@@ -36,8 +36,10 @@ build:
 	$(DEL_COMMAND) -f dist/
 	python -m build
 
-upload:
+upload-only:
 	twine upload dist/*
+
+upload: build upload-only
 
 upload-test:
 	twine upload --repository testpypi dist/*
