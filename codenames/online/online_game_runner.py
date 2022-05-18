@@ -6,6 +6,7 @@ from selenium.common.exceptions import WebDriverException
 
 from codenames.game import (
     Board,
+    GameRunner,
     Guess,
     Guesser,
     Hint,
@@ -14,7 +15,6 @@ from codenames.game import (
     PlayerRole,
     Winner,
 )
-from codenames.game.runner import GameRunner
 from codenames.online import (
     IllegalOperation,
     NamecodingLanguage,
