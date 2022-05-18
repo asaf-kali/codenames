@@ -10,21 +10,19 @@ from codenames.game import (
     Board,
     Card,
     CardColor,
+    CardNotFoundError,
+    GameIsOver,
     GivenGuess,
     GivenHint,
     Guess,
     Hint,
+    InvalidGuess,
+    InvalidHint,
+    InvalidTurn,
     PlayerRole,
     TeamColor,
     WordGroup,
     canonical_format,
-)
-from codenames.game.exceptions import (
-    CardNotFoundError,
-    GameIsOver,
-    InvalidGuess,
-    InvalidHint,
-    InvalidTurn,
 )
 from codenames.utils import wrap
 

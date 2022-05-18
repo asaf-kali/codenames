@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Iterable, List, Optional, Set, Tuple, Union
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import validator
 
-from codenames.game.exceptions import CardNotFoundError
+from codenames.game import CardNotFoundError
 from codenames.utils import wrap
 
 if TYPE_CHECKING:

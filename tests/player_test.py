@@ -1,7 +1,6 @@
 import pytest
 
-from codenames.game.base import CardColor, TeamColor
-from codenames.game.player import Player
+from codenames.game import CardColor, Player, TeamColor
 
 
 def test_player_team_card_color():

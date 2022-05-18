@@ -5,7 +5,7 @@ ALL_DEPS = WEB_DEPS
 
 setup(
     name="codenames",
-    version="1.0.3",
+    version="1.1.0",
     description="Codenames board game logic implementation in python.",
     author="Asaf Kali",
     author_email="asaf.kali@mail.huji.ac.il",

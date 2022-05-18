@@ -1,7 +1,6 @@
 import pytest
 
-from codenames.game.base import Board, two_integer_factors
-from codenames.game.exceptions import CardNotFoundError
+from codenames.game import Board, CardNotFoundError, two_integer_factors
 from tests.utils import constants
 
 
