@@ -1,4 +1,4 @@
-from codenames.game.base import Board, Card, CardColor
+from codenames.game import Board, Card, CardColor
 
 
 def board_10() -> Board:

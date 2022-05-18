@@ -1,10 +1,17 @@
 from typing import Dict, Iterable, List, NamedTuple, Tuple
 
-from codenames.game import GuesserGameState, HinterGameState
-from codenames.game.base import Guess, Hint, TeamColor
-from codenames.game.exceptions import QuitGame
-from codenames.game.player import Guesser, Hinter, Player
-from codenames.game.runner import Team
+from codenames.game import (
+    Guess,
+    Guesser,
+    GuesserGameState,
+    Hint,
+    Hinter,
+    HinterGameState,
+    Player,
+    QuitGame,
+    Team,
+    TeamColor,
+)
 
 
 class UnexpectedEndOfInput(Exception):
