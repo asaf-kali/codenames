@@ -17,7 +17,7 @@ install-dev:
 	@make install-test --no-print-directory
 	pre-commit install
 
-install: install-dev test
+install: install-dev test lint
 
 # Test
 
