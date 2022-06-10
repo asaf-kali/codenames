@@ -5,14 +5,14 @@ ALL_DEPS = WEB_DEPS
 
 setup(
     name="codenames",
-    version="1.1.0",
+    version="1.1.1",
     description="Codenames board game logic implementation in python.",
     author="Asaf Kali",
     author_email="asaf.kali@mail.huji.ac.il",
     url="https://github.com/asaf-kali/codenames",
     install_requires=[
         # Core
-        "pydantic~=1.9",
+        "pydantic==1.9.0",
         # CLI
         "beautifultable~=1.0",
     ],
