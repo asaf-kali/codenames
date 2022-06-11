@@ -33,7 +33,7 @@ cover:
 # Packaging
 
 build:
-	$(DEL_COMMAND) -f dist/
+	$(DEL_COMMAND) -f dist/*
 	python -m build
 
 upload-only:
