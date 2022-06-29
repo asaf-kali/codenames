@@ -10,8 +10,9 @@ install-run:
 	pip install -r requirements.txt
 
 install-test:
-	@make install-run --no-print-directory
+	pip install --upgrade pip
 	pip install -r requirements-dev.txt
+	@make install-run --no-print-directory
 
 install-dev:
 	@make install-test --no-print-directory
