@@ -43,10 +43,10 @@ class BaseModel(PydanticBaseModel):
 
 
 class CardColor(str, Enum):
-    BLUE = "Blue"
-    RED = "Red"
-    GRAY = "Gray"
-    BLACK = "Black"
+    BLUE = "BLUE"
+    RED = "RED"
+    GRAY = "GRAY"
+    BLACK = "BLACK"
 
     def __str__(self):
         return self.value
@@ -77,8 +77,8 @@ CARD_COLOR_TO_EMOJI = {
 
 
 class TeamColor(str, Enum):
-    BLUE = "Blue"
-    RED = "Red"
+    BLUE = "BLUE"
+    RED = "RED"
 
     def __str__(self):
         return self.value

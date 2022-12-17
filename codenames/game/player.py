@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from codenames.game import (
     Board,
@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 
 class PlayerRole(str, Enum):
-    HINTER = "Hinter"
-    GUESSER = "Guesser"
+    HINTER = "HINTER"
+    GUESSER = "GUESSER"
 
     @property
     def other(self) -> "PlayerRole":
@@ -86,5 +86,9 @@ class Team:
     guesser: Guesser
     team_color: TeamColor
 
+    @property
+    def players(self) -> Tuple[Hinter, Guesser]:
+        return self.hinter, self.guesser
+
     def __iter__(self):
-        return iter([self.hinter, self.guesser])
+        return iter(self.players)
