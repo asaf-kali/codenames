@@ -117,7 +117,7 @@ def test_game_runner_hinter_state():
     assert game_state_1.current_team_color == TeamColor.BLUE
     assert game_state_1.given_hints == []
     assert game_state_1.given_guesses == []
-    assert game_state_1.given_hint_words == tuple()
+    assert game_state_1.given_hint_words == ()
 
     for card in game_state_2.board:
         assert card.color is not None

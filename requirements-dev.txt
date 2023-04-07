@@ -1,15 +1,18 @@
 # Testing
-pytest==6.2.5
-coverage==6.3.2
+pytest==7.2.2
+coverage==7.2.3
 
 # Lint
-black==22.3.0
-mypy==0.961
-flake8==4.0.1
-isort==5.10.1
-pre-commit~=2.17
-types-requests~=2.27
+ruff==0.0.261
+black==23.3.0
+isort==5.12.0
+mypy==1.2.0
+pylint==2.17.2
+types-requests==2.28.11.17
 
 # Package
-build==0.7.0
-twine==4.0.0
+build==0.10.0
+twine==4.0.2
+
+# Other
+pre-commit==3.2.2

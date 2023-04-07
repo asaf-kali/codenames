@@ -259,7 +259,7 @@ class GuesserGameState(BaseModel):
         return self.given_hints[-1]
 
 
-def build_game_state(language: str, board: Board = None) -> GameState:
+def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
     if board is None:
         from codenames.boards import generate_standard_board
 
