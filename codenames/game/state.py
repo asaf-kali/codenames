@@ -1,9 +1,9 @@
 import logging
 from enum import Enum
 from functools import cached_property
-from typing import Dict, List, Optional
+from typing import List, Optional
 
-from pydantic import validator
+from pydantic import root_validator
 
 from codenames.game import (
     BaseModel,
@@ -46,25 +46,61 @@ class Winner(BaseModel):
         return f"{self.team_color.value} team ({self.reason.value})"
 
 
+class TeamScore(BaseModel):
+    total: int
+    revealed: int
+
+    @staticmethod
+    def new(total: int) -> "TeamScore":
+        return TeamScore(total=total, revealed=0)
+
+    @property
+    def unrevealed(self) -> int:
+        return self.total - self.revealed
+
+
+class Score(BaseModel):
+    blue: TeamScore
+    red: TeamScore
+
+    @staticmethod
+    def new(blue: int, red: int) -> "Score":
+        return Score(blue=TeamScore.new(blue), red=TeamScore.new(red))
+
+    def add_point(self, team_color: TeamColor) -> bool:
+        team_score = self.blue if team_color == TeamColor.BLUE else self.red
+        team_score.revealed += 1
+        if team_score.unrevealed == 0:
+            return True
+        return False
+
+
 class GameState(BaseModel):
     language: str
     board: Board
+    score: Score
     current_team_color: TeamColor = TeamColor.BLUE
     current_player_role: PlayerRole = PlayerRole.HINTER
     left_guesses: int = 0
     bonus_given: bool = False
     winner: Optional[Winner] = None
-    remaining_score: Dict[TeamColor, int] = {}
     raw_hints: List[Hint] = []
     given_hints: List[GivenHint] = []
     given_guesses: List[GivenGuess] = []
 
-    @validator("remaining_score", always=True)
-    def init_scores(cls, value: Dict[TeamColor, int], values) -> Dict[TeamColor, int]:
-        if value:
-            return value
+    @root_validator(pre=True)
+    def init_score(cls, values: dict) -> dict:
+        score = values.get("score")
+        if score:
+            return values
         board = values["board"]
-        return {TeamColor.BLUE: len(board.blue_cards), TeamColor.RED: len(board.red_cards)}
+        blue_score = TeamScore(
+            total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(CardColor.BLUE))
+        )
+        red_score = TeamScore(total=len(board.red_cards), revealed=len(board.revealed_cards_for_color(CardColor.RED)))
+        score = Score(blue=blue_score, red=red_score)
+        values["score"] = score
+        return values
 
     @property
     def hinter_state(self) -> "HinterGameState":
@@ -190,8 +226,8 @@ class GameState(BaseModel):
             self.winner = Winner(team_color=winner_color, reason=WinningReason.OPPONENT_HIT_BLACK)
             return
         score_team_color = given_guess.team if given_guess.correct else given_guess.team.opponent
-        self.remaining_score[score_team_color] -= 1
-        if self.remaining_score[score_team_color] == 0:
+        game_ended = self.score.add_point(score_team_color)
+        if game_ended:
             self.winner = Winner(team_color=score_team_color, reason=WinningReason.TARGET_SCORE_REACHED)
 
 
