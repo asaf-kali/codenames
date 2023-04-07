@@ -1,0 +1,14 @@
+name: Install linting tools
+description: "A reusable action to install linting tools"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        cache: "pip"
+    - name: Install dependencies
+      shell: bash
+      run: |
+        make install-lint

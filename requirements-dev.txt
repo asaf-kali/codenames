@@ -2,14 +2,6 @@
 pytest==7.2.2
 coverage==7.2.3
 
-# Lint
-ruff==0.0.261
-black==23.3.0
-isort==5.12.0
-mypy==1.2.0
-pylint==2.17.2
-types-requests==2.28.11.17
-
 # Package
 build==0.10.0
 twine==4.0.2

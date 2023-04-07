@@ -11,9 +11,14 @@ upgrade-pip:
 install-run: upgrade-pip
 	pip install -r requirements.txt
 
-install-dev:
+install-test:
 	pip install -r requirements-dev.txt
 	@make install-run --no-print-directory
+
+install-lint:
+	pip install -r requirements-lint.txt
+
+install-dev: install-lint install-test
 	pre-commit install
 
 install: install-dev lint cover
