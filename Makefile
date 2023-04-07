@@ -16,7 +16,7 @@ install-dev:
 	@make install-run --no-print-directory
 	pre-commit install
 
-install: install-dev cover format lint
+install: install-dev lint cover
 
 # Test
 
