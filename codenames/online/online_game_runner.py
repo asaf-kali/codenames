@@ -37,10 +37,10 @@ def player_or_agent(player: T, role: PlayerRole) -> T:
 class NamecodingGameRunner:
     def __init__(
         self,
-        blue_hinter: Hinter = None,
-        red_hinter: Hinter = None,
-        blue_guesser: Guesser = None,
-        red_guesser: Guesser = None,
+        blue_hinter: Optional[Hinter] = None,
+        red_hinter: Optional[Hinter] = None,
+        blue_guesser: Optional[Guesser] = None,
+        red_guesser: Optional[Guesser] = None,
         show_host: bool = True,
     ):
         self.host: Optional[NamecodingPlayerAdapter] = None

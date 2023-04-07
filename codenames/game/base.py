@@ -211,7 +211,7 @@ class Board(BaseModel):
     @property
     def printable_string(self) -> str:
         table = self.as_table
-        for i, row in enumerate(table.rows):
+        for _i, row in enumerate(table.rows):
             for j, card in enumerate(row):
                 row[j] = LTR + str(card)
         return str(table)
