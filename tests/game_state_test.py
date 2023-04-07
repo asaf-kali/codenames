@@ -11,6 +11,7 @@ from codenames.game import (
     InvalidTurn,
     PlayerRole,
     TeamColor,
+    TeamScore,
     Winner,
     WinningReason,
     build_game_state,
@@ -99,3 +100,24 @@ def test_game_state_json_serialization_and_load(board_10: Board):
     game_state_from_json = GameState(**game_state_data)
     assert game_state_from_json.dict() == game_state.dict()
     assert game_state_from_json == game_state
+
+
+def test_score_is_correct_when_board_is_partially_revealed(board_10: Board):
+    board_10.cards[0].revealed = True
+    game_state = build_game_state(language="english", board=board_10)
+    assert game_state.score.blue == TeamScore(total=4, revealed=1)
+    assert game_state.score.red == TeamScore(total=3, revealed=0)
+    assert game_state.score.blue.unrevealed == 3
+    assert game_state.score.red.unrevealed == 3
+
+    game_state.process_hint(Hint(word="A", card_amount=2))
+    game_state.process_guess(Guess(card_index=1))
+    assert game_state.score.blue == TeamScore(total=4, revealed=2)
+    assert game_state.score.red == TeamScore(total=3, revealed=0)
+
+    game_state.process_guess(Guess(card_index=4))
+    assert game_state.score.blue == TeamScore(total=4, revealed=2)
+    assert game_state.score.red == TeamScore(total=3, revealed=1)
+
+    assert game_state.score.blue.unrevealed == 2
+    assert game_state.score.red.unrevealed == 2

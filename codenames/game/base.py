@@ -219,6 +219,9 @@ class Board(BaseModel):
     def cards_for_color(self, card_color: CardColor) -> Cards:
         return tuple(card for card in self.cards if card.color == card_color)
 
+    def revealed_cards_for_color(self, card_color: CardColor) -> Cards:
+        return tuple(card for card in self.cards if card.color == card_color and card.revealed)
+
     def unrevealed_cards_for_color(self, card_color: CardColor) -> Cards:
         return tuple(card for card in self.cards if card.color == card_color and not card.revealed)
 
@@ -252,6 +255,13 @@ class GivenHint(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.word}, {self.card_amount}"
+
+    def __hash__(self) -> int:
+        return self.hash
+
+    @cached_property
+    def hash(self) -> int:
+        return hash(f"{self.formatted_word}{self.card_amount}{self.team_color}")
 
     @cached_property
     def formatted_word(self) -> str:
