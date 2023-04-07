@@ -20,6 +20,9 @@ class PlayerRole(str, Enum):
     HINTER = "HINTER"
     GUESSER = "GUESSER"
 
+    def __str__(self) -> str:
+        return self.value.title()
+
     @property
     def other(self) -> "PlayerRole":
         if self == PlayerRole.HINTER:
