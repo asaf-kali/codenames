@@ -2,7 +2,7 @@ from setuptools import setup
 
 BASE_DEPS = [
     # Core
-    "pydantic==1.9.0",
+    "pydantic~=1.9",
     # CLI
     "beautifultable~=1.0",
 ]
@@ -11,7 +11,7 @@ ALL_DEPS = BASE_DEPS + WEB_DEPS
 
 setup(
     name="codenames",
-    version="1.2.6",
+    version="1.2.7",
     description="Codenames board game logic implementation in python.",
     author="Asaf Kali",
     author_email="akali93@gmail.com",
