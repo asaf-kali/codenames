@@ -43,7 +43,7 @@ class Winner(BaseModel):
     reason: WinningReason
 
     def __str__(self) -> str:
-        return f"{self.team_color.value} team ({self.reason.value})"
+        return f"{self.team_color} team ({self.reason.value})"
 
 
 class TeamScore(BaseModel):

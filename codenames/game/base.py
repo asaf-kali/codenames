@@ -48,8 +48,8 @@ class CardColor(str, Enum):
     GRAY = "GRAY"
     BLACK = "BLACK"
 
-    def __str__(self):
-        return self.value
+    def __str__(self) -> str:
+        return self.value.title()
 
     @property
     def as_team_color(self) -> "TeamColor":
@@ -80,8 +80,8 @@ class TeamColor(str, Enum):
     BLUE = "BLUE"
     RED = "RED"
 
-    def __str__(self):
-        return self.value
+    def __str__(self) -> str:
+        return self.value.title()
 
     @property
     def opponent(self) -> "TeamColor":
@@ -242,7 +242,7 @@ class Hint(BaseModel):
     for_words: Optional[WordGroup] = None
 
     def __str__(self) -> str:
-        result = f"Said {wrap(self.word)} {wrap(self.card_amount)}"
+        result = f"{wrap(self.word)} {wrap(self.card_amount)}"
         if self.for_words:
             result += f" for: {self.for_words}"
         return result
@@ -254,7 +254,7 @@ class GivenHint(BaseModel):
     team_color: TeamColor
 
     def __str__(self) -> str:
-        return f"{self.word}, {self.card_amount}"
+        return f"{wrap(self.word)} {wrap(self.card_amount)}"
 
     def __hash__(self) -> int:
         return self.hash
