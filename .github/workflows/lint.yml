@@ -4,18 +4,55 @@ on:
   push:
 
 jobs:
-  check-formatting:
+  check-ruff:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Set up python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
+      - uses: ./.github/actions/lint-install
+      - name: Run ruff
+        run: |
+          make check-ruff
+
+  check-black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/lint-install
+      - name: Run black
+        run: |
+          make check-black
+
+  check-isort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/lint-install
+      - name: Run isort
+        run: |
+          make check-isort
+
+  check-mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/lint-install
+      - name: Run mypy
+        run: |
+          make check-mypy
+
+  check-pylint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          make install-test
-      - name: Check lint
+          pip install pyOpenSSL==22.0.0
+          make install-dev
+      - name: Run pylint
         run: |
-          make lint-check
+          make check-pylint
