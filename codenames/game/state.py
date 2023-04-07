@@ -94,6 +94,8 @@ class GameState(BaseModel):
         if score:
             return values
         board = values["board"]
+        if isinstance(board, dict):
+            board = Board.parse_obj(board)
         blue_score = TeamScore(
             total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(CardColor.BLUE))
         )
