@@ -31,15 +31,16 @@ class PlayerRole(str, Enum):
 
 
 class Player:
-    def __init__(self, name: str):
+    def __init__(self, name: str, team_color: Optional[TeamColor] = None):
         self.name: str = name
-        self.team_color: Optional[TeamColor] = None
+        self.team_color = team_color
 
     def __str__(self):
         team = ""
         if self.team_color:
             team = f" {self.team_color}"
-        return f"{self.name} -{team} {self.role.value}"
+        class_name = self.__class__.__name__
+        return f"{self.name} -{team} {self.role} ({class_name})"
 
     @property
     def role(self) -> PlayerRole:
