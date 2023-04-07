@@ -1,6 +1,7 @@
 import pytest
 
 from codenames.game import CardColor, Player, TeamColor
+from tests.utils.testing_players import TestGuesser, TestHinter
 
 
 def test_player_team_card_color():
@@ -16,3 +17,11 @@ def test_player_team_card_color():
 
     with pytest.raises(ValueError):
         _ = p3.team_card_color
+
+
+def test_play_to_string():
+    p1 = TestGuesser(guesses=[], name="Player 1", team_color=TeamColor.RED)
+    p2 = TestHinter(hints=[], name="Player 2")
+
+    assert str(p1) == "Player 1 - Red Guesser (TestGuesser)"
+    assert str(p2) == "Player 2 - Hinter (TestHinter)"

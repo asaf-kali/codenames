@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, List, NamedTuple, Tuple
+from typing import Dict, Iterable, List, NamedTuple, Optional, Tuple
 
 from codenames.game import (
     Guess,
@@ -24,9 +24,10 @@ class TestHinter(Hinter):
         self,
         hints: Iterable[Hint],
         name: str = "Test Hinter",
+        team_color: Optional[TeamColor] = None,
         auto_quit: bool = False,
     ):
-        super().__init__(name=name)
+        super().__init__(name=name, team_color=team_color)
         self.hints = list(hints)
         self.current_index = 0
         self.auto_quit = auto_quit
@@ -46,9 +47,10 @@ class TestGuesser(Guesser):
         self,
         guesses: Iterable[Guess],
         name: str = "Test Guesser",
+        team_color: Optional[TeamColor] = None,
         auto_quit: bool = False,
     ):
-        super().__init__(name=name)
+        super().__init__(name=name, team_color=team_color)
         self.guesses = list(guesses)
         self.current_index = 0
         self.auto_quit = auto_quit
