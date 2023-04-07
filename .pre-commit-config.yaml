@@ -10,8 +10,23 @@ repos:
       - id: check-added-large-files
   - repo: local
     hooks:
-      - id: lint
-        name: run lint command
-        entry: "make lint-check"
+      - id: check-ruff
+        name: check ruff standard
+        entry: "make check-ruff"
+        language: system
+        pass_filenames: false
+      - id: check-black
+        name: check black formatting
+        entry: "make check-black"
+        language: system
+        pass_filenames: false
+      - id: check-isort
+        name: check isort formatting
+        entry: "make check-isort"
+        language: system
+        pass_filenames: false
+      - id: check-mypy
+        name: check mypy typing
+        entry: "make check-mypy"
         language: system
         pass_filenames: false

@@ -68,7 +68,9 @@ def get_shadow_root(parent, tag_name: str) -> ShadowRootElement:
 
 
 class NamecodingPlayerAdapter:
-    def __init__(self, player: Player, implicitly_wait: int = 1, headless: bool = True, chromedriver_path: str = None):
+    def __init__(
+        self, player: Player, implicitly_wait: int = 1, headless: bool = True, chromedriver_path: Optional[str] = None
+    ):
         options = webdriver.ChromeOptions()
         if player.is_human:
             headless = False
@@ -310,7 +312,7 @@ class NamecodingPlayerAdapter:
         log.debug("Returning pass guess.")
         return Guess(card_index=PASS_GUESS)
 
-    def has_clue_text(self, clue_area: ShadowRootElement = None) -> bool:
+    def has_clue_text(self, clue_area: Optional[ShadowRootElement] = None) -> bool:
         if not clue_area:
             clue_area = self.get_clue_area()
         return clue_area.find_elements(by=By.ID, value="clue-text") != []

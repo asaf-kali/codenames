@@ -4,6 +4,12 @@ addopts = "-s --disable-pytest-warnings"
 [tool.coverage.run]
 source = ["codenames"]
 
+[tool.ruff]
+line-length = 120
+select = ["B", "C", "E", "F", "W"]
+ignore = []
+exclude = ["local", ".deployment"]
+
 [tool.black]
 line-length = 120
 
@@ -14,3 +20,14 @@ profile = "black"
 [tool.mypy]
 ignore_missing_imports = true
 exclude = ["build", "dist"]
+
+[tool.pylint]
+max-line-length = 120
+disable = [
+    "C0114",
+    "C0115",
+    "C0116",
+    "R0903",
+    "W1203",
+]
+extension-pkg-allow-list = ["pydantic"]

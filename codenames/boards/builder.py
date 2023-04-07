@@ -1,12 +1,14 @@
 import random
-from typing import List, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
 from codenames.boards.english import ENGLISH_WORDS
 from codenames.boards.hebrew import HEBREW_WORDS
 from codenames.game import Board, Card, CardColor
 
 
-def generate_standard_board(language: str, board_size: int = 25, black_amount: int = 1, seed: int = None) -> Board:
+def generate_standard_board(
+    language: str, board_size: int = 25, black_amount: int = 1, seed: Optional[int] = None
+) -> Board:
     if language == "english":
         words = ENGLISH_WORDS
     elif language == "hebrew":
@@ -16,7 +18,9 @@ def generate_standard_board(language: str, board_size: int = 25, black_amount: i
     return build_board(vocabulary=words, board_size=board_size, black_amount=black_amount, seed=seed)
 
 
-def build_board(vocabulary: List[str], board_size: int = 25, black_amount: int = 1, seed: int = None) -> Board:
+def build_board(
+    vocabulary: List[str], board_size: int = 25, black_amount: int = 1, seed: Optional[int] = None
+) -> Board:
     random.seed(seed)
 
     red_amount = board_size // 3
