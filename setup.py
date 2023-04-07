@@ -1,21 +1,22 @@
 from setuptools import setup
 
+BASE_DEPS = [
+    # Core
+    "pydantic==1.9.0",
+    # CLI
+    "beautifultable~=1.0",
+]
 WEB_DEPS = ["selenium~=4.1"]
-ALL_DEPS = WEB_DEPS
+ALL_DEPS = BASE_DEPS + WEB_DEPS
 
 setup(
     name="codenames",
-    version="1.1.1",
+    version="1.1.2",
     description="Codenames board game logic implementation in python.",
     author="Asaf Kali",
     author_email="akali93@gmail.com",
     url="https://github.com/asaf-kali/codenames",
-    install_requires=[
-        # Core
-        "pydantic==1.9.0",
-        # CLI
-        "beautifultable~=1.0",
-    ],
+    install_requires=BASE_DEPS,
     extras_require={
         "all": ALL_DEPS,
         "web": WEB_DEPS,
