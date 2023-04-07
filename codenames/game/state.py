@@ -106,6 +106,7 @@ class GameState(BaseModel):
     def hinter_state(self) -> "HinterGameState":
         return HinterGameState(
             board=self.board,
+            score=self.score,
             current_team_color=self.current_team_color,
             given_hints=self.given_hints,
             given_guesses=self.given_guesses,
@@ -113,9 +114,9 @@ class GameState(BaseModel):
 
     @property
     def guesser_state(self) -> "GuesserGameState":
-        board = self.board.censured
         return GuesserGameState(
-            board=board,
+            board=self.board.censured,
+            score=self.score,
             current_team_color=self.current_team_color,
             given_hints=self.given_hints,
             given_guesses=self.given_guesses,
@@ -233,6 +234,7 @@ class GameState(BaseModel):
 
 class HinterGameState(BaseModel):
     board: Board
+    score: Score
     current_team_color: TeamColor
     given_hints: List[GivenHint]
     given_guesses: List[GivenGuess]
@@ -248,6 +250,7 @@ class HinterGameState(BaseModel):
 
 class GuesserGameState(BaseModel):
     board: Board
+    score: Score
     current_team_color: TeamColor
     given_hints: List[GivenHint]
     given_guesses: List[GivenGuess]
