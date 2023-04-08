@@ -54,7 +54,7 @@ class GivenGuess(BaseModel):
     guessed_card: Card
 
     def __str__(self) -> str:
-        result = "Correct!" if self.correct else "Wrong!"
+        result = "correct!" if self.correct else "wrong!"
         return f"'{self.guessed_card}', {result}"
 
     @property
