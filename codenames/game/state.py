@@ -40,19 +40,21 @@ class BaseGameState(BaseModel):
     board: Board
     score: Score
     current_team_color: TeamColor = TeamColor.BLUE
+    current_player_role: PlayerRole = PlayerRole.HINTER
     given_hints: List[GivenHint] = []
     given_guesses: List[GivenGuess] = []
 
     class Config:
         abstract = True
 
-    @cached_property
+    @property
     def moves(self) -> List[Move]:
-        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
+        return get_moves(
+            given_hints=self.given_hints, given_guesses=self.given_guesses, current_turn=self.current_player_role
+        )
 
 
 class GameState(BaseGameState):
-    current_player_role: PlayerRole = PlayerRole.HINTER
     left_guesses: int = 0
     bonus_given: bool = False
     winner: Optional[Winner] = None
@@ -77,6 +79,7 @@ class GameState(BaseGameState):
             board=self.board,
             score=self.score,
             current_team_color=self.current_team_color,
+            current_player_role=self.current_player_role,
             given_hints=self.given_hints,
             given_guesses=self.given_guesses,
         )
@@ -88,6 +91,7 @@ class GameState(BaseGameState):
             board=self.board.censured,
             score=self.score,
             current_team_color=self.current_team_color,
+            current_player_role=self.current_player_role,
             given_hints=self.given_hints,
             given_guesses=self.given_guesses,
             left_guesses=self.left_guesses,
@@ -251,7 +255,7 @@ def _determine_first_team(board: Board) -> TeamColor:
     return TeamColor.RED
 
 
-def get_moves(given_hints: List[GivenHint], given_guesses: List[GivenGuess]) -> List[Move]:
+def get_moves(given_hints: List[GivenHint], given_guesses: List[GivenGuess], current_turn: PlayerRole) -> List[Move]:
     guesses_by_hints = get_guesses_by_hints(given_hints=given_hints, given_guesses=given_guesses)
     moves: List[Move] = []
     for hint, guesses in guesses_by_hints.items():
@@ -269,7 +273,11 @@ def get_moves(given_hints: List[GivenHint], given_guesses: List[GivenGuess]) -> 
                 moves.append(PassMove(team=hint.team_color))
     if not moves:
         return moves
-    # TODO: Determine if last pass move should be removed.
+    last_move = moves[-1]
+    if not isinstance(last_move, PassMove):
+        return moves
+    if current_turn == PlayerRole.GUESSER:
+        moves = moves[:-1]
     return moves
 
 
