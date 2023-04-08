@@ -1,24 +1,17 @@
+import logging
 from functools import cached_property
 from typing import Callable, List, Optional, Tuple
 
-from codenames.game import (
-    Board,
-    GameState,
-    GivenGuess,
-    Guess,
-    Guesser,
-    Hint,
-    Hinter,
-    InvalidGuess,
-    Player,
-    Team,
-    TeamColor,
-    Winner,
-    build_game_state,
-    log,
-)
-from codenames.utils import wrap
+from codenames.game.board import Board
+from codenames.game.color import TeamColor
+from codenames.game.exceptions import InvalidGuess
+from codenames.game.move import GivenGuess, Guess, Hint
+from codenames.game.player import Guesser, Hinter, Player, Team
+from codenames.game.state import GameState, build_game_state
+from codenames.game.winner import Winner
+from codenames.utils.formatting import wrap
 
+log = logging.getLogger(__name__)
 SEPARATOR = "\n-----\n"
 
 

@@ -3,7 +3,9 @@ from typing import List, Optional, Sequence, Tuple
 
 from codenames.boards.english import ENGLISH_WORDS
 from codenames.boards.hebrew import HEBREW_WORDS
-from codenames.game import Board, Card, CardColor
+from codenames.game.board import Board
+from codenames.game.card import Card
+from codenames.game.color import CardColor
 
 
 def generate_standard_board(

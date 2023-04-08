@@ -1,6 +1,7 @@
 import pytest
 
-from codenames.game import CardColor, Player, TeamColor
+from codenames.game.color import CardColor, TeamColor
+from codenames.game.player import Player
 from tests.utils.testing_players import TestGuesser, TestHinter
 
 
