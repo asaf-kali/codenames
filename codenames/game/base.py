@@ -28,17 +28,17 @@ class BaseModel(PydanticBaseModel):
         keep_untouched = (cached_property,)
 
     @classmethod
-    def from_json(cls, s: str) -> "BaseModel":
-        data = json.loads(s)
+    def from_json(cls, string: str) -> "BaseModel":
+        data = json.loads(string)
         return cls(**data)
 
     def dict(self, *args, **kwargs) -> dict:
         result = super().dict(*args, **kwargs)
         cached_properties = get_cached_properties_names(self.__class__)
         include = kwargs.get("include", None) or set()
-        for k in cached_properties:
-            if k not in include:
-                result.pop(k, None)
+        for prop in cached_properties:
+            if prop not in include:
+                result.pop(prop, None)
         return result
 
 
@@ -135,7 +135,7 @@ class Board(BaseModel):
     cards: List[Card]
 
     @validator("cards")
-    def convert_cards(cls, cards: Iterable[Card]):
+    def convert_cards(cls, cards: Iterable[Card]):  # pylint: disable=no-self-argument
         return list(cards)
 
     def __getitem__(self, item: Union[int, str]) -> Card:
@@ -198,7 +198,9 @@ class Board(BaseModel):
 
     @property
     def as_table(self) -> "BeautifulTable":
-        from beautifultable import BeautifulTable
+        from beautifultable import (  # pylint: disable=import-outside-toplevel
+            BeautifulTable,
+        )
 
         table = BeautifulTable()
         cols, rows = two_integer_factors(self.size)
@@ -211,9 +213,9 @@ class Board(BaseModel):
     @property
     def printable_string(self) -> str:
         table = self.as_table
-        for _i, row in enumerate(table.rows):
-            for j, card in enumerate(row):
-                row[j] = LTR + str(card)
+        for row in table.rows:
+            for i, card in enumerate(row):
+                row[i] = LTR + str(card)
         return str(table)
 
     def cards_for_color(self, card_color: CardColor) -> Cards:

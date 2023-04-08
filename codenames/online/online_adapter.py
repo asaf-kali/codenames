@@ -320,7 +320,7 @@ class NamecodingPlayerAdapter:
     def close(self):
         try:
             self.driver.close()
-        except:  # noqa
+        except:  # noqa  # pylint: disable=bare-except
             pass
 
 
