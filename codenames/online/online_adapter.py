@@ -8,19 +8,13 @@ from selenium.common.exceptions import NoAlertPresentException, NoSuchElementExc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from codenames.game import (
-    PASS_GUESS,
-    Board,
-    Card,
-    CardColor,
-    Guess,
-    GuesserGameState,
-    Hint,
-    Player,
-    PlayerRole,
-)
+from codenames.game.board import Board, Card
+from codenames.game.color import CardColor
+from codenames.game.move import PASS_GUESS, Guess, Hint
+from codenames.game.player import Player, PlayerRole
+from codenames.game.state import GuesserGameState
 from codenames.online.utils import ShadowRootElement, poll_condition
-from codenames.utils import wrap
+from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
 

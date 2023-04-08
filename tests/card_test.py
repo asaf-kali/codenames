@@ -1,4 +1,5 @@
-from codenames.game import Card, CardColor
+from codenames.game.card import Card
+from codenames.game.color import CardColor
 
 
 def test_censored_when_revealed_is_same_as_card():

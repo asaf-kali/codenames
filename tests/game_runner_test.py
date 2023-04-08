@@ -1,19 +1,11 @@
 from typing import Tuple
 from unittest.mock import MagicMock
 
-from codenames.game import (
-    CardColor,
-    GameRunner,
-    GivenGuess,
-    GivenHint,
-    Guess,
-    GuesserGameState,
-    Hint,
-    HinterGameState,
-    TeamColor,
-    Winner,
-    WinningReason,
-)
+from codenames.game.color import CardColor, TeamColor
+from codenames.game.move import GivenGuess, GivenHint, Guess, Hint
+from codenames.game.runner import GameRunner
+from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.game.winner import Winner, WinningReason
 from tests.utils.constants import board_10
 from tests.utils.hooks import hook_method
 from tests.utils.testing_players import (

@@ -1,19 +1,15 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Optional, Tuple
 
-from codenames.game import (
-    Board,
-    CardColor,
-    GivenGuess,
-    GivenHint,
-    Guess,
-    Hint,
-    TeamColor,
-)
+from codenames.game.color import CardColor, TeamColor
 
 if TYPE_CHECKING:
-    from codenames.game import GuesserGameState, HinterGameState
+    from codenames.game.board import Board
+    from codenames.game.move import GivenGuess, GivenHint, Guess, Hint
+    from codenames.game.state import GuesserGameState, HinterGameState
 
 
 class PlayerRole(str, Enum):
@@ -24,7 +20,7 @@ class PlayerRole(str, Enum):
         return self.value.title()
 
     @property
-    def other(self) -> "PlayerRole":
+    def other(self) -> PlayerRole:
         if self == PlayerRole.HINTER:
             return PlayerRole.GUESSER
         return PlayerRole.HINTER
@@ -71,7 +67,7 @@ class Hinter(Player):
     def role(self) -> PlayerRole:
         return PlayerRole.HINTER
 
-    def pick_hint(self, game_state: "HinterGameState") -> Hint:
+    def pick_hint(self, game_state: HinterGameState) -> Hint:
         raise NotImplementedError()
 
 
@@ -80,7 +76,7 @@ class Guesser(Player):
     def role(self) -> PlayerRole:
         return PlayerRole.GUESSER
 
-    def guess(self, game_state: "GuesserGameState") -> Guess:
+    def guess(self, game_state: GuesserGameState) -> Guess:
         raise NotImplementedError()
 
 

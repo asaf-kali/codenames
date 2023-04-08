@@ -1,127 +1,62 @@
 import logging
-from dataclasses import dataclass
-from enum import Enum
 from functools import cached_property
 from typing import Dict, List, Optional
 
 from pydantic import root_validator
 
-from codenames.game import (
-    BaseModel,
-    Board,
-    Card,
-    CardColor,
+from codenames.game.base import BaseModel, WordGroup, canonical_format
+from codenames.game.board import Board
+from codenames.game.card import Card
+from codenames.game.color import CardColor, TeamColor
+from codenames.game.exceptions import (
     CardNotFoundError,
     GameIsOver,
-    GivenGuess,
-    GivenHint,
-    Guess,
-    Hint,
     InvalidGuess,
     InvalidHint,
     InvalidTurn,
-    PlayerRole,
-    TeamColor,
-    WordGroup,
-    canonical_format,
 )
-from codenames.utils import wrap
+from codenames.game.move import (
+    PASS_GUESS,
+    QUIT_GAME,
+    GivenGuess,
+    GivenHint,
+    Guess,
+    GuessMove,
+    Hint,
+    HintMove,
+    Move,
+    PassMove,
+)
+from codenames.game.player import PlayerRole
+from codenames.game.score import Score, TeamScore
+from codenames.game.winner import Winner, WinningReason
+from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
 
-PASS_GUESS = -1
-QUIT_GAME = -2
 
-
-@dataclass
-class Move:
-    @property
-    def team_color(self) -> TeamColor:
-        raise NotImplementedError()
-
-
-@dataclass
-class HintMove(Move):
-    given_hint: GivenHint
-
-    @property
-    def team_color(self) -> TeamColor:
-        return self.given_hint.team_color
-
-
-@dataclass
-class GuessMove(Move):
-    given_guess: GivenGuess
-
-    @property
-    def team_color(self) -> TeamColor:
-        return self.given_guess.team
-
-
-@dataclass
-class PassMove(Move):
-    team: TeamColor
-
-    @property
-    def team_color(self) -> TeamColor:
-        return self.team
-
-
-class WinningReason(str, Enum):
-    TARGET_SCORE_REACHED = "Target score reached"
-    OPPONENT_HIT_BLACK = "Opponent hit black card"
-    OPPONENT_QUIT = "Opponent quit"
-
-
-class Winner(BaseModel):
-    team_color: TeamColor
-    reason: WinningReason
-
-    def __str__(self) -> str:
-        return f"{self.team_color} team ({self.reason.value})"
-
-
-class TeamScore(BaseModel):
-    total: int
-    revealed: int
-
-    @staticmethod
-    def new(total: int) -> "TeamScore":
-        return TeamScore(total=total, revealed=0)
-
-    @property
-    def unrevealed(self) -> int:
-        return self.total - self.revealed
-
-
-class Score(BaseModel):
-    blue: TeamScore
-    red: TeamScore
-
-    @staticmethod
-    def new(blue: int, red: int) -> "Score":
-        return Score(blue=TeamScore.new(blue), red=TeamScore.new(red))
-
-    def add_point(self, team_color: TeamColor) -> bool:
-        team_score = self.blue if team_color == TeamColor.BLUE else self.red
-        team_score.revealed += 1
-        if team_score.unrevealed == 0:
-            return True
-        return False
-
-
-class GameState(BaseModel):
+class BaseGameState(BaseModel):
     language: str
     board: Board
     score: Score
     current_team_color: TeamColor = TeamColor.BLUE
+    given_hints: List[GivenHint] = []
+    given_guesses: List[GivenGuess] = []
+
+    class Config:
+        abstract = True
+
+    @cached_property
+    def moves(self) -> List[Move]:
+        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
+
+
+class GameState(BaseGameState):
     current_player_role: PlayerRole = PlayerRole.HINTER
     left_guesses: int = 0
     bonus_given: bool = False
     winner: Optional[Winner] = None
     raw_hints: List[Hint] = []
-    given_hints: List[GivenHint] = []
-    given_guesses: List[GivenGuess] = []
 
     @root_validator(pre=True)
     def init_score(cls, values: dict) -> dict:  # pylint: disable=no-self-argument
@@ -138,6 +73,7 @@ class GameState(BaseModel):
     @property
     def hinter_state(self) -> "HinterGameState":
         return HinterGameState(
+            language=self.language,
             board=self.board,
             score=self.score,
             current_team_color=self.current_team_color,
@@ -148,6 +84,7 @@ class GameState(BaseModel):
     @property
     def guesser_state(self) -> "GuesserGameState":
         return GuesserGameState(
+            language=self.language,
             board=self.board.censured,
             score=self.score,
             current_team_color=self.current_team_color,
@@ -265,17 +202,7 @@ class GameState(BaseModel):
             self.winner = Winner(team_color=score_team_color, reason=WinningReason.TARGET_SCORE_REACHED)
 
 
-class HinterGameState(BaseModel):
-    board: Board
-    score: Score
-    current_team_color: TeamColor
-    given_hints: List[GivenHint]
-    given_guesses: List[GivenGuess]
-
-    @cached_property
-    def moves(self) -> List[Move]:
-        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
-
+class HinterGameState(BaseGameState):
     @cached_property
     def given_hint_words(self) -> WordGroup:
         return tuple(hint.formatted_word for hint in self.given_hints)
@@ -285,18 +212,9 @@ class HinterGameState(BaseModel):
         return *self.board.all_words, *self.given_hint_words
 
 
-class GuesserGameState(BaseModel):
-    board: Board
-    score: Score
-    current_team_color: TeamColor
-    given_hints: List[GivenHint]
-    given_guesses: List[GivenGuess]
+class GuesserGameState(BaseGameState):
     left_guesses: int
     bonus_given: bool
-
-    @cached_property
-    def moves(self) -> List[Move]:
-        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
 
     @cached_property
     def current_hint(self) -> GivenHint:
@@ -305,7 +223,7 @@ class GuesserGameState(BaseModel):
 
 def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
     if board is None:
-        from codenames.boards import (  # pylint: disable=import-outside-toplevel
+        from codenames.boards.builder import (  # pylint: disable=import-outside-toplevel
             generate_standard_board,
         )
 
@@ -349,6 +267,9 @@ def get_moves(given_hints: List[GivenHint], given_guesses: List[GivenGuess]) -> 
             last_guess = guesses[-1]
             if last_guess.correct:
                 moves.append(PassMove(team=hint.team_color))
+    if not moves:
+        return moves
+    # TODO: Determine if last pass move should be removed.
     return moves
 
 
