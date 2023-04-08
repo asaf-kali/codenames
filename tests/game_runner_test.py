@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 from codenames.game.color import CardColor, TeamColor
 from codenames.game.move import GivenGuess, GivenHint, Guess, Hint
+from codenames.game.player import PlayerRole
 from codenames.game.runner import GameRunner
 from codenames.game.state import GuesserGameState, HinterGameState
 from codenames.game.winner import Winner, WinningReason
@@ -181,3 +182,16 @@ def test_game_runner_guesser_state():
     ]
     assert game_state_5.current_hint == game_state_5.given_hints[1]
     assert game_state_5.bonus_given
+
+
+def test_get_player():
+    blue_hinter, red_hinter = TestHinter([]), TestHinter([])
+    blue_guesser, red_guesser = TestGuesser([]), TestGuesser([])
+    runner = GameRunner(
+        blue_hinter=blue_hinter, red_hinter=red_hinter, blue_guesser=blue_guesser, red_guesser=red_guesser
+    )
+
+    assert runner.get_player(TeamColor.BLUE, PlayerRole.HINTER) is blue_hinter
+    assert runner.get_player(TeamColor.BLUE, PlayerRole.GUESSER) is blue_guesser
+    assert runner.get_player(TeamColor.RED, PlayerRole.HINTER) is red_hinter
+    assert runner.get_player(TeamColor.RED, PlayerRole.GUESSER) is red_guesser
