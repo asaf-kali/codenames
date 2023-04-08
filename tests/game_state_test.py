@@ -2,28 +2,23 @@ import json
 
 import pytest
 
-from codenames.game import (
+from codenames.game.board import Board, Card
+from codenames.game.color import CardColor, TeamColor
+from codenames.game.exceptions import InvalidGuess, InvalidTurn
+from codenames.game.move import (
     PASS_GUESS,
-    Board,
-    Card,
-    CardColor,
-    GameState,
     GivenGuess,
     GivenHint,
     Guess,
     GuessMove,
     Hint,
     HintMove,
-    InvalidGuess,
-    InvalidTurn,
     PassMove,
-    PlayerRole,
-    TeamColor,
-    TeamScore,
-    Winner,
-    WinningReason,
-    build_game_state,
 )
+from codenames.game.player import PlayerRole
+from codenames.game.score import TeamScore
+from codenames.game.state import GameState, build_game_state
+from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 
 

@@ -2,16 +2,10 @@ import logging
 from abc import ABC
 from typing import Optional
 
-from codenames.game import (
-    Guess,
-    Guesser,
-    GuesserGameState,
-    Hint,
-    Hinter,
-    HinterGameState,
-    Player,
-)
-from codenames.online import NamecodingPlayerAdapter
+from codenames.game.move import Guess, Hint
+from codenames.game.player import Guesser, Hinter, Player
+from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.online.online_adapter import NamecodingPlayerAdapter
 
 log = logging.getLogger(__name__)
 

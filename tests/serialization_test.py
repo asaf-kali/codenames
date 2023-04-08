@@ -1,4 +1,5 @@
-from codenames.game import Card, CardColor
+from codenames.game.card import Card
+from codenames.game.color import CardColor
 
 
 def test_card_to_dict_returns_without_cached_properties():

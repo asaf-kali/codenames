@@ -1,21 +1,17 @@
+from __future__ import annotations
+
 import logging
 from threading import Semaphore, Thread
 from typing import Iterable, List, Optional, Tuple, TypeVar
 
 from selenium.common.exceptions import WebDriverException
 
-from codenames.game import (
-    Board,
-    GameRunner,
-    Guess,
-    Guesser,
-    Hint,
-    Hinter,
-    Player,
-    PlayerRole,
-    Winner,
-)
-from codenames.online import (
+from codenames.game.board import Board
+from codenames.game.move import Guess, Hint
+from codenames.game.player import Guesser, Hinter, Player, PlayerRole
+from codenames.game.runner import GameRunner
+from codenames.game.winner import Winner
+from codenames.online.online_adapter import (
     IllegalOperation,
     NamecodingLanguage,
     NamecodingPlayerAdapter,
@@ -129,7 +125,7 @@ class NamecodingGameRunner:
         self.host = host
         return self
 
-    def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> "NamecodingGameRunner":
+    def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> NamecodingGameRunner:
         if not self._running_game_id:
             raise IllegalOperation("Can't join game before hosting initiated. Call host_game() first.")
         if self.has_joined_game(guest_player):
@@ -153,7 +149,7 @@ class NamecodingGameRunner:
 
     def configure_game(
         self, language: NamecodingLanguage = NamecodingLanguage.ENGLISH, clock: bool = True
-    ) -> "NamecodingGameRunner":
+    ) -> NamecodingGameRunner:
         if not self.host:
             raise IllegalOperation("Can't configure game before hosting initiated. Call host_game() first.")
         self._language = language
@@ -170,7 +166,7 @@ class NamecodingGameRunner:
             log.exception("Online adapter failed")
             self.close()
 
-    def _start_game(self) -> "NamecodingGameRunner":
+    def _start_game(self) -> NamecodingGameRunner:
         if not self.host:
             raise IllegalOperation("Can't start game before hosting initiated. Call host_game() first.")
         for adapter in self.adapters:

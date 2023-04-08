@@ -2,18 +2,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from codenames.game import (
-    PASS_GUESS,
-    Board,
-    GameRunner,
-    GivenGuess,
-    GivenHint,
-    Guess,
-    Hint,
-    TeamColor,
-    Winner,
-    WinningReason,
-)
+from codenames.game.board import Board
+from codenames.game.color import TeamColor
+from codenames.game.move import PASS_GUESS, GivenGuess, GivenHint, Guess, Hint
+from codenames.game.runner import GameRunner
+from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 from tests.utils.testing_players import PredictedTurn, build_teams
 
