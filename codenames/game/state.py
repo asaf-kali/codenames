@@ -1,7 +1,8 @@
 import logging
+from dataclasses import dataclass
 from enum import Enum
 from functools import cached_property
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import root_validator
 
@@ -30,6 +31,40 @@ log = logging.getLogger(__name__)
 
 PASS_GUESS = -1
 QUIT_GAME = -2
+
+
+@dataclass
+class Move:
+    @property
+    def team_color(self) -> TeamColor:
+        raise NotImplementedError()
+
+
+@dataclass
+class HintMove(Move):
+    given_hint: GivenHint
+
+    @property
+    def team_color(self) -> TeamColor:
+        return self.given_hint.team_color
+
+
+@dataclass
+class GuessMove(Move):
+    given_guess: GivenGuess
+
+    @property
+    def team_color(self) -> TeamColor:
+        return self.given_guess.team
+
+
+@dataclass
+class PassMove(Move):
+    team: TeamColor
+
+    @property
+    def team_color(self) -> TeamColor:
+        return self.team
 
 
 class WinningReason(str, Enum):
@@ -238,6 +273,10 @@ class HinterGameState(BaseModel):
     given_guesses: List[GivenGuess]
 
     @cached_property
+    def moves(self) -> List[Move]:
+        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
+
+    @cached_property
     def given_hint_words(self) -> WordGroup:
         return tuple(hint.formatted_word for hint in self.given_hints)
 
@@ -254,6 +293,10 @@ class GuesserGameState(BaseModel):
     given_guesses: List[GivenGuess]
     left_guesses: int
     bonus_given: bool
+
+    @cached_property
+    def moves(self) -> List[Move]:
+        return get_moves(given_hints=self.given_hints, given_guesses=self.given_guesses)
 
     @cached_property
     def current_hint(self) -> GivenHint:
@@ -288,3 +331,33 @@ def _determine_first_team(board: Board) -> TeamColor:
     if len(board.blue_cards) >= len(board.red_cards):
         return TeamColor.BLUE
     return TeamColor.RED
+
+
+def get_moves(given_hints: List[GivenHint], given_guesses: List[GivenGuess]) -> List[Move]:
+    guesses_by_hints = get_guesses_by_hints(given_hints=given_hints, given_guesses=given_guesses)
+    moves: List[Move] = []
+    for hint, guesses in guesses_by_hints.items():
+        hint_move = HintMove(given_hint=hint)
+        moves.append(hint_move)
+        for guess in guesses:
+            guess_move = GuessMove(given_guess=guess)
+            moves.append(guess_move)
+        if len(guesses) == 0:
+            moves.append(PassMove(team=hint.team_color))
+            continue
+        if len(guesses) < hint.card_amount + 1:
+            last_guess = guesses[-1]
+            if last_guess.correct:
+                moves.append(PassMove(team=hint.team_color))
+    return moves
+
+
+def get_guesses_by_hints(
+    given_hints: List[GivenHint], given_guesses: List[GivenGuess]
+) -> Dict[GivenHint, List[GivenGuess]]:
+    guesses_by_hints: Dict[GivenHint, List[GivenGuess]] = {}
+    for hint in given_hints:
+        guesses_by_hints[hint] = []
+    for guess in given_guesses:
+        guesses_by_hints[guess.given_hint].append(guess)
+    return guesses_by_hints
