@@ -1,2 +1,2 @@
-from .online_adapter import *  # noqa
-from .online_game_runner import *  # noqa
+from .online_adapter import *  # noqa  # pylint: disable=cyclic-import
+from .online_game_runner import *  # noqa  # pylint: disable=cyclic-import

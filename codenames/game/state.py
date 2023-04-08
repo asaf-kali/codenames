@@ -89,7 +89,7 @@ class GameState(BaseModel):
     given_guesses: List[GivenGuess] = []
 
     @root_validator(pre=True)
-    def init_score(cls, values: dict) -> dict:
+    def init_score(cls, values: dict) -> dict:  # pylint: disable=no-self-argument
         score = values.get("score")
         if score:
             return values
@@ -266,7 +266,9 @@ class GuesserGameState(BaseModel):
 
 def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
     if board is None:
-        from codenames.boards import generate_standard_board
+        from codenames.boards import (  # pylint: disable=import-outside-toplevel
+            generate_standard_board,
+        )
 
         board = generate_standard_board(language=language)
     first_team_color = _determine_first_team(board)
