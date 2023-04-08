@@ -31,24 +31,28 @@ def test_game_state_flow(board_10: Board):
     game_state = build_game_state(language="en", board=board_10)
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.HINTER
+    assert game_state.moves == []
 
     # Round 1 - blue team
     game_state.process_hint(Hint(word="Hint 1", card_amount=2))
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 2
+    assert len(game_state.moves) == 1
 
     game_state.process_guess(Guess(card_index=0))  # Blue - Correct
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 1
     assert game_state.bonus_given is False
+    assert len(game_state.moves) == 2
 
     game_state.process_guess(Guess(card_index=1))  # Blue - Correct
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 1
     assert game_state.bonus_given is True
+    assert len(game_state.moves) == 3
 
     with pytest.raises(InvalidGuess):  # Card already guessed
         game_state.process_guess(Guess(card_index=1))
@@ -57,22 +61,26 @@ def test_game_state_flow(board_10: Board):
     assert game_state.current_team_color == TeamColor.RED
     assert game_state.current_player_role == PlayerRole.HINTER
     assert game_state.left_guesses == 0
+    assert len(game_state.moves) == 4
 
     # Round 2 - red team
     game_state.process_hint(Hint(word="Hint 2", card_amount=1))
     assert game_state.current_team_color == TeamColor.RED
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 1
+    assert len(game_state.moves) == 5
 
     game_state.process_guess(Guess(card_index=4))  # Red - Correct
     assert game_state.current_team_color == TeamColor.RED
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 1
     assert game_state.bonus_given is True
+    assert len(game_state.moves) == 6
 
     game_state.process_guess(Guess(card_index=5))  # Red - Correct
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.HINTER
+    assert len(game_state.moves) == 7
 
     with pytest.raises(InvalidTurn):  # It's not the guesser's turn
         game_state.process_guess(Guess(card_index=8))
@@ -82,14 +90,18 @@ def test_game_state_flow(board_10: Board):
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.GUESSER
     assert game_state.left_guesses == 2
+    assert len(game_state.moves) == 8
 
     game_state.process_guess(Guess(card_index=PASS_GUESS))
     assert game_state.current_team_color == TeamColor.RED
     assert game_state.current_player_role == PlayerRole.HINTER
+    assert len(game_state.moves) == 9
 
     # Round 4 - red team
     game_state.process_hint(Hint(word="Hint 4", card_amount=2))
+    assert len(game_state.moves) == 10
     game_state.process_guess(Guess(card_index=9))  # Black - Game over
+    assert len(game_state.moves) == 11
     assert game_state.winner == Winner(team_color=TeamColor.BLUE, reason=WinningReason.OPPONENT_HIT_BLACK)
 
     with pytest.raises(InvalidTurn):  # Game is over
