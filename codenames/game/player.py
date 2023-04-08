@@ -5,6 +5,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Optional, Tuple
 
 from codenames.game.color import CardColor, TeamColor
+from codenames.utils.formatting import camel_case_split
 
 if TYPE_CHECKING:
     from codenames.game.board import Board
@@ -28,15 +29,25 @@ class PlayerRole(str, Enum):
 
 class Player:
     def __init__(self, name: str, team_color: Optional[TeamColor] = None):
-        self.name: str = name
+        self.name = name
         self.team_color = team_color
 
     def __str__(self):
-        team = ""
-        if self.team_color:
-            team = f" {self.team_color}"
+        team = str(self.team_color) if self.team_color else None
+        role = str(self.role)
+        class_name = self.clazz
+        if role.lower() in class_name.lower():
+            role = None
+        parts = [part for part in (team, role, class_name) if part is not None]
+        description = " ".join(parts)
+        return f"{self.name} | {description}"
+
+    @property
+    def clazz(self) -> str:
         class_name = self.__class__.__name__
-        return f"{self.name} -{team} {self.role} ({class_name})"
+        split = camel_case_split(class_name)
+        clazz = " ".join(split)
+        return clazz
 
     @property
     def role(self) -> PlayerRole:

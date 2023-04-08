@@ -24,5 +24,5 @@ def test_play_to_string():
     p1 = TestGuesser(guesses=[], name="Player 1", team_color=TeamColor.RED)
     p2 = TestHinter(hints=[], name="Player 2")
 
-    assert str(p1) == "Player 1 - Red Guesser (TestGuesser)"
-    assert str(p2) == "Player 2 - Hinter (TestHinter)"
+    assert str(p1) == "Player 1 | Red Test Guesser"
+    assert str(p2) == "Player 2 | Test Hinter"
