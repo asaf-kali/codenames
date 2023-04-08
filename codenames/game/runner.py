@@ -6,7 +6,7 @@ from codenames.game.board import Board
 from codenames.game.color import TeamColor
 from codenames.game.exceptions import InvalidGuess
 from codenames.game.move import GivenGuess, Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player, Team
+from codenames.game.player import Guesser, Hinter, Player, PlayerRole, Team
 from codenames.game.state import GameState, build_game_state
 from codenames.game.winner import Winner
 from codenames.utils.formatting import wrap
@@ -73,6 +73,12 @@ class GameRunner:
         winner = self._run_rounds()
         log.info(f"{SEPARATOR}{winner.reason.value}, {wrap(winner.team_color)} team wins!")
         return winner
+
+    def get_player(self, team_color: TeamColor, role: PlayerRole) -> Player:
+        team = self.blue_team if team_color == TeamColor.BLUE else self.red_team
+        if role == PlayerRole.HINTER:
+            return team.hinter
+        return team.guesser
 
     def _set_player_team_colors(self):
         for player in self.red_team:
