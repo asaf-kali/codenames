@@ -96,11 +96,7 @@ class GameState(BaseModel):
         board = values["board"]
         if isinstance(board, dict):
             board = Board.parse_obj(board)
-        blue_score = TeamScore(
-            total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(CardColor.BLUE))
-        )
-        red_score = TeamScore(total=len(board.red_cards), revealed=len(board.revealed_cards_for_color(CardColor.RED)))
-        score = Score(blue=blue_score, red=red_score)
+        score = build_score(board)
         values["score"] = score
         return values
 
@@ -272,11 +268,20 @@ def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
 
         board = generate_standard_board(language=language)
     first_team_color = _determine_first_team(board)
+    score = build_score(board)
     return GameState(
         language=language,
         board=board,
+        score=score,
         current_team_color=first_team_color,
     )
+
+
+def build_score(board: Board) -> Score:
+    blue_score = TeamScore(total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(CardColor.BLUE)))
+    red_score = TeamScore(total=len(board.red_cards), revealed=len(board.revealed_cards_for_color(CardColor.RED)))
+    score = Score(blue=blue_score, red=red_score)
+    return score
 
 
 def _determine_first_team(board: Board) -> TeamColor:
