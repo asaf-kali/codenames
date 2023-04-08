@@ -102,14 +102,14 @@ class NamecodingGameRunner:
                 self.host_game(host_player=player)  # type: ignore
                 self.configure_game(language=language, clock=clock)
             else:
-                self._auto_start_semaphore.acquire()
+                self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
                 log.debug("Semaphore acquired.")
                 self.add_to_game(guest_player=player, multithreaded=True)
         if not self._running_game_id:
             log.warning("Game not running after auto start.")
             return self
         for i in range(number_of_guests):
-            self._auto_start_semaphore.acquire()
+            self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
             log.debug(f"Thread {i} done.")
         log.info(f"All {number_of_guests} joined, starting.")
         self.run_game()
@@ -140,8 +140,8 @@ class NamecodingGameRunner:
             self._auto_start_semaphore.release()
             return self
         if multithreaded:
-            t = Thread(target=self.add_to_game, args=[guest_player, False], daemon=True)
-            t.start()
+            thread = Thread(target=self.add_to_game, args=[guest_player, False], daemon=True)
+            thread.start()
             return self
         guest = NamecodingPlayerAdapter(player=guest_player)
         guest.open().join_game(game_id=self._running_game_id).choose_role()

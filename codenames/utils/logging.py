@@ -1,2 +1,2 @@
-def wrap(o: object) -> str:
-    return f"[{o}]"
+def wrap(obj: object) -> str:
+    return f"[{obj}]"

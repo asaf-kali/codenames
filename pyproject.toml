@@ -23,11 +23,23 @@ exclude = ["build", "dist"]
 
 [tool.pylint]
 max-line-length = 120
+good-names = [
+    "by",
+    "e",
+    "i",
+    "n",
+    "x",
+]
 disable = [
     "C0114",
     "C0115",
     "C0116",
     "R0903",
     "W1203",
+    "fixme",
+    "too-many-arguments",
+    "too-many-public-methods",
+    "too-many-return-statements",
+    "too-many-locals",
 ]
 extension-pkg-allow-list = ["pydantic"]
