@@ -1,8 +1,53 @@
+# Poetry
+
+[tool.poetry]
+name = "codenames"
+version = "2.2.1"
+description = "Codenames board game logic implementation in python."
+authors = ["Asaf Kali <asaf.kali@mail.huji.ac.il>"]
+readme = "README.md"
+
+[tool.poetry.extras]
+web = ["selenium"]
+
+[tool.poetry.dependencies]
+# Core
+python = "^3.8"
+pydantic = "^1.9"
+# CLI
+beautifultable = "^1.0"
+# Web
+selenium = { version = "^4.1", optional = true }
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^7.2.2"
+coverage = "^7.2.3"
+# Other
+pre-commit = "^3.2.2"
+twine = "^4.0.2"
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.0.261"
+black = "^23.3.0"
+isort = "^5.12.0"
+mypy = "^1.2.0"
+pylint = "^2.17.2"
+types-requests = "^2.28.11.17"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Test
+
 [tool.pytest.ini_options]
 addopts = "-s --disable-pytest-warnings"
 
 [tool.coverage.run]
 source = ["codenames"]
+
+# Lint
 
 [tool.ruff]
 line-length = 120

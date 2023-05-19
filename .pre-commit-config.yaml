@@ -30,3 +30,8 @@ repos:
         entry: "make check-mypy"
         language: system
         pass_filenames: false
+      - id: check-poetry-lock
+        name: check poetry lock file is synced with pyproject.toml
+        entry: "make lock-check"
+        language: system
+        pass_filenames: false

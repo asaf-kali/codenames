@@ -49,10 +49,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - uses: ./.github/actions/lint-install
       - name: Install dependencies
         run: |
-          pip install pyOpenSSL==22.0.0
-          make install-dev
+          make install-dev SYNC=""
       - name: Run pylint
         run: |
           make check-pylint

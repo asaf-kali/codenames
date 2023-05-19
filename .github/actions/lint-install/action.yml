@@ -7,8 +7,8 @@ runs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-        cache: "pip"
     - name: Install dependencies
       shell: bash
       run: |
+        make install-ci
         make install-lint
