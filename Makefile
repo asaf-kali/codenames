@@ -2,26 +2,39 @@ PYTHON_TEST_COMMAND=pytest
 DEL_COMMAND=gio trash
 LINE_LENGTH=120
 .PHONY: build
+SYNC=--sync
 
 # Install
 
 upgrade-pip:
 	pip install --upgrade pip
 
-install-run: upgrade-pip
-	pip install -r requirements.txt
+install-ci: upgrade-pip
+	pip install poetry==1.4.2
+	poetry config virtualenvs.create false
+
+install-run:
+	poetry install --only main
 
 install-test:
-	pip install -r requirements-dev.txt
-	@make install-run --no-print-directory
+	poetry install --only main --only dev
 
 install-lint:
-	pip install -r requirements-lint.txt
+	poetry install --only lint
 
-install-dev: install-lint install-test
+install-dev: upgrade-pip
+	poetry install --all-extras	$(SYNC)
 	pre-commit install
 
-install: install-dev lint cover
+install: lock-check install-dev lint cover
+
+# Poetry
+
+lock:
+	poetry lock --no-update
+
+lock-check:
+	poetry lock --check
 
 # Test
 
@@ -38,7 +51,7 @@ cover:
 
 build:
 	$(DEL_COMMAND) -f dist/*
-	python -m build
+	poetry build
 
 upload-test:
 	twine upload --repository testpypi dist/*
