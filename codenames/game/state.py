@@ -56,7 +56,6 @@ class BaseGameState(BaseModel):
 
 class GameState(BaseGameState):
     left_guesses: int = 0
-    bonus_given: bool = False
     winner: Optional[Winner] = None
     raw_hints: List[Hint] = []
 
@@ -95,7 +94,6 @@ class GameState(BaseGameState):
             given_hints=self.given_hints,
             given_guesses=self.given_guesses,
             left_guesses=self.left_guesses,
-            bonus_given=self.bonus_given,
         )
 
     @property
@@ -128,7 +126,7 @@ class GameState(BaseGameState):
         )
         log.info(f"Hinter: {wrap(hint.word)} {hint.card_amount} card(s)")
         self.given_hints.append(given_hint)
-        self.left_guesses = given_hint.card_amount
+        self.left_guesses = given_hint.card_amount + 1
         self.current_player_role = PlayerRole.GUESSER
         return given_hint
 
@@ -161,13 +159,8 @@ class GameState(BaseGameState):
         self.left_guesses -= 1
         if self.left_guesses > 0:
             return given_guess
-        if self.bonus_given:
-            log.info("Bonus already given, turn is over")
-            self._end_turn()
-            return given_guess
-        log.info("Giving bonus guess!")
-        self.bonus_given = True
-        self.left_guesses += 1
+        log.info("Turn is over")
+        self._end_turn()
         return given_guess
 
     def _reveal_guessed_card(self, guess: Guess) -> Card:
@@ -182,7 +175,6 @@ class GameState(BaseGameState):
 
     def _end_turn(self, switch_role: bool = True):
         self.left_guesses = 0
-        self.bonus_given = False
         self.current_team_color = self.current_team_color.opponent
         if switch_role:
             self.current_player_role = self.current_player_role.other
@@ -218,7 +210,6 @@ class HinterGameState(BaseGameState):
 
 class GuesserGameState(BaseGameState):
     left_guesses: int
-    bonus_given: bool
 
     @cached_property
     def current_hint(self) -> GivenHint:

@@ -137,20 +137,19 @@ def test_game_runner_guesser_state():
         runner.run_game(language="english", board=board)
 
     calls = pick_guess_mock.hook.calls
-    assert len(calls) == 5
+    assert len(calls) == 5  # This game has 5 guesser turns
     game_states: Tuple[GuesserGameState, ...] = tuple(call.kwargs["game_state"] for call in calls)
     game_state_1, game_state_2, game_state_3, game_state_4, game_state_5 = game_states
 
     # game_state_1
     assert sum(1 for card in game_state_1.board if card.color is not None) == 0
     assert game_state_1.current_team_color == TeamColor.BLUE
-    assert game_state_1.left_guesses == 2
+    assert game_state_1.left_guesses == 3
     assert game_state_1.given_hints == [
         GivenHint(word="a", card_amount=2, team_color=TeamColor.BLUE),
     ]
     assert game_state_1.given_guesses == []
     assert game_state_1.current_hint == game_state_1.given_hints[0]
-    assert game_state_1.bonus_given is False
 
     # game_state_3
     assert sum(1 for card in game_state_3.board if card.color is not None) == 2
@@ -164,7 +163,6 @@ def test_game_runner_guesser_state():
         GivenGuess(given_hint=game_state_3.given_hints[0], guessed_card=board[1]),
     ]
     assert game_state_3.current_hint == game_state_3.given_hints[0]
-    assert game_state_3.bonus_given
 
     # game_state_5
     assert sum(1 for card in game_state_5.board if card.color is not None) == 4
@@ -181,7 +179,6 @@ def test_game_runner_guesser_state():
         GivenGuess(given_hint=game_state_5.given_hints[1], guessed_card=board[4]),
     ]
     assert game_state_5.current_hint == game_state_5.given_hints[1]
-    assert game_state_5.bonus_given
 
 
 def test_get_player():
