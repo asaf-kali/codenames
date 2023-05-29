@@ -17,7 +17,7 @@ install-run:
 	poetry install --only main
 
 install-test:
-	poetry install --only main --only dev
+	poetry install --only main --only test
 
 install-lint:
 	poetry install --only lint
