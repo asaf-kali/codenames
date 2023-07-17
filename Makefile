@@ -1,8 +1,13 @@
 PYTHON_TEST_COMMAND=pytest
-DEL_COMMAND=gio trash
-LINE_LENGTH=120
-.PHONY: build
+ifeq ($(OS),Windows_NT)
+	OPEN_FILE_COMMAND=start
+	DEL_COMMAND=del
+else
+	OPEN_FILE_COMMAND=xdg-open
+	DEL_COMMAND=gio trash
+endif
 SYNC=--sync
+.PHONY: build
 
 # Install
 
@@ -44,7 +49,7 @@ test:
 cover:
 	coverage run -m $(PYTHON_TEST_COMMAND)
 	coverage html
-	xdg-open htmlcov/index.html &
+	$(OPEN_FILE_COMMAND) htmlcov/index.html &
 	$(DEL_COMMAND) .coverage*
 
 # Packaging
