@@ -9,24 +9,28 @@ from selenium.webdriver.remote.webelement import WebElement
 
 log = logging.getLogger(__name__)
 T = TypeVar("T")
+CLEAR = "\b\b\b\b\b"
 
 
 class PollingTimeout(Exception):
     pass
 
 
-# def poll_not_none(fn: Callable[[], T], timeout_seconds: float = 5, interval_sleep_seconds: float = 0.2) -> T:
-#     start = time.time()
-#     while True:
-#         result = fn()
-#         if result is not None:
-#             return result
-#         log.debug("Result was none, sleeping...")
-#         now = time.time()
-#         passed = now - start
-#         if passed >= timeout_seconds:
-#             raise PollingTimeout()
-#         sleep(interval_sleep_seconds)
+def fill_input(element: WebElement, value: str):
+    element.send_keys(CLEAR)
+    element.send_keys(CLEAR)
+    sleep(0.1)
+    element.send_keys(value)
+    sleep(0.1)
+
+
+def multi_click(element: WebElement, times: int = 3):
+    for _ in range(times):
+        try:
+            element.click()
+            sleep(0.05)
+        except Exception:
+            log.debug("Failed to click, trying again...")
 
 
 def poll_element(element_getter: Callable[[], T], timeout_sec: float = 10, poll_interval_sec: float = 0.2) -> T:
@@ -34,7 +38,8 @@ def poll_element(element_getter: Callable[[], T], timeout_sec: float = 10, poll_
         try:
             return element_getter()
         except Exception as e:
-            log.debug(f"Element getter raised an error: {e}")
+            error_line = str(e).replace("\n", " ")
+            log.debug(f"Element getter raised an error: {error_line}")
             return None
 
     start = time.time()

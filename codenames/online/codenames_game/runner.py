@@ -38,6 +38,7 @@ class CodenamesGameRunner:
         blue_guesser: Optional[Guesser] = None,
         red_guesser: Optional[Guesser] = None,
         show_host: bool = True,
+        language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH,
     ):
         self.host: Optional[CodenamesGamePlayerAdapter] = None
         self.guests: List[CodenamesGamePlayerAdapter] = []
@@ -52,9 +53,9 @@ class CodenamesGameRunner:
             red_guesser=red_guesser,  # type: ignore
         )
         self._show_host = show_host
+        self._language = language
         self._running_game_url: Optional[str] = None
         self._auto_start_semaphore = Semaphore()
-        self._language: CodenamesGameLanguage = CodenamesGameLanguage.HEBREW
         self.game_runner.hint_given_subscribers.append(self._handle_hint_given)
         self.game_runner.guess_given_subscribers.append(self._handle_guess_given)
 
@@ -99,7 +100,7 @@ class CodenamesGameRunner:
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
                 log.debug("Semaphore acquired.")
-                self.add_to_game(guest_player=player, multithreaded=False)
+                self.add_to_game(guest_player=player, multithreaded=True)
         if not self._running_game_url:
             log.warning("Game not running after auto start.")
             return self
@@ -149,16 +150,6 @@ class CodenamesGameRunner:
         log.debug("Semaphore release")
         return self
 
-    def configure_game(
-        self, language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH, clock: bool = True
-    ) -> CodenamesGameRunner:
-        if not self.host:
-            raise IllegalOperation("Can't configure game before hosting initiated. Call host_game() first.")
-        self._language = language
-        self.host.set_language(language=language)
-        self.host.set_clock(clock=clock)
-        return self
-
     def run_game(self):
         self._start_game()
         board = self.host.parse_board()
@@ -173,7 +164,7 @@ class CodenamesGameRunner:
             raise IllegalOperation("Can't start game before hosting initiated. Call host_game() first.")
         for agent in self.agents:
             agent.set_host_adapter(adapter=self.host)
-        self.host.click_start_game()
+        self.host.start_game()
         return self
 
     def _handle_hint_given(self, hinter: Hinter, hint: Hint):

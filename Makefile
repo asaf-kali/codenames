@@ -91,3 +91,8 @@ check-pylint:
 lint: format
 	pre-commit run --all-files
 	@make check-pylint --no-print-directory
+
+wip:
+	git add .
+	git commit -m "Auto commit." --no-verify
+	git push
