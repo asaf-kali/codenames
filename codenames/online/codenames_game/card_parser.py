@@ -44,6 +44,6 @@ def _parse_card_color(card_element: WebElement) -> CardColor:
     raise ValueError(f"Could not parse card color from element classes: {element_classes}")
 
 
-def _is_card_revealed(card_container: WebElement) -> bool:
+def _is_card_revealed(card_container: WebElement) -> bool:  # pylint: disable=unused-argument
     # TODO: Implement this
     return False

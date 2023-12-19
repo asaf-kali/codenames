@@ -23,11 +23,11 @@ class HinterAgent(Agent, Hinter):
     def pick_hint(self, game_state: HinterGameState) -> Hint:
         if not self.adapter:
             raise RuntimeError("HinterAgent.adapter is not set")
-        return self.adapter.poll_hint_given()
+        return self.adapter.poll_hint_given()  # type: ignore
 
 
 class GuesserAgent(Agent, Guesser):
     def guess(self, game_state: GuesserGameState) -> Guess:
         if not self.adapter:
             raise RuntimeError("GuesserAgent.adapter is not set")
-        return self.adapter.poll_guess_given(game_state=game_state)
+        return self.adapter.poll_guess_given(game_state=game_state)  # type: ignore
