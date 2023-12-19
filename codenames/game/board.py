@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterable, List, Tuple, Union
+from typing import TYPE_CHECKING, Iterable, Iterator, List, Tuple, Union
 
 from pydantic import validator
 
@@ -33,7 +33,7 @@ class Board(BaseModel):
             raise IndexError(f"Card index out of bounds: {item}")
         return self.cards[item]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Card]:  # type: ignore
         return iter(self.cards)
 
     def __len__(self) -> int:
