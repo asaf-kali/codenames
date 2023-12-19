@@ -42,7 +42,7 @@ class CodenamesGamePlayerAdapter:
         self,
         player: Player,
         implicitly_wait: int = 1,
-        headless: bool = False,
+        headless: bool = True,
         chromedriver_path: Optional[str] = None,
         game_url: Optional[str] = None,
     ):
@@ -127,32 +127,29 @@ class CodenamesGamePlayerAdapter:
     def parse_board(self) -> Board:
         log.debug("Parsing board...")
         card_containers = poll_element(self.get_card_containers)
-        cards = [_parse_card(card_element) for card_element in card_containers]
+        parse_results = [_parse_card(card) for card in card_containers]
+        parse_results.sort(key=lambda result: result.index)
+        cards = [result.card for result in parse_results]
         log.debug("Parse board done")
         return Board(cards=cards)
 
     def transmit_hint(self, hint: Hint) -> "CodenamesGamePlayerAdapter":
         log.debug(f"Sending hint: {hint}")
-        self.driver.save_screenshot("1.png")
         # Clue value
         clue_input = poll_element(self.get_clue_input)
         fill_input(clue_input, hint.word)
         # Number
         number_selector = poll_element(self.get_number_wrapper)
         sleep(0.1)
-        self.driver.save_screenshot("2.png")
         number_selector.click()
         sleep(0.3)
-        self.driver.save_screenshot("3.png")
         number_to_select = poll_element(lambda: self.get_number_option(number_selector, hint.card_amount))
         number_to_select.click()
         sleep(0.1)
-        self.driver.save_screenshot("4.png")
         # Submit
         submit_button = poll_element(self.get_give_clue_button)
         submit_button.click()
         sleep(0.1)
-        self.driver.save_screenshot("5.png")
         return self
 
     def transmit_guess(self, guess: Guess) -> "CodenamesGamePlayerAdapter":
@@ -162,7 +159,6 @@ class CodenamesGamePlayerAdapter:
             multi_click(end_guessing_button)
         else:
             picker = poll_element(lambda: self.get_card_picker(guess.card_index))
-            picker.screenshot("picker.png")
             multi_click(picker)
         sleep(0.5)
         return self
@@ -198,11 +194,11 @@ class CodenamesGamePlayerAdapter:
         return self.driver.find_element(by=By.ID, value="clip-input")
 
     def get_card_containers(self) -> List[WebElement]:
-        card_containers = self.driver.find_elements(by=By.CLASS_NAME, value="card")
-        card_containers = [c for c in card_containers if c.text != ""]
-        if len(card_containers) < 25:
-            raise ValueError(f"Expected 25 cards, loaded {len(card_containers)}")
-        return card_containers
+        card_elements = self.driver.find_elements(by=By.CLASS_NAME, value="card")
+        card_elements = [element for element in card_elements if element.text != ""]
+        if len(card_elements) < 25:
+            raise ValueError(f"Expected 25 cards, loaded {len(card_elements)}")
+        return self.driver.find_elements(By.XPATH, value="//div[@role='img']")
 
     def get_clue_input(self) -> WebElement:
         return self.driver.find_element(By.CSS_SELECTOR, value="input[name='clue']")
@@ -218,7 +214,7 @@ class CodenamesGamePlayerAdapter:
         return self.driver.find_element(by=By.XPATH, value="//button[contains(text(),'Give Clue')]")
 
     def get_card_picker(self, card_index: int) -> WebElement:
-        picker_xpath = f"//button[@tabindex='{card_index + 1}']"
+        picker_xpath = f"//button[@tabindex='{card_index}']"
         return self.driver.find_element(By.XPATH, value=picker_xpath)
 
     def get_end_guessing_button(self) -> WebElement:
@@ -275,3 +271,7 @@ class CodenamesGamePlayerAdapter:
             self.driver.close()
         except:  # noqa  # pylint: disable=bare-except
             pass
+
+
+def get_card_container_index(card_container: WebElement) -> int:
+    return
