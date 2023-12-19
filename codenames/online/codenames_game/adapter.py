@@ -1,8 +1,9 @@
 import logging
+import os
 from dataclasses import dataclass
 from enum import Enum
-from time import sleep
-from typing import List, Optional
+from time import sleep, time
+from typing import Callable, List, Optional, TypeVar
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -18,6 +19,7 @@ from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
 
+T = TypeVar("T")
 WEBAPP_URL = "https://codenames.game/"
 
 
@@ -76,10 +78,10 @@ class CodenamesGamePlayerAdapter:
         return self
 
     def host_game(self, game_configs: Optional[GameConfigs] = None) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is creating a room...")
+        log.info(f"{self.log_prefix} creating a room...")
         if game_configs is None:
             game_configs = GameConfigs()
-        create_room_button = poll_element(self.get_create_room_button)
+        create_room_button = self.poll_element(self.get_create_room_button)
         multi_click(create_room_button)
         sleep(2)
         self.configure_language(language=game_configs.language)
@@ -92,9 +94,9 @@ class CodenamesGamePlayerAdapter:
         pass
 
     def login(self):
-        log.info(f"{self.log_prefix} is logging in...")
+        log.info(f"{self.log_prefix} logging in...")
         # Enter nickname
-        nickname_input = poll_element(self.get_nickname_input)
+        nickname_input = self.poll_element(self.get_nickname_input)
         fill_input(nickname_input, value=self.player.name)
         # Submit
         submit_button = self.get_login_submit_button()
@@ -102,29 +104,34 @@ class CodenamesGamePlayerAdapter:
         return self
 
     def choose_role(self) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is picking role...")
+        log.info(f"{self.log_prefix} picking role...")
         join_button = self.get_join_button()
+        # suffix = f"{self.player.name.lower()}-{time()}"
+        # self.screenshot(f"before-join-{suffix}")
+        sleep(0.3)
         multi_click(join_button)
+        sleep(0.2)
+        # self.screenshot(f"after-join-{suffix}")
         return self
 
     def get_game_url(self) -> str:
         if self.game_url:
             return self.game_url
-        players_button = poll_element(self.get_players_button)
+        players_button = self.poll_element(self.get_players_button)
         players_button.click()
-        clip_input = poll_element(self.get_clip_input)
+        clip_input = self.poll_element(self.get_clip_input)
         self.game_url = clip_input.get_attribute("value")
         players_button.click()
         return self.game_url  # type: ignore
 
     def start_game(self):
-        start_game_button = poll_element(self.get_start_game_button)
+        start_game_button = self.poll_element(self.get_start_game_button)
         multi_click(start_game_button)
         return self
 
     def parse_board(self) -> Board:
         log.debug("Parsing board...")
-        card_containers = poll_element(self.get_card_containers)
+        card_containers = self.poll_element(self.get_card_containers)
         parse_results = [_parse_card(card) for card in card_containers]
         parse_results.sort(key=lambda result: result.index)
         cards = [result.card for result in parse_results]
@@ -134,18 +141,18 @@ class CodenamesGamePlayerAdapter:
     def transmit_hint(self, hint: Hint) -> "CodenamesGamePlayerAdapter":
         log.debug(f"Sending hint: {hint}")
         # Clue value
-        clue_input = poll_element(self.get_clue_input)
+        clue_input = self.poll_element(self.get_clue_input)
         fill_input(clue_input, hint.word)
         sleep(0.5)
         # Number
-        number_selector = poll_element(self.get_number_wrapper)
+        number_selector = self.poll_element(self.get_number_wrapper)
         number_selector.click()
         sleep(1)
-        number_to_select = poll_element(lambda: self.get_number_option(number_selector, hint.card_amount))
+        number_to_select = self.poll_element(lambda: self.get_number_option(number_selector, hint.card_amount))
         number_to_select.click()
         sleep(0.5)
         # Submit
-        submit_button = poll_element(self.get_give_clue_button)
+        submit_button = self.poll_element(self.get_give_clue_button)
         submit_button.click()
         sleep(3)
         return self
@@ -153,13 +160,19 @@ class CodenamesGamePlayerAdapter:
     def transmit_guess(self, guess: Guess) -> "CodenamesGamePlayerAdapter":
         log.debug(f"Sending guess: {guess}")
         if guess.card_index == PASS_GUESS:
-            end_guessing_button = poll_element(self.get_end_guessing_button)
-            multi_click(end_guessing_button)
+            end_guessing_button = self.poll_element(self.get_end_guessing_button)
+            multi_click(end_guessing_button, times=10)
         else:
-            picker = poll_element(lambda: self.get_card_picker(guess.card_index))
-            multi_click(picker)
-        sleep(3)
+            picker = self.poll_element(lambda: self.get_card_picker(guess.card_index))
+            multi_click(picker, times=10)
+        sleep(2)
         return self
+
+    def close(self):
+        try:
+            self.driver.close()
+        except:  # noqa  # pylint: disable=bare-except
+            pass
 
     # Elements #
 
@@ -180,7 +193,7 @@ class CodenamesGamePlayerAdapter:
         return self.driver.find_element(by=By.ID, value=team_window_id)
 
     def get_join_button(self) -> WebElement:
-        team_window = poll_element(self.get_team_window)
+        team_window = self.poll_element(self.get_team_window)
         role_name = "Spymaster" if self.player.role == PlayerRole.HINTER else "Operative"
         join_button_text = f"Join as {role_name}"
         return team_window.find_element(by=By.XPATH, value=f".//*[contains(text(),'{join_button_text}')]")
@@ -219,7 +232,27 @@ class CodenamesGamePlayerAdapter:
         end_guessing_xpath = "//button[contains(text(),'End Guessing')]"
         return self.driver.find_element(by=By.XPATH, value=end_guessing_xpath)
 
-    # Polling #
+    # Other #
+
+    def poll_element(
+        self,
+        element_getter: Callable[[], T],
+        timeout_sec: float = 15,
+        poll_interval_sec: float = 0.5,
+    ) -> T:
+        log.debug(f"Polling [{element_getter.__name__}]...")
+        try:
+            return poll_element(element_getter, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
+        except Exception as e:
+            file_name = self.screenshot(f"failed-polling-{time()}")
+            log.info(f"Failed polling, screenshot saved to {file_name}")
+            raise e
+
+    def screenshot(self, file_name: str):
+        os.makedirs("./debug", exist_ok=True)
+        path = os.path.abspath(f"./debug/{file_name}.png")
+        self.driver.save_screenshot(path)
+        return path
 
     # def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> Optional[int]:
     #     log.debug("Looking for visibility change...")
@@ -263,9 +296,3 @@ class CodenamesGamePlayerAdapter:
     #     if not clue_area:
     #         clue_area = self.get_clue_area()
     #     return clue_area.find_elements(by=By.ID, value="clue-text") != []
-
-    def close(self):
-        try:
-            self.driver.close()
-        except:  # noqa  # pylint: disable=bare-except
-            pass
