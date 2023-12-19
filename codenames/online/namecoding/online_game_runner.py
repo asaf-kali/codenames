@@ -11,12 +11,12 @@ from codenames.game.move import Guess, Hint
 from codenames.game.player import Guesser, Hinter, Player, PlayerRole
 from codenames.game.runner import GameRunner
 from codenames.game.winner import Winner
-from codenames.online.online_adapter import (
+from codenames.online.namecoding.online_adapter import (
     IllegalOperation,
     NamecodingLanguage,
     NamecodingPlayerAdapter,
 )
-from codenames.online.online_players import Agent, GuesserAgent, HinterAgent
+from codenames.online.namecoding.online_players import Agent, GuesserAgent, HinterAgent
 
 log = logging.getLogger(__name__)
 
