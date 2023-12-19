@@ -4,7 +4,8 @@ from time import sleep
 from typing import Iterable, Optional
 
 from selenium import webdriver
-from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException
+from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -13,7 +14,7 @@ from codenames.game.color import CardColor
 from codenames.game.move import PASS_GUESS, Guess, Hint
 from codenames.game.player import Player, PlayerRole
 from codenames.game.state import GuesserGameState
-from codenames.online.utils import ShadowRootElement, poll_condition
+from codenames.online.utils import ShadowRootElement, poll_condition, poll_element
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
@@ -63,7 +64,12 @@ def get_shadow_root(parent, tag_name: str) -> ShadowRootElement:
 
 class CodenamesGamePlayerAdapter:
     def __init__(
-        self, player: Player, implicitly_wait: int = 1, headless: bool = True, chromedriver_path: Optional[str] = None
+        self,
+        player: Player,
+        implicitly_wait: int = 1,
+        headless: bool = False,
+        chromedriver_path: Optional[str] = None,
+        game_url: Optional[str] = None,
     ):
         options = webdriver.ChromeOptions()
         if player.is_human:
@@ -73,9 +79,11 @@ class CodenamesGamePlayerAdapter:
         if not chromedriver_path:
             log.warning("Chromedriver path not given, searching in root directory...")
             chromedriver_path = "./chromedriver"  # TODO: Make default path a config
-        self.driver = webdriver.Chrome(chromedriver_path, options=options)
+        service = Service(executable_path=chromedriver_path)
+        self.driver = webdriver.Chrome(service=service, options=options)
         self.driver.implicitly_wait(implicitly_wait)
         self.player = player
+        self.game_url = game_url
 
     # Utils #
 
@@ -86,131 +94,88 @@ class CodenamesGamePlayerAdapter:
     def __str__(self) -> str:
         return f"{self.player} adapter"
 
-    # Pages #
-
-    @property
-    def codenames_app(self) -> ShadowRootElement:
-        return get_shadow_root(self.driver, tag_name="codenames-app")
-
-    def get_page(self, page_name: str) -> ShadowRootElement:
-        return get_shadow_root(self.codenames_app, tag_name=page_name)
-
-    def get_login_page(self) -> ShadowRootElement:
-        return self.get_page("login-page")
-
-    def get_menu_page(self) -> ShadowRootElement:
-        return self.get_page("menu-page")
-
-    def get_lobby_page(self) -> ShadowRootElement:
-        return self.get_page("lobby-page")
-
-    def get_game_page(self) -> ShadowRootElement:
-        return self.get_page("codenames-game")
-
-    def get_clue_area(self) -> ShadowRootElement:
-        return get_shadow_root(self.get_game_page(), tag_name="clue-area")
-
     # Methods #
 
     def open(self) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is logging in...")
-        self.driver.get(WEBAPP_URL)
-        login_page = self.get_login_page()
-        username_textbox = login_page.find_element(by=By.ID, value="username-input")
-        login_button = login_page.find_element(by=By.ID, value="login-button")
-        fill_input(username_textbox, self.player.name)
-        login_button.click()
+        log.info(f"{self.log_prefix} window open...")
+        game_url = self.game_url or WEBAPP_URL
+        self.driver.get(game_url)
         return self
 
-    def host_game(self) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is hosting...")
-        menu_page = self.get_menu_page()
-        host_button = menu_page.find_element(by=By.ID, value="host-button")
-        host_button.click()
+    def host_game(
+        self,
+        language: CodenamesGameLanguage,
+    ) -> "CodenamesGamePlayerAdapter":
+        log.info(f"{self.log_prefix} is creating a room...")
+        create_room_button = poll_element(self.get_create_room_button)
+        create_room_button.click()
+        self.configure_language()
+        self.login()
+        log.info("New game created")
         return self
 
-    def join_game(self, game_id: str) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is joining game {wrap(game_id)}...")
-        menu_page = self.get_menu_page()
-        game_id_input = menu_page.find_element(by=By.ID, value="game-id-input")
-        join_game_button = menu_page.find_element(by=By.ID, value="join-game-button")
-        fill_input(game_id_input, game_id)
-        join_game_button.click()
-        return self
+    def configure_language(self):
+        # TODO: Implement
+        pass
 
-    def get_game_id(self) -> str:
-        lobby_page = self.get_lobby_page()
-        game_id_container = lobby_page.find_element(by=By.ID, value="game-code")
-        game_id = game_id_container.text.strip()
-        return game_id
+    def login(self):
+        # Enter nickname
+        nickname_input = poll_element(self.get_nickname_input)
+        # nickname_input.click()
+        fill_input(nickname_input, value=self.player.name)
+        # Submit
+        submit_button = self.get_login_submit_button()
+        submit_button.click()
+        return self
 
     def choose_role(self) -> "CodenamesGamePlayerAdapter":
         log.info(f"{self.log_prefix} is picking role...")
-        lobby_page = self.get_lobby_page()
-        team_element_id = f"{self.player.team_color.value.lower()}-team"  # type: ignore
-        role_button_class_name = "guessers" if self.player.role == PlayerRole.GUESSER else "hinters"
-        team_element = lobby_page.find_element(by=By.ID, value=team_element_id)
-        role_button = team_element.find_element(by=By.CLASS_NAME, value=role_button_class_name)
-        role_button.click()
+        join_button = self.get_join_button()
+        join_button.click()
+        log.info(f"{self.log_prefix} picked role")
         return self
 
-    def set_language(self, language: CodenamesGameLanguage) -> "CodenamesGamePlayerAdapter":
-        lobby_page = self.get_lobby_page()
-        options_section = lobby_page.find_element(by=By.ID, value="options-section")
-        language_options = get_shadow_root(options_section, tag_name="x-options")
-        button_index = 0 if language == CodenamesGameLanguage.HEBREW else 1
-        buttons = language_options.find_elements(by=By.TAG_NAME, value="x-button")
-        buttons[button_index].click()
-        sleep(0.1)
-        return self
+    def get_game_url(self) -> str:
+        if self.game_url:
+            return self.game_url
+        players_button = poll_element(self.get_players_button)
+        players_button.click()
+        clip_input = poll_element(self.get_clip_input)
+        self.game_url = clip_input.get_attribute("value")
+        players_button.click()
+        return self.game_url
 
-    def set_clock(self, clock: bool) -> "CodenamesGamePlayerAdapter":
-        lobby_page = self.get_lobby_page()
-        options_section = lobby_page.find_element(by=By.ID, value="options-section")
-        checkbox = options_section.find_element(by=By.TAG_NAME, value="x-checkbox")
-        is_checked_now = checkbox.get_attribute("value") is not None
-        if is_checked_now != clock:
-            checkbox.click()
-            sleep(0.1)
-        return self
+    # Elements #
 
-    def ready(self, ready: bool = True) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is ready!")
-        lobby_page = self.get_lobby_page()
-        switch = lobby_page.find_element(by=By.ID, value="ready-switch")
-        is_checked_now = switch.get_attribute("value") is not None
-        if is_checked_now != ready:
-            switch.click()
-            sleep(0.1)
-        return self
+    def get_create_room_button(self) -> WebElement:
+        return self.driver.find_element(by=By.CLASS_NAME, value="create-button")
 
-    def click_start_game(self) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} is starting the game!")
-        try:
-            lobby_page = self.get_lobby_page()
-        except NoSuchElementException:
-            log.warning("Lobby page is not found, assuming start was already clicked.")
-            return self
-        start_game_button = lobby_page.find_element(by=By.ID, value="start-game-button")
-        poll_condition(
-            lambda: start_game_button.get_attribute("disabled") is None, timeout_sec=300, poll_interval_sec=0.5
-        )
-        start_game_button.click()
-        return self
+    def get_start_new_game_button(self) -> WebElement:
+        return self.driver.find_element(By.XPATH, value="//*[contains(text(),'Play with')]")
 
-    # def is_my_turn(self) -> bool:
-    #     clue_area = self.get_clue_area()
-    #     if (
-    #         self.player.role == PlayerRole.HINTER
-    #         and clue_area.find_elements(by=By.ID, value="submit-clue-button") != []
-    #     ):
-    #         return True
-    #     if (
-    #         self.player.role == PlayerRole.GUESSER
-    #         and clue_area.find_elements(by=By.ID, value="finish-turn-button") != []
-    #     ):
-    #         return True
-    #     return False
+    def get_login_submit_button(self) -> WebElement:
+        return self.driver.find_element(by=By.CSS_SELECTOR, value="button[type='submit']")
+
+    def get_nickname_input(self) -> WebElement:
+        return self.driver.find_element(by=By.ID, value="nickname-input")
+
+    def get_team_window(self) -> WebElement:
+        team_window_id = f"teamBoard-{self.player.team_color.value.lower()}"  # type: ignore
+        return self.driver.find_element(by=By.ID, value=team_window_id)
+
+    def get_join_button(self) -> WebElement:
+        team_window = poll_element(self.get_team_window)
+        role_name = "Spymaster" if self.player.role == PlayerRole.HINTER else "Operative"
+        join_button_text = f"Join as {role_name}"
+        return team_window.find_element(by=By.XPATH, value=f"//*[contains(text(),'{join_button_text}')]")
+
+    def get_players_button(self) -> WebElement:
+        return self.driver.find_element(by=By.XPATH, value="//*[contains(text(),'Players')]")
+
+    def get_clip_input(self) -> WebElement:
+        return self.driver.find_element(by=By.ID, value="clip-input")
+
+    # Polling #
 
     def parse_board(self) -> Board:
         log.debug("Parsing board...")
