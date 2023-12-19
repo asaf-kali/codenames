@@ -1,7 +1,7 @@
 import logging
 import time
 from time import sleep
-from typing import Callable, List, Tuple, TypeVar
+from typing import Callable, List, Optional, Tuple, TypeVar
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.shadowroot import ShadowRoot
@@ -29,15 +29,28 @@ class PollingTimeout(Exception):
 #         sleep(interval_sleep_seconds)
 
 
-def poll_condition(test: Callable[[], bool], timeout_sec: float = 5, poll_interval_sec: float = 0.2):
+def poll_element(element_getter: Callable[[], T], timeout_sec: float = 10, poll_interval_sec: float = 0.2) -> T:
+    def safe_getter() -> Optional[T]:
+        try:
+            return element_getter()
+        except Exception as e:
+            log.debug(f"Element getter raised an error: {e}")
+            return None
+
     start = time.time()
-    while not test():
-        log.debug("Test not passed, sleeping...")
+    while not (element := safe_getter()):
+        log.debug("Element not found, sleeping...")
         now = time.time()
         passed = now - start
         if passed >= timeout_sec:
             raise PollingTimeout()
         sleep(poll_interval_sec)
+    log.debug("Element found")
+    return element
+
+
+def poll_condition(test: Callable[[], bool], timeout_sec: float = 5, poll_interval_sec: float = 0.2):
+    poll_element(test, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
 
 
 def _by_to_using(by: str, value: str) -> Tuple[str, str]:
