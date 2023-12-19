@@ -114,7 +114,7 @@ class CodenamesGamePlayerAdapter:
         clip_input = poll_element(self.get_clip_input)
         self.game_url = clip_input.get_attribute("value")
         players_button.click()
-        return self.game_url
+        return self.game_url  # type: ignore
 
     def start_game(self):
         start_game_button = poll_element(self.get_start_game_button)
