@@ -70,8 +70,8 @@ class CodenamesGamePlayerAdapter:
     # Methods #
 
     def open(self) -> "CodenamesGamePlayerAdapter":
-        log.info(f"{self.log_prefix} window open...")
         game_url = self.game_url or WEBAPP_URL
+        log.info(f"{self.log_prefix} opening {game_url}")
         self.driver.get(game_url)
         return self
 
@@ -81,6 +81,7 @@ class CodenamesGamePlayerAdapter:
             game_configs = GameConfigs()
         create_room_button = poll_element(self.get_create_room_button)
         multi_click(create_room_button)
+        sleep(2)
         self.configure_language(language=game_configs.language)
         self.login()
         log.info("New game created")
@@ -91,6 +92,7 @@ class CodenamesGamePlayerAdapter:
         pass
 
     def login(self):
+        log.info(f"{self.log_prefix} is logging in...")
         # Enter nickname
         nickname_input = poll_element(self.get_nickname_input)
         fill_input(nickname_input, value=self.player.name)
@@ -103,7 +105,6 @@ class CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} is picking role...")
         join_button = self.get_join_button()
         multi_click(join_button)
-        log.info(f"{self.log_prefix} picked role")
         return self
 
     def get_game_url(self) -> str:
@@ -127,7 +128,7 @@ class CodenamesGamePlayerAdapter:
         parse_results = [_parse_card(card) for card in card_containers]
         parse_results.sort(key=lambda result: result.index)
         cards = [result.card for result in parse_results]
-        log.debug("Parse board done")
+        log.debug("Board parsed.")
         return Board(cards=cards)
 
     def transmit_hint(self, hint: Hint) -> "CodenamesGamePlayerAdapter":
@@ -135,18 +136,18 @@ class CodenamesGamePlayerAdapter:
         # Clue value
         clue_input = poll_element(self.get_clue_input)
         fill_input(clue_input, hint.word)
+        sleep(0.5)
         # Number
         number_selector = poll_element(self.get_number_wrapper)
-        sleep(0.1)
         number_selector.click()
-        sleep(0.3)
+        sleep(1)
         number_to_select = poll_element(lambda: self.get_number_option(number_selector, hint.card_amount))
         number_to_select.click()
-        sleep(0.1)
+        sleep(0.5)
         # Submit
         submit_button = poll_element(self.get_give_clue_button)
         submit_button.click()
-        sleep(0.1)
+        sleep(3)
         return self
 
     def transmit_guess(self, guess: Guess) -> "CodenamesGamePlayerAdapter":
@@ -157,7 +158,7 @@ class CodenamesGamePlayerAdapter:
         else:
             picker = poll_element(lambda: self.get_card_picker(guess.card_index))
             multi_click(picker)
-        sleep(2)
+        sleep(3)
         return self
 
     # Elements #
