@@ -16,7 +16,7 @@ from codenames.online.codenames_game.adapter import (
     CodenamesGamePlayerAdapter,
     IllegalOperation,
 )
-from codenames.online.codenames_game.players import Agent, GuesserAgent, HinterAgent
+from codenames.online.codenames_game.agent import Agent, GuesserAgent, HinterAgent
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def player_or_agent(player: T, role: PlayerRole) -> T:
     return player_class("Agent")
 
 
-class CodenamesGameGameRunner:
+class CodenamesGameRunner:
     def __init__(
         self,
         blue_hinter: Optional[Hinter] = None,
@@ -52,7 +52,7 @@ class CodenamesGameGameRunner:
             red_guesser=red_guesser,  # type: ignore
         )
         self._show_host = show_host
-        self._running_game_id: Optional[str] = None
+        self._running_game_url: Optional[str] = None
         self._auto_start_semaphore = Semaphore()
         self._language: CodenamesGameLanguage = CodenamesGameLanguage.HEBREW
         self.game_runner.hint_given_subscribers.append(self._handle_hint_given)
@@ -90,18 +90,17 @@ class CodenamesGameGameRunner:
 
     def auto_start(
         self, language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH, clock: bool = True
-    ) -> "CodenamesGameGameRunner":
+    ) -> "CodenamesGameRunner":
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
             if not self.host:
-                self.host_game(host_player=player)  # type: ignore
-                self.configure_game(language=language, clock=clock)
+                self.host_game(host_player=player, language=language)  # type: ignore
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
                 log.debug("Semaphore acquired.")
-                self.add_to_game(guest_player=player, multithreaded=True)
-        if not self._running_game_id:
+                self.add_to_game(guest_player=player, multithreaded=False)
+        if not self._running_game_url:
             log.warning("Game not running after auto start.")
             return self
         for i in range(number_of_guests):
@@ -111,7 +110,11 @@ class CodenamesGameGameRunner:
         self.run_game()
         return self
 
-    def host_game(self, host_player: Optional[Hinter] = None) -> "CodenamesGameGameRunner":
+    def host_game(
+        self,
+        host_player: Optional[Hinter] = None,
+        language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH,
+    ) -> "CodenamesGameRunner":
         if self.host:
             raise IllegalOperation("A game is already running.")
         if host_player is None:
@@ -119,14 +122,14 @@ class CodenamesGameGameRunner:
         if not isinstance(host_player, Hinter):
             raise IllegalOperation("Host player must be a Hinter.")
         host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
-        host.open().host_game().choose_role().ready()
-        self._running_game_id = host.get_game_id()
-        print(f"Running game id: {self._running_game_id}")
+        host.open().host_game(language=language)
+        self._running_game_url = host.get_game_url()
         self.host = host
+        host.choose_role()
         return self
 
-    def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> CodenamesGameGameRunner:
-        if not self._running_game_id:
+    def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> CodenamesGameRunner:
+        if not self._running_game_url:
             raise IllegalOperation("Can't join game before hosting initiated. Call host_game() first.")
         if self.has_joined_game(guest_player):
             log.warning(f"Player {guest_player} already joined.")
@@ -139,17 +142,16 @@ class CodenamesGameGameRunner:
             thread = Thread(target=self.add_to_game, args=[guest_player, False], daemon=True)
             thread.start()
             return self
-        guest = CodenamesGamePlayerAdapter(player=guest_player)
-        guest.open().join_game(game_id=self._running_game_id).choose_role()
+        guest = CodenamesGamePlayerAdapter(player=guest_player, game_url=self._running_game_url)
+        guest.open().login().choose_role()
         self.guests.append(guest)
-        guest.ready()
         self._auto_start_semaphore.release()
         log.debug("Semaphore release")
         return self
 
     def configure_game(
         self, language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH, clock: bool = True
-    ) -> CodenamesGameGameRunner:
+    ) -> CodenamesGameRunner:
         if not self.host:
             raise IllegalOperation("Can't configure game before hosting initiated. Call host_game() first.")
         self._language = language
@@ -166,11 +168,9 @@ class CodenamesGameGameRunner:
             log.exception("Online adapter failed")
             self.close()
 
-    def _start_game(self) -> CodenamesGameGameRunner:
+    def _start_game(self) -> CodenamesGameRunner:
         if not self.host:
             raise IllegalOperation("Can't start game before hosting initiated. Call host_game() first.")
-        for adapter in self.adapters:
-            adapter.ready()
         for agent in self.agents:
             agent.set_host_adapter(adapter=self.host)
         self.host.click_start_game()
