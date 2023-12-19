@@ -33,7 +33,7 @@ def multi_click(element: WebElement, times: int = 3):
             log.debug("Failed to click, trying again...")
 
 
-def poll_element(element_getter: Callable[[], T], timeout_sec: float = 10, poll_interval_sec: float = 0.2) -> T:
+def poll_element(element_getter: Callable[[], T], timeout_sec: float = 15, poll_interval_sec: float = 0.5) -> T:
     def safe_getter() -> Optional[T]:
         try:
             return element_getter()
