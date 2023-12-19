@@ -5,6 +5,7 @@ from typing import Iterable, Optional
 
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -73,7 +74,8 @@ class NamecodingPlayerAdapter:
         if not chromedriver_path:
             log.warning("Chromedriver path not given, searching in root directory...")
             chromedriver_path = "./chromedriver"  # TODO: Make default path a config
-        self.driver = webdriver.Chrome(chromedriver_path, options=options)
+        service = Service(executable_path=chromedriver_path)
+        self.driver = webdriver.Chrome(service=service, options=options)
         self.driver.implicitly_wait(implicitly_wait)
         self.player = player
 
