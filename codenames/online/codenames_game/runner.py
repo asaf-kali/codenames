@@ -124,6 +124,7 @@ class CodenamesGameRunner:
         host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
         host.open().host_game(game_configs=game_configs)
         self._running_game_url = host.get_game_url()
+        log.info(f"Game URL: {self._running_game_url}")
         self.host = host
         host.choose_role()
         return self
