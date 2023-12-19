@@ -14,6 +14,7 @@ from codenames.game.winner import Winner
 from codenames.online.codenames_game.adapter import (
     CodenamesGameLanguage,
     CodenamesGamePlayerAdapter,
+    GameConfigs,
     IllegalOperation,
 )
 from codenames.online.codenames_game.agent import Agent, GuesserAgent, HinterAgent
@@ -89,14 +90,12 @@ class CodenamesGameRunner:
     def has_joined_game(self, player: Player) -> bool:
         return any(adapter.player == player for adapter in self.adapters)
 
-    def auto_start(
-        self, language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH, clock: bool = True
-    ) -> "CodenamesGameRunner":
+    def auto_start(self, game_configs: Optional[GameConfigs] = None) -> "CodenamesGameRunner":
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
             if not self.host:
-                self.host_game(host_player=player, language=language)  # type: ignore
+                self.host_game(host_player=player, game_configs=game_configs)  # type: ignore
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
                 log.debug("Semaphore acquired.")
@@ -114,7 +113,7 @@ class CodenamesGameRunner:
     def host_game(
         self,
         host_player: Optional[Hinter] = None,
-        language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH,
+        game_configs: Optional[GameConfigs] = None,
     ) -> "CodenamesGameRunner":
         if self.host:
             raise IllegalOperation("A game is already running.")
@@ -123,7 +122,7 @@ class CodenamesGameRunner:
         if not isinstance(host_player, Hinter):
             raise IllegalOperation("Host player must be a Hinter.")
         host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
-        host.open().host_game(language=language)
+        host.open().host_game(game_configs=game_configs)
         self._running_game_url = host.get_game_url()
         self.host = host
         host.choose_role()

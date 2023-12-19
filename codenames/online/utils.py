@@ -29,7 +29,7 @@ def multi_click(element: WebElement, times: int = 3):
         try:
             element.click()
             sleep(0.05)
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             log.debug("Failed to click, trying again...")
 
 
@@ -37,7 +37,7 @@ def poll_element(element_getter: Callable[[], T], timeout_sec: float = 10, poll_
     def safe_getter() -> Optional[T]:
         try:
             return element_getter()
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             error_line = str(e).replace("\n", " ")
             log.debug(f"Element getter raised an error: {error_line}")
             return None

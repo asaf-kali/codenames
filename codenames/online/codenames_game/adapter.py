@@ -1,7 +1,8 @@
 import logging
+from dataclasses import dataclass
 from enum import Enum
 from time import sleep
-from typing import Iterable, List, Optional
+from typing import List, Optional
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -11,16 +12,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from codenames.game.board import Board
 from codenames.game.move import PASS_GUESS, Guess, Hint
 from codenames.game.player import Player, PlayerRole
-from codenames.game.state import GuesserGameState
-from codenames.online.codenames_game.card_parser import _is_card_revealed, _parse_card
-from codenames.online.namecoding.adapter import get_shadow_root
-from codenames.online.utils import (
-    ShadowRootElement,
-    fill_input,
-    multi_click,
-    poll_condition,
-    poll_element,
-)
+from codenames.online.codenames_game.card_parser import _parse_card
+from codenames.online.utils import fill_input, multi_click, poll_element
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
@@ -35,6 +28,11 @@ class CodenamesGameLanguage(str, Enum):
 
 class IllegalOperation(Exception):
     pass
+
+
+@dataclass
+class GameConfigs:
+    language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH
 
 
 class CodenamesGamePlayerAdapter:
@@ -77,19 +75,18 @@ class CodenamesGamePlayerAdapter:
         self.driver.get(game_url)
         return self
 
-    def host_game(
-        self,
-        language: CodenamesGameLanguage,
-    ) -> "CodenamesGamePlayerAdapter":
+    def host_game(self, game_configs: Optional[GameConfigs] = None) -> "CodenamesGamePlayerAdapter":
         log.info(f"{self.log_prefix} is creating a room...")
+        if game_configs is None:
+            game_configs = GameConfigs()
         create_room_button = poll_element(self.get_create_room_button)
         multi_click(create_room_button)
-        self.configure_language()
+        self.configure_language(language=game_configs.language)
         self.login()
         log.info("New game created")
         return self
 
-    def configure_language(self):
+    def configure_language(self, language: CodenamesGameLanguage):
         # TODO: Implement
         pass
 
@@ -223,55 +220,51 @@ class CodenamesGamePlayerAdapter:
 
     # Polling #
 
-    def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> Optional[int]:
-        log.debug("Looking for visibility change...")
-        game_page = self.get_game_page()
-        card_containers = game_page.find_elements(by=By.ID, value="card-padding-container")
-        for i, card_container in enumerate(card_containers):
-            card_root = get_shadow_root(card_container, "card-element")
-            is_revealed = _is_card_revealed(card_root)
-            if is_revealed and i not in revealed_card_indexes:
-                log.debug(f"Found a visibility change at index {wrap(i)}")
-                return i
-        log.debug("No visibility change found")
-        return None
+    # def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> Optional[int]:
+    #     log.debug("Looking for visibility change...")
+    #     game_page = self.get_game_page()
+    #     card_containers = game_page.find_elements(by=By.ID, value="card-padding-container")
+    #     for i, card_container in enumerate(card_containers):
+    #         card_root = get_shadow_root(card_container, "card-element")
+    #         is_revealed = _is_card_revealed(card_root)
+    #         if is_revealed and i not in revealed_card_indexes:
+    #             log.debug(f"Found a visibility change at index {wrap(i)}")
+    #             return i
+    #     log.debug("No visibility change found")
+    #     return None
 
-    def poll_hint_given(self) -> Hint:
-        log.debug("Polling for hint given...")
-        clue_area = self.get_clue_area()
-        sleep(0.1)
+    # def poll_hint_given(self) -> Hint:
+    #     log.debug("Polling for hint given...")
+    #     clue_area = self.get_clue_area()
+    #     sleep(0.1)
+    #
+    #     poll_condition(lambda: self.has_clue_text(clue_area), timeout_sec=600)
+    #     clue_input = clue_area.find_element(by=By.ID, value="clue-text")
+    #     cards_input = clue_area.find_element(by=By.ID, value="cards-num-container")
+    #     return Hint(word=clue_input.text.strip(), card_amount=int(cards_input.text[0]))
 
-        poll_condition(lambda: self.has_clue_text(clue_area), timeout_sec=600)
-        clue_input = clue_area.find_element(by=By.ID, value="clue-text")
-        cards_input = clue_area.find_element(by=By.ID, value="cards-num-container")
-        return Hint(word=clue_input.text.strip(), card_amount=int(cards_input.text[0]))
+    # def poll_guess_given(self, game_state: GuesserGameState) -> Guess:
+    #     log.debug("Polling for guess given...")
+    #     revealed_card_indexes = game_state.board.revealed_card_indexes
+    #     clue_area = self.get_clue_area()
+    #     should_return = False
+    #     while not should_return:
+    #         if not self.has_clue_text(clue_area):
+    #             log.debug("No clue text found, detecting changes last time...")
+    #             should_return = True
+    #         card_index = self.detect_visibility_change(revealed_card_indexes)
+    #         if card_index is not None:
+    #             return Guess(card_index=card_index)
+    #     log.debug("Returning pass guess.")
+    #     return Guess(card_index=PASS_GUESS)
 
-    def poll_guess_given(self, game_state: GuesserGameState) -> Guess:
-        log.debug("Polling for guess given...")
-        revealed_card_indexes = game_state.board.revealed_card_indexes
-        clue_area = self.get_clue_area()
-        should_return = False
-        while not should_return:
-            if not self.has_clue_text(clue_area):
-                log.debug("No clue text found, detecting changes last time...")
-                should_return = True
-            card_index = self.detect_visibility_change(revealed_card_indexes)
-            if card_index is not None:
-                return Guess(card_index=card_index)
-        log.debug("Returning pass guess.")
-        return Guess(card_index=PASS_GUESS)
-
-    def has_clue_text(self, clue_area: Optional[ShadowRootElement] = None) -> bool:
-        if not clue_area:
-            clue_area = self.get_clue_area()
-        return clue_area.find_elements(by=By.ID, value="clue-text") != []
+    # def has_clue_text(self, clue_area: Optional[ShadowRootElement] = None) -> bool:
+    #     if not clue_area:
+    #         clue_area = self.get_clue_area()
+    #     return clue_area.find_elements(by=By.ID, value="clue-text") != []
 
     def close(self):
         try:
             self.driver.close()
         except:  # noqa  # pylint: disable=bare-except
             pass
-
-
-def get_card_container_index(card_container: WebElement) -> int:
-    return
