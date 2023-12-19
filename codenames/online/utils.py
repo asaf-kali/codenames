@@ -28,7 +28,7 @@ def multi_click(element: WebElement, times: int = 3):
     for _ in range(times):
         try:
             element.click()
-            sleep(0.05)
+            sleep(0.1)
         except Exception:  # pylint: disable=broad-except
             log.debug("Failed to click, trying again...")
 

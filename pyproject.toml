@@ -2,7 +2,7 @@
 
 [tool.poetry]
 name = "codenames"
-version = "3.0.2"
+version = "3.0.3"
 description = "Codenames board game logic implementation in python."
 authors = ["Asaf Kali <asaf.kali@mail.huji.ac.il>"]
 readme = "README.md"
