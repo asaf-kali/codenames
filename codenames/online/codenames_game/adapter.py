@@ -157,7 +157,7 @@ class CodenamesGamePlayerAdapter:
         else:
             picker = poll_element(lambda: self.get_card_picker(guess.card_index))
             multi_click(picker)
-        sleep(0.5)
+        sleep(2)
         return self
 
     # Elements #
