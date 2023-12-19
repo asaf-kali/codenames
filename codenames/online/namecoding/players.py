@@ -5,7 +5,7 @@ from typing import Optional
 from codenames.game.move import Guess, Hint
 from codenames.game.player import Guesser, Hinter, Player
 from codenames.game.state import GuesserGameState, HinterGameState
-from codenames.online.namecoding.online_adapter import NamecodingPlayerAdapter
+from codenames.online.namecoding.adapter import NamecodingPlayerAdapter
 
 log = logging.getLogger(__name__)
 
