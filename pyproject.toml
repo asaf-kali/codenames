@@ -2,10 +2,15 @@
 
 [tool.poetry]
 name = "codenames"
-version = "3.0.3"
+version = "3.0.4"
 description = "Codenames board game logic implementation in python."
 authors = ["Asaf Kali <asaf.kali@mail.huji.ac.il>"]
 readme = "README.md"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/asaf-kali/codenames"
+Repository = "https://github.com/asaf-kali/codenames"
+Issues = "https://github.com/asaf-kali/codenames/issues"
 
 [tool.poetry.extras]
 web = ["selenium"]
