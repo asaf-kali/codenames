@@ -13,7 +13,11 @@ CLEAR = "\b\b\b\b\b"
 
 
 class PollingTimeout(Exception):
-    pass
+    def __init__(self, timeout_sec: float, started: float, passed: float):
+        self.timeout_sec = timeout_sec
+        self.started = started
+        self.passed = passed
+        super().__init__(f"Polling timeout after {passed:.2f} seconds (timeout was {timeout_sec})")
 
 
 def fill_input(element: WebElement, value: str):
@@ -48,7 +52,7 @@ def poll_element(element_getter: Callable[[], T], timeout_sec: float = 15, poll_
         now = time.time()
         passed = now - start
         if passed >= timeout_sec:
-            raise PollingTimeout()
+            raise PollingTimeout(timeout_sec=timeout_sec, started=start, passed=passed)
         sleep(poll_interval_sec)
     log.debug("Element found")
     return element
