@@ -7,6 +7,7 @@ from typing import Iterable, List, Optional, Tuple, TypeVar
 from selenium.common.exceptions import WebDriverException
 
 from codenames.game.board import Board
+from codenames.game.color import TeamColor
 from codenames.game.move import Guess, Hint
 from codenames.game.player import Guesser, Hinter, Player, PlayerRole
 from codenames.game.runner import GameRunner
@@ -21,14 +22,15 @@ from codenames.online.codenames_game.agent import Agent, GuesserAgent, HinterAge
 
 log = logging.getLogger(__name__)
 
-T = TypeVar("T")
+T = TypeVar("T", bound=Player)
 
 
-def player_or_agent(player: T, role: PlayerRole) -> T:
+def player_or_agent(player: Optional[T], role: PlayerRole, team_color: TeamColor) -> T:
     if player is not None:
         return player
     player_class = HinterAgent if role == PlayerRole.HINTER else GuesserAgent
-    return player_class("Agent")
+    name = f"{team_color} {role} Agent"
+    return player_class(name)  # type: ignore
 
 
 class CodenamesGameRunner:
@@ -43,10 +45,10 @@ class CodenamesGameRunner:
     ):
         self.host: Optional[CodenamesGamePlayerAdapter] = None
         self.guests: List[CodenamesGamePlayerAdapter] = []
-        blue_hinter = player_or_agent(blue_hinter, PlayerRole.HINTER)
-        red_hinter = player_or_agent(red_hinter, PlayerRole.HINTER)
-        blue_guesser = player_or_agent(blue_guesser, PlayerRole.GUESSER)
-        red_guesser = player_or_agent(red_guesser, PlayerRole.GUESSER)
+        blue_hinter = player_or_agent(blue_hinter, PlayerRole.HINTER, TeamColor.BLUE)
+        red_hinter = player_or_agent(red_hinter, PlayerRole.HINTER, TeamColor.RED)
+        blue_guesser = player_or_agent(blue_guesser, PlayerRole.GUESSER, TeamColor.BLUE)
+        red_guesser = player_or_agent(red_guesser, PlayerRole.GUESSER, TeamColor.RED)
         self.game_runner = GameRunner(
             blue_hinter=blue_hinter,  # type: ignore
             red_hinter=red_hinter,  # type: ignore
@@ -136,7 +138,7 @@ class CodenamesGameRunner:
             log.warning(f"Player {guest_player} already joined.")
             return self
         if isinstance(guest_player, Agent):
-            log.debug("Not adding agent to online game.")
+            log.debug("Not adding agent guest to online game.")
             self._auto_start_semaphore.release()
             return self
         if multithreaded:

@@ -45,5 +45,6 @@ def _parse_card_color(card_element: WebElement) -> CardColor:
 
 
 def _is_card_revealed(card_container: WebElement) -> bool:  # pylint: disable=unused-argument
-    # TODO: Implement this
+    if "revealed" in card_container.accessible_name:
+        return True
     return False

@@ -1,11 +1,13 @@
 import logging
 from abc import ABC
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from codenames.game.move import Guess, Hint
 from codenames.game.player import Guesser, Hinter, Player
 from codenames.game.state import GuesserGameState, HinterGameState
-from codenames.online.codenames_game.adapter import CodenamesGamePlayerAdapter
+
+if TYPE_CHECKING:
+    from codenames.online.codenames_game.adapter import CodenamesGamePlayerAdapter
 
 log = logging.getLogger(__name__)
 
@@ -13,9 +15,9 @@ log = logging.getLogger(__name__)
 class Agent(Player, ABC):
     def __init__(self, name: str):
         super().__init__(name)
-        self.adapter: Optional[CodenamesGamePlayerAdapter] = None
+        self.adapter: Optional["CodenamesGamePlayerAdapter"] = None
 
-    def set_host_adapter(self, adapter: CodenamesGamePlayerAdapter):
+    def set_host_adapter(self, adapter: "CodenamesGamePlayerAdapter"):
         self.adapter = adapter
 
 
