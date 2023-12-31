@@ -3,10 +3,11 @@ description: "A reusable action to install linting tools"
 runs:
   using: "composite"
   steps:
-    - name: Set up python 3.9
+    - name: Set up python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        cache: "pip"
+        python-version: "3.11"
     - name: Install dependencies
       shell: bash
       run: |
