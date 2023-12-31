@@ -7,6 +7,11 @@ description = "Codenames board game logic implementation in python."
 authors = ["Asaf Kali <asaf.kali@mail.huji.ac.il>"]
 readme = "README.md"
 
+[tool.semantic_release]
+branch = "main"
+version_toml = ["pyproject.toml:tool.poetry.version"]
+build_command = "make install && make build"
+
 [tool.poetry.urls]
 Homepage = "https://github.com/asaf-kali/codenames"
 Repository = "https://github.com/asaf-kali/codenames"
@@ -39,6 +44,7 @@ types-requests = "^2.28.11.17"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.2"
 twine = "^4.0.2"
+python-semantic-release = "^8.0.8"
 
 [build-system]
 requires = ["poetry-core"]
