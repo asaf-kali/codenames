@@ -105,6 +105,7 @@ jobs:
         run: |
           echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - name: Release
+        id: release-status
         shell: bash
         run: |
           if [[ $GITHUB_REF == "refs/heads/main" ]]
@@ -114,13 +115,13 @@ jobs:
             make semrel-dev
           fi
       - name: Publish to PyPI
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' && steps.release-status.outputs.released == 'true' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip_existing: true
       - name: Publish to TestPyPI
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: ${{ github.ref != 'refs/heads/main' && steps.release-status.outputs.released == 'true' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
