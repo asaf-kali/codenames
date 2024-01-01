@@ -1,15 +1,29 @@
 # CHANGELOG
 
 
+
+## v3.0.7 (2024-01-01)
+
+### Other
+
+* Merge pull request #3 from asaf-kali/release
+
+🛠️ Sematic release in CI. ([`cd834ba`](https://github.com/asaf-kali/codenames/commit/cd834ba15125514f32dd7714041153d408bb296a))
+
+* 📦️ CI: add python semantic release basics. ([`6bec20b`](https://github.com/asaf-kali/codenames/commit/6bec20b8c03ed2eb8f8df45de6b724780202636c))
+
+### 🛠️
+
+* 🛠️ Sematic release: configurations and CI fixes. ([`a0b66e3`](https://github.com/asaf-kali/codenames/commit/a0b66e36027a4896926aec286775ee505aec9c7b))
+
+
 ## v3.0.6 (2023-12-31)
 
-### Feature
+### Other
 
 * Merge pull request #2 from asaf-kali/ci
 
 🔩 CI: unified pipeline, python 3.11, poetry caching. ([`5e360ce`](https://github.com/asaf-kali/codenames/commit/5e360ce43432b8535022890ec2dfc2ce0c0b1498))
-
-* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`5935b35`](https://github.com/asaf-kali/codenames/commit/5935b3549290e1cf492d8009aa80e683952da3c6))
 
 * :sparkles: Online: work on Codenames Game agents. ([`d458401`](https://github.com/asaf-kali/codenames/commit/d458401bcfc0507a6b873d45120f2f4459ae6f8e))
 
@@ -117,3 +131,6 @@
 
 * Initial commit: copy package files from solver repository. ([`555aff7`](https://github.com/asaf-kali/codenames/commit/555aff7a968fb48fa722d5072fbd0d8a8a43ac34))
 
+### 🔩
+
+* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`5935b35`](https://github.com/asaf-kali/codenames/commit/5935b3549290e1cf492d8009aa80e683952da3c6))
