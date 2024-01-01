@@ -84,7 +84,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    # needs: [ check-ruff, check-black, check-isort, check-mypy, check-pylint, test ]
+    needs: [ check-ruff, check-black, check-isort, check-mypy, check-pylint, test ]
     concurrency: release
     steps:
       - name: Checkout repo

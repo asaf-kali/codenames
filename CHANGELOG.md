@@ -8,13 +8,13 @@
 
 * Merge pull request #3 from asaf-kali/release
 
-🛠️ Sematic release in CI. ([`cd834ba`](https://github.com/asaf-kali/codenames/commit/cd834ba15125514f32dd7714041153d408bb296a))
+🛠️ Semantic release in CI. ([`cd834ba`](https://github.com/asaf-kali/codenames/commit/cd834ba15125514f32dd7714041153d408bb296a))
 
 * 📦️ CI: add python semantic release basics. ([`6bec20b`](https://github.com/asaf-kali/codenames/commit/6bec20b8c03ed2eb8f8df45de6b724780202636c))
 
 ### 🛠️
 
-* 🛠️ Sematic release: configurations and CI fixes. ([`a0b66e3`](https://github.com/asaf-kali/codenames/commit/a0b66e36027a4896926aec286775ee505aec9c7b))
+* 🛠️ Semantic release: configurations and CI fixes. ([`a0b66e3`](https://github.com/asaf-kali/codenames/commit/a0b66e36027a4896926aec286775ee505aec9c7b))
 
 
 ## v3.0.6 (2023-12-31)
