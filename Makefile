@@ -15,7 +15,7 @@ upgrade-pip:
 	pip install --upgrade pip
 
 install-ci: upgrade-pip
-	pip install poetry==1.4.2
+	pip install poetry==1.5.1
 	poetry config virtualenvs.create false
 
 install-run:
@@ -66,6 +66,19 @@ upload:
 
 build-and-upload: build upload
 
+# Semantic release
+
+semrel:
+	@echo "Releasing version..."
+	semantic-release version
+
+semrel-dev:
+	@echo "Releasing dev version..."
+	semantic-release version --no-commit --no-push
+	# Replace "-dev.1" with epoch time in version
+	sed -i 's/-dev.1/.dev.$(shell date +%s)/g' pyproject.toml
+	make build
+
 # Lint
 
 format:
@@ -92,7 +105,13 @@ lint: format
 	pre-commit run --all-files
 	@make check-pylint --no-print-directory
 
+# Quick and dirty
+
 wip:
 	git add .
 	git commit -m "Auto commit." --no-verify
 	git push
+
+amend:
+	git add .
+	git commit --amend --no-edit --no-verify
