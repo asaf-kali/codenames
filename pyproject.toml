@@ -6,11 +6,7 @@ version = "3.0.6"
 description = "Codenames board game logic implementation in python."
 authors = ["Asaf Kali <asaf.kali@mail.huji.ac.il>"]
 readme = "README.md"
-
-[tool.semantic_release]
-branch = "main"
-version_toml = ["pyproject.toml:tool.poetry.version"]
-build_command = "make install && make build"
+include = ["CHANGELOG.md"]
 
 [tool.poetry.urls]
 Homepage = "https://github.com/asaf-kali/codenames"
@@ -49,6 +45,44 @@ python-semantic-release = "^8.0.8"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Release
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:tool.poetry.version"]
+commit_parser = "emoji"
+build_command = "make build"
+commit_message = "🤖 Release [{version}] [skip ci]"
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
+[tool.semantic_release.branches.dev]
+match = ".*"
+prerelease = true
+prerelease_token = "dev"
+
+[tool.semantic_release.commit_parser_options]
+major_tags = [
+    "💥",
+    "🚀",
+    "🎉",
+]
+minor_tags = [
+    "✨",
+    "📝",
+    "🔥",
+]
+patch_tags = [
+    "🏗️",
+    "🔧",
+    "🛠️",
+    "🔩",
+    "🐛",
+    "🚑",
+    "📌",
+]
 
 # Test
 
