@@ -1,14 +1,24 @@
 from __future__ import annotations
 
 import math
+import random
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterable, Iterator, List, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 from pydantic import validator
 
 from codenames.game.base import BaseModel, WordGroup, canonical_format
 from codenames.game.card import Card, Cards
-from codenames.game.color import CardColor
+from codenames.game.color import CardColor, TeamColor
 from codenames.game.exceptions import CardNotFoundError
 
 if TYPE_CHECKING:
@@ -18,6 +28,7 @@ LTR = "\u200E"
 
 
 class Board(BaseModel):
+    language: str
     cards: List[Card]
 
     @validator("cards")
@@ -88,7 +99,7 @@ class Board(BaseModel):
 
     @property
     def censured(self) -> Board:
-        return Board(cards=[card.censored for card in self.cards])
+        return Board(language=self.language, cards=[card.censored for card in self.cards])
 
     @property
     def as_table(self) -> BeautifulTable:
@@ -111,6 +122,40 @@ class Board(BaseModel):
             for i, card in enumerate(row):
                 row[i] = LTR + str(card)
         return str(table)
+
+    @staticmethod
+    def from_vocabulary(
+        language: str,
+        vocabulary: List[str],
+        board_size: int = 25,
+        black_amount: int = 1,
+        seed: Optional[int] = None,
+        first_team: Optional[TeamColor] = None,
+    ) -> Board:
+        if seed:
+            random.seed(seed)
+
+        first_team = first_team or random.choice(list(TeamColor))
+        red_amount = blue_amount = board_size // 3
+        if first_team == TeamColor.RED:
+            red_amount += 1
+        else:
+            blue_amount += 1
+        gray_amount = board_size - red_amount - blue_amount - black_amount
+
+        words_list, red_words = _extract_random_subset(vocabulary, red_amount)
+        words_list, blue_words = _extract_random_subset(words_list, blue_amount)
+        words_list, gray_words = _extract_random_subset(words_list, gray_amount)
+        words_list, black_words = _extract_random_subset(words_list, black_amount)
+
+        red_cards = [Card(word=word, color=CardColor.RED) for word in red_words]
+        blue_cards = [Card(word=word, color=CardColor.BLUE) for word in blue_words]
+        gray_cards = [Card(word=word, color=CardColor.GRAY) for word in gray_words]
+        black_cards = [Card(word=word, color=CardColor.BLACK) for word in black_words]
+
+        all_cards = red_cards + blue_cards + gray_cards + black_cards
+        random.shuffle(all_cards)
+        return Board(language=language, cards=all_cards)
 
     def cards_for_color(self, card_color: CardColor) -> Cards:
         return tuple(card for card in self.cards if card.color == card_color)
@@ -139,3 +184,9 @@ def two_integer_factors(n: int) -> Tuple[int, int]:
     while n % x != 0:
         x -= 1
     return n // x, x
+
+
+def _extract_random_subset(elements: Sequence, subset_size: int) -> Tuple[tuple, tuple]:
+    sample = tuple(random.sample(elements, k=subset_size))
+    remaining = tuple(e for e in elements if e not in sample)
+    return remaining, sample

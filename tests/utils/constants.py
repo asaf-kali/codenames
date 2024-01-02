@@ -4,6 +4,7 @@ from codenames.game.color import CardColor
 
 def board_10() -> Board:
     return Board(
+        language="english",
         cards=[
             Card(word="Card 0", color=CardColor.BLUE),  # 0
             Card(word="Card 1", color=CardColor.BLUE),  # 1
@@ -15,12 +16,13 @@ def board_10() -> Board:
             Card(word="Card 7", color=CardColor.GRAY),  # 7
             Card(word="Card 8", color=CardColor.GRAY),  # 8
             Card(word="Card 9", color=CardColor.BLACK),  # 9
-        ]
+        ],
     )
 
 
 def board_25() -> Board:
     return Board(
+        language="english",
         cards=[
             Card(word="Card 0", color=CardColor.BLUE),
             Card(word="Card 1", color=CardColor.BLUE),
@@ -47,12 +49,13 @@ def board_25() -> Board:
             Card(word="Card 22", color=CardColor.GRAY),
             Card(word="Card 23", color=CardColor.GRAY),
             Card(word="Card 24", color=CardColor.BLACK),
-        ]
+        ],
     )
 
 
 def hebrew_board() -> Board:
     return Board(
+        language="hebrew",
         cards=[
             Card(word="חיים", color=CardColor.GRAY),
             Card(word="ערך", color=CardColor.BLACK),
@@ -79,5 +82,5 @@ def hebrew_board() -> Board:
             Card(word="שק", color=CardColor.GRAY),
             Card(word="אקורדיון", color=CardColor.RED),
             Card(word="ילד", color=CardColor.BLUE),
-        ]
+        ],
     )

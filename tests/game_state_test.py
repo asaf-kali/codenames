@@ -28,7 +28,7 @@ def board_10() -> Board:
 
 
 def test_game_state_flow(board_10: Board):
-    game_state = build_game_state(language="en", board=board_10)
+    game_state = build_game_state(board=board_10)
     assert game_state.current_team_color == TeamColor.BLUE
     assert game_state.current_player_role == PlayerRole.HINTER
     assert game_state.moves == []
@@ -151,7 +151,7 @@ def test_game_state_flow(board_10: Board):
 
 
 def test_game_state_json_serialization_and_load(board_10: Board):
-    game_state = build_game_state(language="english", board=board_10)
+    game_state = build_game_state(board=board_10)
     game_state.process_hint(Hint(word="A", card_amount=2))
     game_state.process_guess(Guess(card_index=0))
     game_state.process_guess(Guess(card_index=1))
@@ -165,7 +165,7 @@ def test_game_state_json_serialization_and_load(board_10: Board):
 
 def test_score_is_correct_when_board_is_partially_revealed(board_10: Board):
     board_10.cards[0].revealed = True
-    game_state = build_game_state(language="english", board=board_10)
+    game_state = build_game_state(board=board_10)
     assert game_state.score.blue == TeamScore(total=4, revealed=1)
     assert game_state.score.red == TeamScore(total=3, revealed=0)
     assert game_state.score.blue.unrevealed == 3

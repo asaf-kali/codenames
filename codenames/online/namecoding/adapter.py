@@ -214,14 +214,14 @@ class NamecodingPlayerAdapter:
     #         return True
     #     return False
 
-    def parse_board(self) -> Board:
+    def parse_board(self, language: str) -> Board:
         log.debug("Parsing board...")
         game_page = self.get_game_page()
         card_containers = game_page.find_elements(by=By.ID, value="card-padding-container")
         card_elements = [get_shadow_root(card_container, "card-element") for card_container in card_containers]
         cards = [_parse_card(card_element) for card_element in card_elements]
         log.debug("Parse board done")
-        return Board(cards=cards)
+        return Board(language=language, cards=cards)
 
     def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> Optional[int]:
         log.debug("Looking for visibility change...")

@@ -216,17 +216,19 @@ class GuesserGameState(BaseGameState):
         return self.given_hints[-1]
 
 
-def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
+def build_game_state(language: Optional[str] = None, board: Optional[Board] = None) -> GameState:
+    if language is None and board is None:
+        raise ValueError("Either language or board must be provided")
     if board is None:
         from codenames.boards.builder import (  # pylint: disable=import-outside-toplevel
             generate_board,
         )
 
-        board = generate_board(language=language)
+        board = generate_board(language=language)  # type: ignore
     first_team_color = _determine_first_team(board)
     score = build_score(board)
     return GameState(
-        language=language,
+        language=board.language,
         board=board,
         score=score,
         current_team_color=first_team_color,

@@ -24,7 +24,7 @@ def test_blue_reveals_all_and_wins(board_10: Board):
     ]
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
     assert runner.winner == Winner(team_color=TeamColor.BLUE, reason=WinningReason.TARGET_SCORE_REACHED)
 
 
@@ -37,7 +37,7 @@ def test_red_reveals_all_and_wins(board_10: Board):
     ]
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
     assert runner.winner == Winner(team_color=TeamColor.RED, reason=WinningReason.TARGET_SCORE_REACHED)
 
 
@@ -47,7 +47,7 @@ def test_blue_picks_black_and_red_wins(board_10: Board):
     ]
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
     assert runner.winner == Winner(team_color=TeamColor.RED, reason=WinningReason.OPPONENT_HIT_BLACK)
 
 
@@ -59,7 +59,7 @@ def test_blue_picks_red_and_red_wins(board_10: Board):
     ]
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
 
     expected_given_hints = [
         GivenHint(word="a", card_amount=2, team_color=TeamColor.BLUE),
@@ -90,7 +90,7 @@ def test_hint_subscribers_are_notified(board_10: Board):
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
     runner.hint_given_subscribers.append(hint_given_subscriber)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
 
     sent_args = [call[0] for call in hint_given_subscriber.call_args_list]
     assert sent_args == [
@@ -121,7 +121,7 @@ def test_turns_switch_when_guessers_use_extra_guess(board_10: Board):
     ]
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
 
     expected_given_hints = [
         GivenHint(word="a", card_amount=2, team_color=TeamColor.BLUE),
@@ -151,7 +151,7 @@ def test_guess_subscribers_are_notified(board_10: Board):
     blue_team, red_team = build_teams(all_turns=all_turns)
     runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
     runner.guess_given_subscribers.append(guess_given_subscriber)
-    runner.run_game(language="english", board=board_10)
+    runner.run_game(board=board_10)
 
     sent_args = [call[0] for call in guess_given_subscriber.call_args_list]
     assert sent_args == [
