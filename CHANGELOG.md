@@ -2,9 +2,36 @@
 
 
 
+## v4.0.0 (2024-01-02)
+
+### Other
+
+* Merge pull request #5 from asaf-kali/fix
+
+Fix ([`a213ae4`](https://github.com/asaf-kali/codenames/commit/a213ae4b571e53e2c9ebeec559689b518adb0624))
+
+* 🖋️ Semantic release commit author. ([`5382286`](https://github.com/asaf-kali/codenames/commit/53822869d5f497f6414b5446f4d2204e8c0dcc4a))
+
+### 📜
+
+* 📜 Readme: Add simple example. ([`46b66a0`](https://github.com/asaf-kali/codenames/commit/46b66a05df54e291ca2312961b782f0b82403a41))
+
+* 📜 README: badge fix. ([`748de60`](https://github.com/asaf-kali/codenames/commit/748de60fd4638dd5d3626a05e6beee9a00b0e410))
+
+### 🔥
+
+* 🔥 Board builder: extended builder capabilities, add tests, minor refactoring. ([`707e100`](https://github.com/asaf-kali/codenames/commit/707e100f525cd70f6560859f6638e67e6037533f))
+
+### 🚀
+
+* 🚀 Board model: Simplifications and refactoring. ([`24aa141`](https://github.com/asaf-kali/codenames/commit/24aa1414ead84919ff729ed9400816c098fb4fa0))
+
+
 ## v3.0.8 (2024-01-02)
 
 ### Other
+
+* 🤖 Release [3.0.8] [skip ci] ([`1e07812`](https://github.com/asaf-kali/codenames/commit/1e07812ea0fd94996bdbbee53b9190953c33e1ec))
 
 * 🔍️ Small fixes. ([`b448a4d`](https://github.com/asaf-kali/codenames/commit/b448a4d6956daea9d3f0772bc2f07fd7ebf037f8))
 
