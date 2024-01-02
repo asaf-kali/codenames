@@ -2,7 +2,18 @@
 
 
 
+## v4.0.3 (2024-01-02)
+
+### 🔩
+
+* 🔩 Game state: remove language. ([`e562509`](https://github.com/asaf-kali/codenames/commit/e562509ad267f7d8065aae81fb33e891333879a0))
+
+
 ## v4.0.2 (2024-01-02)
+
+### Other
+
+* 🤖 Release [4.0.2] [skip ci] ([`ceee69c`](https://github.com/asaf-kali/codenames/commit/ceee69c4343daeb229350d28accaedf2dee1eb35))
 
 ### 📜
 
