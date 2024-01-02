@@ -2,9 +2,22 @@
 
 
 
+## v4.0.1 (2024-01-02)
+
+### Other
+
+* ⚙️ Update lock dependencies. ([`64aac21`](https://github.com/asaf-kali/codenames/commit/64aac21e55c345ce4142e1f0da93190a2d8b54cc))
+
+### 🚑
+
+* 🚑 Player: remove language from game start event. ([`7c3b1ff`](https://github.com/asaf-kali/codenames/commit/7c3b1ff46b9630a7076bd0b810dec98a22f2a2d9))
+
+
 ## v4.0.0 (2024-01-02)
 
 ### Other
+
+* 🤖 Release [4.0.0] [skip ci] ([`610be23`](https://github.com/asaf-kali/codenames/commit/610be23f902f3b1e6261e25dabd220b19636e77a))
 
 * Merge pull request #5 from asaf-kali/fix
 
