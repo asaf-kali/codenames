@@ -64,7 +64,7 @@ class Player:
             raise ValueError("Team color not set")
         return self.team_color.as_card_color
 
-    def on_game_start(self, language: str, board: Board):
+    def on_game_start(self, board: Board):
         pass
 
     def on_hint_given(self, given_hint: GivenHint):

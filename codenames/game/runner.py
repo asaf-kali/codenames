@@ -89,9 +89,9 @@ class GameRunner:
     def _notify_game_starts(self):
         censored_board = self.state.board.censured
         for hinter in self.hinters:
-            hinter.on_game_start(language=self.state.language, board=self.state.board)
+            hinter.on_game_start(board=self.state.board)
         for guesser in self.guessers:
-            guesser.on_game_start(language=self.state.language, board=censored_board)
+            guesser.on_game_start(board=censored_board)
 
     def _run_rounds(self) -> Winner:
         while not self.state.is_game_over:
