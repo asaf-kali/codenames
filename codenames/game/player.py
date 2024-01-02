@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Optional, Tuple
@@ -73,7 +74,7 @@ class Player:
         pass
 
 
-class Hinter(Player):
+class Hinter(Player, ABC):
     @property
     def role(self) -> PlayerRole:
         return PlayerRole.HINTER
@@ -82,7 +83,7 @@ class Hinter(Player):
         raise NotImplementedError()
 
 
-class Guesser(Player):
+class Guesser(Player, ABC):
     @property
     def role(self) -> PlayerRole:
         return PlayerRole.GUESSER

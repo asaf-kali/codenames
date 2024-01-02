@@ -1,32 +1,57 @@
 import random
-from typing import List, Optional, Sequence, Tuple
+from enum import Enum
+from typing import List, Optional, Sequence, Tuple, Union
 
 from codenames.boards.english import ENGLISH_WORDS
 from codenames.boards.hebrew import HEBREW_WORDS
 from codenames.game.board import Board
 from codenames.game.card import Card
-from codenames.game.color import CardColor
+from codenames.game.color import CardColor, TeamColor
 
 
-def generate_standard_board(
-    language: str, board_size: int = 25, black_amount: int = 1, seed: Optional[int] = None
+class SupportedLanguage(str, Enum):
+    ENGLISH = "english"
+    HEBREW = "hebrew"
+
+
+def generate_board(
+    language: Union[str, SupportedLanguage],
+    board_size: int = 25,
+    black_amount: int = 1,
+    seed: Optional[int] = None,
+    first_team: Optional[TeamColor] = None,
 ) -> Board:
-    if language == "english":
+    if language == SupportedLanguage.ENGLISH:
         words = ENGLISH_WORDS
-    elif language == "hebrew":
+    elif language == SupportedLanguage.HEBREW:
         words = HEBREW_WORDS
     else:
         raise NotImplementedError(f"Unknown language: {language}")
-    return build_board(vocabulary=words, board_size=board_size, black_amount=black_amount, seed=seed)
+    return generate_board_from_vocabulary(
+        vocabulary=words,
+        board_size=board_size,
+        black_amount=black_amount,
+        seed=seed,
+        first_team=first_team,
+    )
 
 
-def build_board(
-    vocabulary: List[str], board_size: int = 25, black_amount: int = 1, seed: Optional[int] = None
+def generate_board_from_vocabulary(
+    vocabulary: List[str],
+    board_size: int = 25,
+    black_amount: int = 1,
+    seed: Optional[int] = None,
+    first_team: Optional[TeamColor] = None,
 ) -> Board:
-    random.seed(seed)
+    if seed:
+        random.seed(seed)
 
-    red_amount = board_size // 3
-    blue_amount = red_amount + 1
+    first_team = first_team or random.choice(list(TeamColor))
+    red_amount = blue_amount = board_size // 3
+    if first_team == TeamColor.RED:
+        red_amount += 1
+    else:
+        blue_amount += 1
     gray_amount = board_size - red_amount - blue_amount - black_amount
 
     words_list, red_words = _extract_random_subset(vocabulary, red_amount)
