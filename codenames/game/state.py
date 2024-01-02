@@ -36,7 +36,6 @@ log = logging.getLogger(__name__)
 
 
 class BaseGameState(BaseModel):
-    language: str
     board: Board
     score: Score
     current_team_color: TeamColor = TeamColor.BLUE
@@ -74,7 +73,6 @@ class GameState(BaseGameState):
     @property
     def hinter_state(self) -> "HinterGameState":
         return HinterGameState(
-            language=self.language,
             board=self.board,
             score=self.score,
             current_team_color=self.current_team_color,
@@ -86,7 +84,6 @@ class GameState(BaseGameState):
     @property
     def guesser_state(self) -> "GuesserGameState":
         return GuesserGameState(
-            language=self.language,
             board=self.board.censured,
             score=self.score,
             current_team_color=self.current_team_color,
@@ -216,9 +213,9 @@ class GuesserGameState(BaseGameState):
         return self.given_hints[-1]
 
 
-def build_game_state(language: Optional[str] = None, board: Optional[Board] = None) -> GameState:
-    if language is None and board is None:
-        raise ValueError("Either language or board must be provided")
+def build_game_state(board: Optional[Board] = None, language: Optional[str] = None) -> GameState:
+    if board is None and language is None:
+        raise ValueError("Either board or language must be provided")
     if board is None:
         from codenames.boards.builder import (  # pylint: disable=import-outside-toplevel
             generate_board,
@@ -228,7 +225,6 @@ def build_game_state(language: Optional[str] = None, board: Optional[Board] = No
     first_team_color = _determine_first_team(board)
     score = build_score(board)
     return GameState(
-        language=board.language,
         board=board,
         score=score,
         current_team_color=first_team_color,
