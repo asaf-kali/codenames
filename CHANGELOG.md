@@ -2,19 +2,32 @@
 
 
 
+## v3.0.8 (2024-01-02)
+
+### Other
+
+* 🔍️ Small fixes. ([`b448a4d`](https://github.com/asaf-kali/codenames/commit/b448a4d6956daea9d3f0772bc2f07fd7ebf037f8))
+
+### 🐛
+
+* 🐛 Publish package: publish only if release was made. ([`b387e17`](https://github.com/asaf-kali/codenames/commit/b387e17d28c23538e1e5dd802946854dd406c318))
+
+
 ## v3.0.7 (2024-01-01)
 
 ### Other
 
+* 🤖 Release [3.0.7] [skip ci] ([`b877343`](https://github.com/asaf-kali/codenames/commit/b877343b3f7bdbbbe1fa17359adf6ceee47bfbef))
+
 * Merge pull request #3 from asaf-kali/release
 
-🛠️ Semantic release in CI. ([`cd834ba`](https://github.com/asaf-kali/codenames/commit/cd834ba15125514f32dd7714041153d408bb296a))
+🛠️ Sematic release in CI. ([`cd834ba`](https://github.com/asaf-kali/codenames/commit/cd834ba15125514f32dd7714041153d408bb296a))
 
 * 📦️ CI: add python semantic release basics. ([`6bec20b`](https://github.com/asaf-kali/codenames/commit/6bec20b8c03ed2eb8f8df45de6b724780202636c))
 
 ### 🛠️
 
-* 🛠️ Semantic release: configurations and CI fixes. ([`a0b66e3`](https://github.com/asaf-kali/codenames/commit/a0b66e36027a4896926aec286775ee505aec9c7b))
+* 🛠️ Sematic release: configurations and CI fixes. ([`a0b66e3`](https://github.com/asaf-kali/codenames/commit/a0b66e36027a4896926aec286775ee505aec9c7b))
 
 
 ## v3.0.6 (2023-12-31)
