@@ -2,9 +2,18 @@
 
 
 
+## v4.0.2 (2024-01-02)
+
+### 📜
+
+* 📜 README: Add example output. ([`34ea7e8`](https://github.com/asaf-kali/codenames/commit/34ea7e801d71413f3055ef0e658bfbab8fea6083))
+
+
 ## v4.0.1 (2024-01-02)
 
 ### Other
+
+* 🤖 Release [4.0.1] [skip ci] ([`7252dee`](https://github.com/asaf-kali/codenames/commit/7252deea80e85c22822741ef15044d6959179574))
 
 * ⚙️ Update lock dependencies. ([`64aac21`](https://github.com/asaf-kali/codenames/commit/64aac21e55c345ce4142e1f0da93190a2d8b54cc))
 
