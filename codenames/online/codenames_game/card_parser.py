@@ -28,7 +28,7 @@ def _parse_card(card_container: WebElement) -> ParseResult:
 
 
 def _parse_card_index(card_container: WebElement) -> int:
-    return int(card_container.get_attribute("tabindex"))
+    return int(card_container.get_attribute("tabindex"))  # type: ignore
 
 
 def _parse_card_word(card_element: WebElement) -> str:
@@ -37,7 +37,7 @@ def _parse_card_word(card_element: WebElement) -> str:
 
 
 def _parse_card_color(card_element: WebElement) -> CardColor:
-    element_classes = card_element.get_attribute("class").split(" ")
+    element_classes = card_element.get_attribute("class").split(" ")  # type: ignore
     for card_color in CardColor:
         if card_color.lower() in element_classes:
             return card_color  # type: ignore

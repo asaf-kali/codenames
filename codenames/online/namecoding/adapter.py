@@ -49,7 +49,7 @@ def _is_card_revealed(card_element: ShadowRootElement) -> bool:
 def _parse_card(card_element: ShadowRootElement) -> Card:
     word = card_element.find_element(by=By.ID, value="bottom").text.strip().lower()
     namecoding_color = card_element.find_element(by=By.ID, value="right").get_attribute("team")
-    card_color = parse_card_color(namecoding_color=namecoding_color)
+    card_color = parse_card_color(namecoding_color=namecoding_color)  # type: ignore
     revealed = _is_card_revealed(card_element=card_element)
     card = Card(word=word, color=card_color, revealed=revealed)
     log.debug(f"Parsed card: {card}")
