@@ -52,7 +52,7 @@ build-backend = "poetry.core.masonry.api"
 version_toml = ["pyproject.toml:tool.poetry.version"]
 commit_parser = "emoji"
 build_command = "make build"
-commit_author = "Semantic Release <actions@github.com>"
+commit_author = "Semantic release <semantic-release>"
 commit_message = "🤖 Release [{version}] [skip ci]"
 
 [tool.semantic_release.branches.main]
