@@ -154,9 +154,9 @@ class CodenamesGameRunner:
 
     def run_game(self):
         self._start_game()
-        board = self.host.parse_board()
+        board = self.host.parse_board(language=self._language.value)
         try:
-            self.game_runner.run_game(language=self._language.value, board=board)
+            self.game_runner.run_game(board=board)
         except WebDriverException:
             log.exception("Online adapter failed")
             self.close()

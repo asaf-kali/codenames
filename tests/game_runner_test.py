@@ -49,7 +49,7 @@ def test_game_runner_notifies_all_players_on_hint_given():
     for player in runner.players:
         player.on_hint_given = on_hint_given_mock
         player.on_guess_given = on_guess_given_mock
-    runner.run_game(language="english", board=board)
+    runner.run_game(board=board)
 
     expected_given_hint_1 = GivenHint(word="a", card_amount=2, team_color=TeamColor.BLUE)
     expected_given_hint_2 = GivenHint(word="b", card_amount=1, team_color=TeamColor.RED)
@@ -83,7 +83,7 @@ def test_game_starts_with_team_with_most_cards():
     board = board_10()
     board.cards[3].color = CardColor.RED
     assert len(board.red_cards) > len(board.blue_cards)
-    runner.run_game(language="english", board=board)
+    runner.run_game(board=board)
 
     assert runner.winner == Winner(team_color=TeamColor.BLUE, reason=WinningReason.OPPONENT_HIT_BLACK)
 
@@ -98,7 +98,7 @@ def test_game_runner_hinter_state():
     board = board_10()
 
     with hook_method(TestHinter, "pick_hint") as pick_hint_mock:
-        runner.run_game(language="english", board=board)
+        runner.run_game(board=board)
 
     calls = pick_hint_mock.hook.calls
     assert len(calls) == 2
@@ -134,7 +134,7 @@ def test_game_runner_guesser_state():
     board = board_10()
 
     with hook_method(TestGuesser, "guess") as pick_guess_mock:
-        runner.run_game(language="english", board=board)
+        runner.run_game(board=board)
 
     calls = pick_guess_mock.hook.calls
     assert len(calls) == 5  # This game has 5 guesser turns

@@ -66,9 +66,9 @@ class GameRunner:
     def winner(self) -> Optional[Winner]:
         return self.state.winner
 
-    def run_game(self, language: str, board: Board) -> Winner:
+    def run_game(self, board: Board) -> Winner:
         if self.state is None:
-            self.state = build_game_state(language=language, board=board)
+            self.state = build_game_state(board=board)
         self._notify_game_starts()
         winner = self._run_rounds()
         log.info(f"{SEPARATOR}{winner.reason.value}, {wrap(winner.team_color)} team wins!")

@@ -131,14 +131,14 @@ class CodenamesGamePlayerAdapter:
         multi_click(start_game_button)
         return self
 
-    def parse_board(self) -> Board:
+    def parse_board(self, language: str) -> Board:
         log.debug("Parsing board...")
         card_containers = self.poll_element(self.get_card_containers)
         parse_results = [_parse_card(card) for card in card_containers]
         parse_results.sort(key=lambda result: result.index)
         cards = [result.card for result in parse_results]
         log.debug("Board parsed.")
-        return Board(cards=cards)
+        return Board(language=language, cards=cards)
 
     def transmit_hint(self, hint: Hint) -> "CodenamesGamePlayerAdapter":
         log.debug(f"Sending hint: {hint}")
@@ -274,7 +274,7 @@ class CodenamesGamePlayerAdapter:
 
     def detect_visibility_change(self, revealed_card_indexes: Set[int]) -> Optional[int]:
         log.debug("Looking for visibility change...")
-        board = self.parse_board()
+        board = self.parse_board(language="")
         for i, card in enumerate(board.cards):
             if card.revealed and i not in revealed_card_indexes:
                 log.debug(f"Found a visibility change at index {wrap(i)}")
