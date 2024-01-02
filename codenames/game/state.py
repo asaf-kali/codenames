@@ -219,10 +219,10 @@ class GuesserGameState(BaseGameState):
 def build_game_state(language: str, board: Optional[Board] = None) -> GameState:
     if board is None:
         from codenames.boards.builder import (  # pylint: disable=import-outside-toplevel
-            generate_standard_board,
+            generate_board,
         )
 
-        board = generate_standard_board(language=language)
+        board = generate_board(language=language)
     first_team_color = _determine_first_team(board)
     score = build_score(board)
     return GameState(

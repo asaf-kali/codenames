@@ -78,6 +78,14 @@ class Board(BaseModel):
     def blue_cards(self) -> Cards:
         return self.cards_for_color(CardColor.BLUE)
 
+    @cached_property
+    def gray_cards(self) -> Cards:
+        return self.cards_for_color(CardColor.GRAY)
+
+    @cached_property
+    def black_cards(self) -> Cards:
+        return self.cards_for_color(CardColor.BLACK)
+
     @property
     def censured(self) -> Board:
         return Board(cards=[card.censored for card in self.cards])

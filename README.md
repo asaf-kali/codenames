@@ -4,3 +4,15 @@
 [![PyPI version](https://badge.fury.io/py/codenames.svg)](https://badge.fury.io/py/codenames)
 
 Code infrastructure for the Codenames board game.
+
+
+## Installation
+
+```bash
+pip install codenames
+```
+
+## Usage
+
+```python
+from codenames import
