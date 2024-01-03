@@ -93,6 +93,7 @@ addopts = "-s --disable-pytest-warnings"
 
 [tool.coverage.run]
 source = ["codenames"]
+omit = ["codenames/online/*"]
 
 # Lint
 
