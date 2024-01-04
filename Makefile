@@ -46,9 +46,16 @@ lock-check:
 test:
 	python -m $(PYTHON_TEST_COMMAND)
 
-cover:
+cover-base:
 	coverage run -m $(PYTHON_TEST_COMMAND)
+
+cover-xml: cover-base
+	coverage xml
+
+cover-html: cover-base
 	coverage html
+
+cover: cover-html
 	$(OPEN_FILE_COMMAND) htmlcov/index.html &
 	$(DEL_COMMAND) .coverage*
 
