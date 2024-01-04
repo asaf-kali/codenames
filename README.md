@@ -1,6 +1,7 @@
 # Codenames
 
 [![Pipeline](https://github.com/asaf-kali/codenames/actions/workflows/pipeline.yml/badge.svg)](https://github.com/asaf-kali/codenames/actions/workflows/pipeline.yml)
+[![codecov](https://codecov.io/github/asaf-kali/codenames/graph/badge.svg?token=HET5E8P1UK)](https://codecov.io/github/asaf-kali/codenames)
 [![PyPI version](https://badge.fury.io/py/codenames.svg)](https://badge.fury.io/py/codenames)
 
 Code infrastructure for the Codenames board game. \
