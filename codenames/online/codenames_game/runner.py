@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import logging
 from threading import Semaphore, Thread
-from typing import Iterable, List, Optional, Tuple, TypeVar
-
-from selenium.common.exceptions import WebDriverException
+from typing import ContextManager, Iterable, List, Optional, Tuple, TypeVar
 
 from codenames.game.color import TeamColor
 from codenames.game.move import Guess, Hint
@@ -31,7 +29,7 @@ def player_or_agent(player: Optional[T], role: PlayerRole, team_color: TeamColor
     return player_class(name=name, team_color=team_color)  # type: ignore
 
 
-class CodenamesGameRunner:
+class CodenamesGameRunner(ContextManager):
     def __init__(
         self,
         blue_hinter: Optional[Hinter] = None,
@@ -62,14 +60,8 @@ class CodenamesGameRunner:
     def agents(self) -> Tuple[Agent, ...]:
         return tuple(player for player in self.players if isinstance(player, Agent))
 
-    def _get_adapter_for_player(self, player: Player) -> CodenamesGamePlayerAdapter:
-        for adapter in self.adapters:
-            if adapter.player == player:
-                return adapter
-        raise ValueError(f"Player {player} not found in this game manager.")
-
-    def has_joined_game(self, player: Player) -> bool:
-        return any(adapter.player == player for adapter in self.adapters)
+    def __exit__(self, __exc_type, __exc_value, __traceback):
+        self.close()
 
     def auto_start(self, game_configs: Optional[GameConfigs] = None) -> GameRunner:
         number_of_guests = 3
@@ -89,6 +81,16 @@ class CodenamesGameRunner:
         log.info(f"All {number_of_guests} joined, starting.")
         return self.run_game()
 
+    def run_game(self) -> GameRunner:
+        self._start_game()
+        board = self.host.parse_board(language=self._language.value)  # type: ignore
+        game_runner = GameRunner(players=self.players, board=board)
+        game_runner.hint_given_subscribers.append(self._handle_hint_given)
+        game_runner.guess_given_subscribers.append(self._handle_guess_given)
+        game_runner.run_game()
+        self.host.screenshot("game over")  # type: ignore
+        return game_runner
+
     def host_game(
         self,
         host_player: Optional[Hinter] = None,
@@ -100,12 +102,11 @@ class CodenamesGameRunner:
             host_player = self.players.blue_team.hinter
         if not isinstance(host_player, Hinter):
             raise IllegalOperation("Host player must be a Hinter.")
-        host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
-        host.open().host_game(game_configs=game_configs)
-        self._running_game_url = host.get_game_url()
+        self.host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
+        self.host.open().host_game(game_configs=game_configs)
+        self._running_game_url = self.host.get_game_url()
         log.info(f"Game URL: {self._running_game_url}")
-        self.host = host
-        host.choose_role()
+        self.host.choose_role()
         return self
 
     def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> CodenamesGameRunner:
@@ -129,25 +130,28 @@ class CodenamesGameRunner:
         log.debug("Semaphore release")
         return self
 
-    def run_game(self) -> GameRunner:
-        try:
-            self._start_game()
-            board = self.host.parse_board(language=self._language.value)  # type: ignore
-            game_runner = GameRunner(players=self.players, board=board)
-            game_runner.hint_given_subscribers.append(self._handle_hint_given)
-            game_runner.guess_given_subscribers.append(self._handle_guess_given)
-            game_runner.run_game()
-            return game_runner
-        except WebDriverException:
-            log.exception("Online adapter failed")
-            self.close()
-            raise
+    def close(self):
+        log.info("Closing online manager...")
+        for guest in self.guests:
+            guest.close()
+        if self.host:
+            self.host.close()
+
+    def has_joined_game(self, player: Player) -> bool:
+        return any(adapter.player == player for adapter in self.adapters)
+
+    def _get_adapter_for_player(self, player: Player) -> CodenamesGamePlayerAdapter:
+        for adapter in self.adapters:
+            if adapter.player == player:
+                return adapter
+        raise ValueError(f"Player {player} not found in this game manager.")
 
     def _start_game(self) -> CodenamesGameRunner:
         if not self.host:
             raise IllegalOperation("Can't start game before hosting initiated. Call host_game() first.")
         for agent in self.agents:
             agent.set_host_adapter(adapter=self.host)
+        self.host.screenshot("game start")
         self.host.start_game()
         return self
 
@@ -164,10 +168,3 @@ class CodenamesGameRunner:
             return
         adapter = self._get_adapter_for_player(player=guesser)
         adapter.transmit_guess(guess=guess)
-
-    def close(self):
-        log.info("Closing online manager...")
-        for guest in self.guests:
-            guest.close()
-        if self.host:
-            self.host.close()

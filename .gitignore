@@ -5,6 +5,7 @@ media/
 exports/
 chromedriver
 language_data
+debug/
 
 # Language data files
 language_data/*.bin
