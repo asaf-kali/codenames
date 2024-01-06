@@ -5,7 +5,8 @@
 [![PyPI version](https://badge.fury.io/py/codenames.svg)](https://badge.fury.io/py/codenames)
 
 Code infrastructure for the Codenames board game. \
-Designed to serve as a base for implementing different Codenames players (solvers).
+Designed to serve as a base for implementing players (agents) with different strategies and algorithms. \
+See the [codenames-solvers](https://github.com/asaf-kali/codenames-solvers) repository for such examples.
 
 
 ### Installation
