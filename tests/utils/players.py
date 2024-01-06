@@ -1,9 +1,9 @@
-from typing import Dict, Iterable, List, NamedTuple, Optional, Tuple
+from typing import Dict, Iterable, List, NamedTuple
 
 from codenames.game.color import TeamColor
 from codenames.game.exceptions import QuitGame
 from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player, Team
+from codenames.game.player import GamePlayers, Guesser, Hinter, Player, Team
 from codenames.game.state import GuesserGameState, HinterGameState
 
 
@@ -16,8 +16,8 @@ class TestHinter(Hinter):
     def __init__(
         self,
         hints: Iterable[Hint],
+        team_color: TeamColor,
         name: str = "Test Hinter",
-        team_color: Optional[TeamColor] = None,
         auto_quit: bool = False,
     ):
         super().__init__(name=name, team_color=team_color)
@@ -39,8 +39,8 @@ class TestGuesser(Guesser):
     def __init__(
         self,
         guesses: Iterable[Guess],
+        team_color: TeamColor,
         name: str = "Test Guesser",
-        team_color: Optional[TeamColor] = None,
         auto_quit: bool = False,
     ):
         super().__init__(name=name, team_color=team_color)
@@ -63,20 +63,20 @@ class PredictedTurn(NamedTuple):
     guesses: List[int]
 
 
-def build_team(team_color: TeamColor, turns: Iterable[PredictedTurn]) -> Team:
-    hints = [turn.hint for turn in turns]
-    guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    hinter = TestHinter(hints=hints)
-    guesser = TestGuesser(guesses=guesses)
-    return Team(hinter=hinter, guesser=guesser, team_color=team_color)
-
-
-def build_teams(all_turns: Iterable[PredictedTurn]) -> Tuple[Team, Team]:
+def build_players(all_turns: Iterable[PredictedTurn], first_team: TeamColor = TeamColor.BLUE) -> GamePlayers:
     team_to_turns: Dict[TeamColor, List[PredictedTurn]] = {TeamColor.BLUE: [], TeamColor.RED: []}
-    current_team_color = TeamColor.BLUE
+    current_team_color = first_team
     for turn in all_turns:
         team_to_turns[current_team_color].append(turn)
         current_team_color = current_team_color.opponent
     blue_team = build_team(TeamColor.BLUE, turns=team_to_turns[TeamColor.BLUE])
     red_team = build_team(TeamColor.RED, turns=team_to_turns[TeamColor.RED])
-    return blue_team, red_team
+    return GamePlayers(blue_team=blue_team, red_team=red_team)
+
+
+def build_team(team_color: TeamColor, turns: Iterable[PredictedTurn]) -> Team:
+    hints = [turn.hint for turn in turns]
+    guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
+    hinter = TestHinter(hints=hints, team_color=team_color)
+    guesser = TestGuesser(guesses=guesses, team_color=team_color)
+    return Team(hinter=hinter, guesser=guesser)

@@ -1,55 +1,38 @@
 from typing import Tuple
 from unittest.mock import MagicMock
 
+import pytest
+
+from codenames.game.board import Board
 from codenames.game.color import CardColor, TeamColor
-from codenames.game.move import GivenGuess, GivenHint, Guess, Hint
-from codenames.game.player import PlayerRole
+from codenames.game.move import GivenGuess, GivenHint, Hint
 from codenames.game.runner import GameRunner
-from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.game.state import GameState, GuesserGameState
 from codenames.game.winner import Winner, WinningReason
-from tests.utils.constants import board_10
+from tests.utils import constants
+from tests.utils.common import run_game
 from tests.utils.hooks import hook_method
-from tests.utils.testing_players import (
-    PredictedTurn,
-    TestGuesser,
-    TestHinter,
-    build_teams,
-)
+from tests.utils.players import PredictedTurn, TestGuesser, TestHinter, build_players
 
 
-def test_game_runner_assigns_team_colors_to_players_on_game_runner_construction():
-    blue_hinter = TestHinter([])
-    blue_guesser = TestGuesser([])
-    red_hinter = TestHinter([])
-    red_guesser = TestGuesser([])
-
-    assert blue_hinter.team_color is None
-    assert red_hinter.team_color is None
-    assert blue_guesser.team_color is None
-    assert red_guesser.team_color is None
-
-    GameRunner(blue_hinter=blue_hinter, red_hinter=red_hinter, blue_guesser=blue_guesser, red_guesser=red_guesser)
-
-    assert blue_hinter.team_color == TeamColor.BLUE
-    assert red_hinter.team_color == TeamColor.RED
-    assert blue_guesser.team_color == TeamColor.BLUE
-    assert red_guesser.team_color == TeamColor.RED
+@pytest.fixture()
+def board() -> Board:
+    return constants.board_10()
 
 
-def test_game_runner_notifies_all_players_on_hint_given():
+def test_game_runner_notifies_all_players_on_hint_given(board: Board):
     all_turns = [
         PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
         PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
-    blue_team, red_team = build_teams(all_turns=all_turns)
-    runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
     on_hint_given_mock = MagicMock()
     on_guess_given_mock = MagicMock()
-    board = board_10()
-    for player in runner.players:
-        player.on_hint_given = on_hint_given_mock
-        player.on_guess_given = on_guess_given_mock
-    runner.run_game(board=board)
+    run_game(
+        board=board,
+        all_turns=all_turns,
+        on_hint_given_mock=on_hint_given_mock,
+        on_guess_given_mock=on_guess_given_mock,
+    )
 
     expected_given_hint_1 = GivenHint(word="a", card_amount=2, team_color=TeamColor.BLUE)
     expected_given_hint_2 = GivenHint(word="b", card_amount=1, team_color=TeamColor.RED)
@@ -75,35 +58,34 @@ def test_game_runner_notifies_all_players_on_hint_given():
     }
 
 
-def test_game_starts_with_team_with_most_cards():
-    blue_team, red_team = build_teams(all_turns=[])
-    red_team.hinter.hints = [Hint(word="A", card_amount=2)]
-    red_team.guesser.guesses = [Guess(card_index=9)]
-    runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    board = board_10()
+def test_game_starts_with_team_with_most_cards(board: Board):
+    players = build_players(
+        all_turns=[
+            PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[9]),
+        ],
+        first_team=TeamColor.RED,
+    )
     board.cards[3].color = CardColor.RED
     assert len(board.red_cards) > len(board.blue_cards)
-    runner.run_game(board=board)
+    runner = GameRunner(players=players, board=board)
+    runner.run_game()
 
     assert runner.winner == Winner(team_color=TeamColor.BLUE, reason=WinningReason.OPPONENT_HIT_BLACK)
 
 
-def test_game_runner_hinter_state():
+def test_game_runner_hinter_state(board: Board):
     all_turns = [
         PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
         PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
-    blue_team, red_team = build_teams(all_turns=all_turns)
-    runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    board = board_10()
 
     with hook_method(TestHinter, "pick_hint") as pick_hint_mock:
-        runner.run_game(board=board)
+        run_game(board=board, all_turns=all_turns)
 
     calls = pick_hint_mock.hook.calls
     assert len(calls) == 2
-    game_state_1: HinterGameState = calls[0].kwargs["game_state"]
-    game_state_2: HinterGameState = calls[1].kwargs["game_state"]
+    game_state_1: GameState = calls[0].kwargs["game_state"]
+    game_state_2: GameState = calls[1].kwargs["game_state"]
 
     for card in game_state_1.board:
         assert card.color is not None
@@ -124,17 +106,13 @@ def test_game_runner_hinter_state():
     assert game_state_2.given_hint_words == ("a",)
 
 
-def test_game_runner_guesser_state():
+def test_game_runner_guesser_state(board: Board):
     all_turns = [
         PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
         PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
-    blue_team, red_team = build_teams(all_turns=all_turns)
-    runner = GameRunner.from_teams(blue_team=blue_team, red_team=red_team)
-    board = board_10()
-
     with hook_method(TestGuesser, "guess") as pick_guess_mock:
-        runner.run_game(board=board)
+        run_game(board=board, all_turns=all_turns)
 
     calls = pick_guess_mock.hook.calls
     assert len(calls) == 5  # This game has 5 guesser turns
@@ -179,16 +157,3 @@ def test_game_runner_guesser_state():
         GivenGuess(given_hint=game_state_5.given_hints[1], guessed_card=board[4]),
     ]
     assert game_state_5.current_hint == game_state_5.given_hints[1]
-
-
-def test_get_player():
-    blue_hinter, red_hinter = TestHinter([]), TestHinter([])
-    blue_guesser, red_guesser = TestGuesser([]), TestGuesser([])
-    runner = GameRunner(
-        blue_hinter=blue_hinter, red_hinter=red_hinter, blue_guesser=blue_guesser, red_guesser=red_guesser
-    )
-
-    assert runner.get_player(TeamColor.BLUE, PlayerRole.HINTER) is blue_hinter
-    assert runner.get_player(TeamColor.BLUE, PlayerRole.GUESSER) is blue_guesser
-    assert runner.get_player(TeamColor.RED, PlayerRole.HINTER) is red_hinter
-    assert runner.get_player(TeamColor.RED, PlayerRole.GUESSER) is red_guesser

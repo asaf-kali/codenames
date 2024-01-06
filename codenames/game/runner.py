@@ -6,85 +6,51 @@ from codenames.game.board import Board
 from codenames.game.color import TeamColor
 from codenames.game.exceptions import InvalidGuess
 from codenames.game.move import GivenGuess, Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player, PlayerRole, Team
-from codenames.game.state import GameState, build_game_state
+from codenames.game.player import GamePlayers, Guesser, Hinter, Team
+from codenames.game.state import GameState, new_game_state
 from codenames.game.winner import Winner
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
 SEPARATOR = "\n-----\n"
+HintGivenSubscriber = Callable[[Hinter, Hint], None]
+GuessGivenSubscriber = Callable[[Guesser, Guess], None]
 
 
 class GameRunner:
-    def __init__(
-        self,
-        blue_hinter: Hinter,
-        red_hinter: Hinter,
-        blue_guesser: Guesser,
-        red_guesser: Guesser,
-        state: Optional[GameState] = None,
-    ):
-        self.blue_hinter = blue_hinter
-        self.red_hinter = red_hinter
-        self.blue_guesser = blue_guesser
-        self.red_guesser = red_guesser
-        self.state: GameState = state  # type: ignore
-        self.hint_given_subscribers: List[Callable[[Hinter, Hint], None]] = []
-        self.guess_given_subscribers: List[Callable[[Guesser, Guess], None]] = []
-        self._set_player_team_colors()
-
-    @staticmethod
-    def from_teams(blue_team: Team, red_team: Team):
-        return GameRunner(
-            blue_hinter=blue_team.hinter,
-            red_hinter=red_team.hinter,
-            blue_guesser=blue_team.guesser,
-            red_guesser=red_team.guesser,
-        )
+    def __init__(self, players: GamePlayers, state: Optional[GameState] = None, board: Optional[Board] = None):
+        self.players = players
+        if (not state and not board) or (state and board):
+            raise ValueError("Exactly one of state or board must be provided.")
+        self.state = state or new_game_state(board=board)
+        self.hint_given_subscribers: List[HintGivenSubscriber] = []
+        self.guess_given_subscribers: List[GuessGivenSubscriber] = []
 
     @cached_property
     def hinters(self) -> Tuple[Hinter, Hinter]:
-        return self.blue_hinter, self.red_hinter
+        return self.players.hinters
 
     @cached_property
     def guessers(self) -> Tuple[Guesser, Guesser]:
-        return self.blue_guesser, self.red_guesser
-
-    @cached_property
-    def players(self) -> Tuple[Player, ...]:
-        return *self.hinters, *self.guessers
+        return self.players.guessers
 
     @cached_property
     def blue_team(self) -> Team:
-        return Team(hinter=self.blue_hinter, guesser=self.blue_guesser, team_color=TeamColor.BLUE)
+        return self.players.blue_team
 
     @cached_property
     def red_team(self) -> Team:
-        return Team(hinter=self.red_hinter, guesser=self.red_guesser, team_color=TeamColor.RED)
+        return self.players.red_team
 
     @property
     def winner(self) -> Optional[Winner]:
         return self.state.winner
 
-    def run_game(self, board: Board) -> Winner:
-        if self.state is None:
-            self.state = build_game_state(board=board)
+    def run_game(self) -> Winner:
         self._notify_game_starts()
         winner = self._run_rounds()
         log.info(f"{SEPARATOR}{winner.reason.value}, {wrap(winner.team_color)} team wins!")
         return winner
-
-    def get_player(self, team_color: TeamColor, role: PlayerRole) -> Player:
-        team = self.blue_team if team_color == TeamColor.BLUE else self.red_team
-        if role == PlayerRole.HINTER:
-            return team.hinter
-        return team.guesser
-
-    def _set_player_team_colors(self):
-        for player in self.red_team:
-            player.team_color = TeamColor.RED
-        for player in self.blue_team:
-            player.team_color = TeamColor.BLUE
 
     def _notify_game_starts(self):
         censored_board = self.state.board.censured

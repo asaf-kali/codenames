@@ -57,6 +57,10 @@ class Board(BaseModel):
     def size(self) -> int:
         return len(self.cards)
 
+    @property
+    def is_clean(self) -> bool:
+        return all(not card.revealed for card in self.cards)
+
     @cached_property
     def all_words(self) -> WordGroup:
         return tuple(card.formatted_word for card in self.cards)
