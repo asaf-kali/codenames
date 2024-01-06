@@ -2,6 +2,23 @@
 
 
 
+## v4.1.0 (2024-01-06)
+
+### Other
+
+* 🧪 CI: add codecov for coverage monitoring. ([`857e680`](https://github.com/asaf-kali/codenames/commit/857e680c5bd423c9c04a5889173066e3e5890553))
+
+* 🧪 Makefile: adjust coverage commands. ([`c0ab67c`](https://github.com/asaf-kali/codenames/commit/c0ab67cb59e8d420ec0228a7cac573e954db1b7a))
+
+* 🩹 Changelog: fix commit hash. ([`94bc248`](https://github.com/asaf-kali/codenames/commit/94bc248353bbe4e356c4f5e64dce2a9e4d6088d1))
+
+* 🩹 Coverage: ignore online module. ([`07739ff`](https://github.com/asaf-kali/codenames/commit/07739ff3325185fba01d620ec0bfa407cf4d5fc8))
+
+### 🔥
+
+* 🔥 Refactor: GameRunner simplification, add GamePlayers model. ([`a7dc188`](https://github.com/asaf-kali/codenames/commit/a7dc188be75e30c71dca0fe9eb08c10c9c3ee2a0))
+
+
 ## v4.0.3 (2024-01-02)
 
 ### Other
@@ -13,7 +30,7 @@
 * 🔩 Game state: remove language. ([`01176e9`](https://github.com/asaf-kali/codenames/commit/01176e914e69e8a95deaa58507855f252ddb7235))
 
 
-## v4.0.2 (2024-01-02)
+## v4.0.2 (2024-01-04)
 
 ### Other
 
@@ -24,7 +41,7 @@
 * 📜 README: Add example output. ([`981bdc9`](https://github.com/asaf-kali/codenames/commit/981bdc95f5f76e6678125364e805161f090d900c))
 
 
-## v4.0.1 (2024-01-02)
+## v4.0.1 (2024-01-04)
 
 ### Other
 
@@ -37,7 +54,7 @@
 * 🚑 Player: remove language from game start event. ([`7d48a91`](https://github.com/asaf-kali/codenames/commit/7d48a91849865c041978585e564be7c748f48f3b))
 
 
-## v4.0.0 (2024-01-02)
+## v4.0.0 (2024-01-04)
 
 ### Other
 
@@ -64,7 +81,7 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 * 🚀 Board model: Simplifications and refactoring. ([`7f0ba56`](https://github.com/asaf-kali/codenames/commit/7f0ba56a6e3569d75045efd7e6fa226431e95dd6))
 
 
-## v3.0.8 (2024-01-02)
+## v3.0.8 (2024-01-04)
 
 ### Other
 
@@ -77,7 +94,7 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 * 🐛 Publish package: publish only if release was made. ([`2b0af2a`](https://github.com/asaf-kali/codenames/commit/2b0af2a690da29a8de50f39e3e995b885a8799ec))
 
 
-## v3.0.7 (2024-01-01)
+## v3.0.7 (2024-01-04)
 
 ### Other
 
@@ -94,7 +111,7 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 * 🛠️ Sematic release: configurations and CI fixes. ([`6185b1d`](https://github.com/asaf-kali/codenames/commit/6185b1dbe588735e9c5853442bd24966e2b6f767))
 
 
-## v3.0.6 (2023-12-31)
+## v3.0.6 (2024-01-04)
 
 ### Other
 
