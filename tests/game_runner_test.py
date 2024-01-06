@@ -12,7 +12,12 @@ from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 from tests.utils.common import run_game
 from tests.utils.hooks import hook_method
-from tests.utils.players import PredictedTurn, TestGuesser, TestHinter, build_players
+from tests.utils.players import (
+    DictatedGuesser,
+    DictatedHinter,
+    DictatedTurn,
+    build_players,
+)
 
 
 @pytest.fixture()
@@ -22,8 +27,8 @@ def board() -> Board:
 
 def test_game_runner_notifies_all_players_on_hint_given(board: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
-        PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
+        DictatedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
     on_hint_given_mock = MagicMock()
     on_guess_given_mock = MagicMock()
@@ -61,7 +66,7 @@ def test_game_runner_notifies_all_players_on_hint_given(board: Board):
 def test_game_starts_with_team_with_most_cards(board: Board):
     players = build_players(
         all_turns=[
-            PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[9]),
+            DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[9]),
         ],
         first_team=TeamColor.RED,
     )
@@ -75,11 +80,11 @@ def test_game_starts_with_team_with_most_cards(board: Board):
 
 def test_game_runner_hinter_state(board: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
-        PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
+        DictatedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
 
-    with hook_method(TestHinter, "pick_hint") as pick_hint_mock:
+    with hook_method(DictatedHinter, "pick_hint") as pick_hint_mock:
         run_game(board=board, all_turns=all_turns)
 
     calls = pick_hint_mock.hook.calls
@@ -108,10 +113,10 @@ def test_game_runner_hinter_state(board: Board):
 
 def test_game_runner_guesser_state(board: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
-        PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
+        DictatedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 9]),
     ]
-    with hook_method(TestGuesser, "guess") as pick_guess_mock:
+    with hook_method(DictatedGuesser, "guess") as pick_guess_mock:
         run_game(board=board, all_turns=all_turns)
 
     calls = pick_guess_mock.hook.calls

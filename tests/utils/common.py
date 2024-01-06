@@ -3,12 +3,12 @@ from unittest.mock import Mock
 
 from codenames.game.board import Board
 from codenames.game.runner import GameRunner, GuessGivenSubscriber, HintGivenSubscriber
-from tests.utils.players import PredictedTurn, build_players
+from tests.utils.players import DictatedTurn, build_players
 
 
 def run_game(
     board: Board,
-    all_turns: List[PredictedTurn],
+    all_turns: List[DictatedTurn],
     hint_given_sub: Optional[HintGivenSubscriber] = None,
     guess_given_sub: Optional[GuessGivenSubscriber] = None,
     on_hint_given_mock: Optional[Mock] = None,

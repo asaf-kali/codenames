@@ -15,7 +15,7 @@ from codenames.game.move import (
 from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 from tests.utils.common import run_game
-from tests.utils.players import PredictedTurn
+from tests.utils.players import DictatedTurn
 
 
 @pytest.fixture()
@@ -25,9 +25,9 @@ def board_10() -> Board:
 
 def test_blue_reveals_all_and_wins(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="C", card_amount=2), guesses=[2, 3]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="C", card_amount=2), guesses=[2, 3]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
     assert runner.winner == Winner(team_color=TeamColor.BLUE, reason=WinningReason.TARGET_SCORE_REACHED)
@@ -35,10 +35,10 @@ def test_blue_reveals_all_and_wins(board_10: Board):
 
 def test_red_reveals_all_and_wins(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
-        PredictedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
+        DictatedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
     assert runner.winner == Winner(team_color=TeamColor.RED, reason=WinningReason.TARGET_SCORE_REACHED)
@@ -46,7 +46,7 @@ def test_red_reveals_all_and_wins(board_10: Board):
 
 def test_blue_picks_black_and_red_wins(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 9]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 9]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
     assert runner.winner == Winner(team_color=TeamColor.RED, reason=WinningReason.OPPONENT_HIT_BLACK)
@@ -54,9 +54,9 @@ def test_blue_picks_black_and_red_wins(board_10: Board):
 
 def test_blue_picks_red_and_red_wins(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 7]),  # Hits gray
-        PredictedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, 1]),  # Hits blue
-        PredictedTurn(hint=Hint(word="C", card_amount=1), guesses=[2, 6]),  # Hits last red
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 7]),  # Hits gray
+        DictatedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, 1]),  # Hits blue
+        DictatedTurn(hint=Hint(word="C", card_amount=1), guesses=[2, 6]),  # Hits last red
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
 
@@ -81,10 +81,10 @@ def test_blue_picks_red_and_red_wins(board_10: Board):
 def test_hint_subscribers_are_notified(board_10: Board):
     hint_given_subscriber = MagicMock()
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
-        PredictedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
+        DictatedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns, hint_given_sub=hint_given_subscriber)
 
@@ -112,10 +112,10 @@ def test_hint_subscribers_are_notified(board_10: Board):
 def test_guess_subscribers_are_notified(board_10: Board):
     guess_given_subscriber = MagicMock()
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
-        PredictedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="B", card_amount=2), guesses=[4, 5, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="C", card_amount=2), guesses=[7]),  # Hits gray
+        DictatedTurn(hint=Hint(word="D", card_amount=1), guesses=[6]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns, guess_given_sub=guess_given_subscriber)
 
@@ -158,9 +158,9 @@ def test_guess_subscribers_are_notified(board_10: Board):
 
 def test_turns_switch_when_guessers_use_extra_guess(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
-        PredictedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 5]),
-        PredictedTurn(hint=Hint(word="C", card_amount=1), guesses=[3]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, 2]),
+        DictatedTurn(hint=Hint(word="B", card_amount=1), guesses=[4, 5]),
+        DictatedTurn(hint=Hint(word="C", card_amount=1), guesses=[3]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
 
@@ -183,8 +183,8 @@ def test_turns_switch_when_guessers_use_extra_guess(board_10: Board):
 
 def test_hinter_quit_ends_game(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
-        PredictedTurn(hint=Hint(word="B", card_amount=QUIT_GAME), guesses=[]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, PASS_GUESS]),
+        DictatedTurn(hint=Hint(word="B", card_amount=QUIT_GAME), guesses=[]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
 
@@ -200,7 +200,7 @@ def test_hinter_quit_ends_game(board_10: Board):
 
 def test_guesser_quit_ends_game(board_10: Board):
     all_turns = [
-        PredictedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, QUIT_GAME]),
+        DictatedTurn(hint=Hint(word="A", card_amount=2), guesses=[0, 1, QUIT_GAME]),
     ]
     runner = run_game(board=board_10, all_turns=all_turns)
 
