@@ -12,7 +12,7 @@ class UnexpectedEndOfInput(Exception):
         self.player = player
 
 
-class TestHinter(Hinter):
+class DictatedHinter(Hinter):
     def __init__(
         self,
         hints: Iterable[Hint],
@@ -35,7 +35,7 @@ class TestHinter(Hinter):
         return hint
 
 
-class TestGuesser(Guesser):
+class DictatedGuesser(Guesser):
     def __init__(
         self,
         guesses: Iterable[Guess],
@@ -58,13 +58,13 @@ class TestGuesser(Guesser):
         return guess
 
 
-class PredictedTurn(NamedTuple):
+class DictatedTurn(NamedTuple):
     hint: Hint
     guesses: List[int]
 
 
-def build_players(all_turns: Iterable[PredictedTurn], first_team: TeamColor = TeamColor.BLUE) -> GamePlayers:
-    team_to_turns: Dict[TeamColor, List[PredictedTurn]] = {TeamColor.BLUE: [], TeamColor.RED: []}
+def build_players(all_turns: Iterable[DictatedTurn], first_team: TeamColor = TeamColor.BLUE) -> GamePlayers:
+    team_to_turns: Dict[TeamColor, List[DictatedTurn]] = {TeamColor.BLUE: [], TeamColor.RED: []}
     current_team_color = first_team
     for turn in all_turns:
         team_to_turns[current_team_color].append(turn)
@@ -74,9 +74,9 @@ def build_players(all_turns: Iterable[PredictedTurn], first_team: TeamColor = Te
     return GamePlayers(blue_team=blue_team, red_team=red_team)
 
 
-def build_team(team_color: TeamColor, turns: Iterable[PredictedTurn]) -> Team:
+def build_team(team_color: TeamColor, turns: Iterable[DictatedTurn]) -> Team:
     hints = [turn.hint for turn in turns]
     guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    hinter = TestHinter(hints=hints, team_color=team_color)
-    guesser = TestGuesser(guesses=guesses, team_color=team_color)
+    hinter = DictatedHinter(hints=hints, team_color=team_color)
+    guesser = DictatedGuesser(guesses=guesses, team_color=team_color)
     return Team(hinter=hinter, guesser=guesser)
