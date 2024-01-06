@@ -16,7 +16,8 @@ from codenames.game.color import CardColor
 from codenames.game.move import PASS_GUESS, Guess, Hint
 from codenames.game.player import Player, PlayerRole
 from codenames.game.state import GuesserGameState
-from codenames.online.utils import ShadowRootElement, poll_condition
+from codenames.online.namecoding.shadow import ShadowRootElement
+from codenames.online.utils import poll_condition
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
