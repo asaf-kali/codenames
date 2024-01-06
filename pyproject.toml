@@ -92,7 +92,7 @@ patch_tags = [
 addopts = "-s --disable-pytest-warnings"
 
 [tool.coverage.run]
-source = ["codenames"]
+source = ["codenames", "tests"]
 omit = ["codenames/online/*"]
 
 # Lint
@@ -112,7 +112,7 @@ profile = "black"
 
 [tool.mypy]
 ignore_missing_imports = true
-exclude = ["build", "dist"]
+exclude = ["build", "dist", "codenames/online/namecoding"]
 
 [tool.pylint]
 max-line-length = 120
@@ -137,3 +137,6 @@ disable = [
     "too-many-locals",
 ]
 extension-pkg-allow-list = ["pydantic"]
+
+[tool.pylint.MASTER]
+ignore-paths = '^codenames/online/namecoding/.*$'

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from enum import Enum
 from time import sleep
@@ -114,7 +116,7 @@ class NamecodingPlayerAdapter:
 
     # Methods #
 
-    def open(self) -> "NamecodingPlayerAdapter":
+    def open(self) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is logging in...")
         self.driver.get(WEBAPP_URL)
         login_page = self.get_login_page()
@@ -124,14 +126,14 @@ class NamecodingPlayerAdapter:
         login_button.click()
         return self
 
-    def host_game(self) -> "NamecodingPlayerAdapter":
+    def host_game(self) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is hosting...")
         menu_page = self.get_menu_page()
         host_button = menu_page.find_element(by=By.ID, value="host-button")
         host_button.click()
         return self
 
-    def join_game(self, game_id: str) -> "NamecodingPlayerAdapter":
+    def join_game(self, game_id: str) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is joining game {wrap(game_id)}...")
         menu_page = self.get_menu_page()
         game_id_input = menu_page.find_element(by=By.ID, value="game-id-input")
@@ -146,7 +148,7 @@ class NamecodingPlayerAdapter:
         game_id = game_id_container.text.strip()
         return game_id
 
-    def choose_role(self) -> "NamecodingPlayerAdapter":
+    def choose_role(self) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is picking role...")
         lobby_page = self.get_lobby_page()
         team_element_id = f"{self.player.team_color.value.lower()}-team"  # type: ignore
@@ -156,7 +158,7 @@ class NamecodingPlayerAdapter:
         role_button.click()
         return self
 
-    def set_language(self, language: NamecodingLanguage) -> "NamecodingPlayerAdapter":
+    def set_language(self, language: NamecodingLanguage) -> NamecodingPlayerAdapter:
         lobby_page = self.get_lobby_page()
         options_section = lobby_page.find_element(by=By.ID, value="options-section")
         language_options = get_shadow_root(options_section, tag_name="x-options")
@@ -166,7 +168,7 @@ class NamecodingPlayerAdapter:
         sleep(0.1)
         return self
 
-    def set_clock(self, clock: bool) -> "NamecodingPlayerAdapter":
+    def set_clock(self, clock: bool) -> NamecodingPlayerAdapter:
         lobby_page = self.get_lobby_page()
         options_section = lobby_page.find_element(by=By.ID, value="options-section")
         checkbox = options_section.find_element(by=By.TAG_NAME, value="x-checkbox")
@@ -176,7 +178,7 @@ class NamecodingPlayerAdapter:
             sleep(0.1)
         return self
 
-    def ready(self, ready: bool = True) -> "NamecodingPlayerAdapter":
+    def ready(self, ready: bool = True) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is ready!")
         lobby_page = self.get_lobby_page()
         switch = lobby_page.find_element(by=By.ID, value="ready-switch")
@@ -186,7 +188,7 @@ class NamecodingPlayerAdapter:
             sleep(0.1)
         return self
 
-    def click_start_game(self) -> "NamecodingPlayerAdapter":
+    def click_start_game(self) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is starting the game!")
         try:
             lobby_page = self.get_lobby_page()
@@ -236,7 +238,7 @@ class NamecodingPlayerAdapter:
         log.debug("No visibility change found")
         return None
 
-    def transmit_hint(self, hint: Hint) -> "NamecodingPlayerAdapter":
+    def transmit_hint(self, hint: Hint) -> NamecodingPlayerAdapter:
         log.debug(f"Sending hint: {hint}")
         clue_area = self.get_clue_area()
         sleep(0.1)
@@ -267,7 +269,7 @@ class NamecodingPlayerAdapter:
                 log.debug(f"Alert not found, sleeping {interval_seconds} seconds.")
                 sleep(interval_seconds)
 
-    def transmit_guess(self, guess: Guess) -> "NamecodingPlayerAdapter":
+    def transmit_guess(self, guess: Guess) -> NamecodingPlayerAdapter:
         log.debug(f"Sending guess: {guess}")
         game_page = self.get_game_page()
         if guess.card_index == PASS_GUESS:

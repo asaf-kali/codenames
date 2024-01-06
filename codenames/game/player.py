@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Collection, Iterator, Tuple
 
 from codenames.game.color import CardColor, TeamColor
 from codenames.utils.formatting import camel_case_split
@@ -29,7 +29,7 @@ class PlayerRole(str, Enum):
 
 
 class Player:
-    def __init__(self, name: str, team_color: Optional[TeamColor] = None):
+    def __init__(self, name: str, team_color: TeamColor):
         self.name = name
         self.team_color = team_color
 
@@ -60,8 +60,6 @@ class Player:
 
     @property
     def team_card_color(self) -> CardColor:
-        if self.team_color is None:
-            raise ValueError("Team color not set")
         return self.team_color.as_card_color
 
     def on_game_start(self, board: Board):
@@ -96,11 +94,59 @@ class Guesser(Player, ABC):
 class Team:
     hinter: Hinter
     guesser: Guesser
-    team_color: TeamColor
+
+    def __post_init__(self):
+        if self.hinter.team_color != self.guesser.team_color:
+            raise ValueError(f"Team hinter {self.hinter} and guesser {self.guesser} must have the same team color")
+
+
+@dataclass(frozen=True)
+class GamePlayers:
+    blue_team: Team
+    red_team: Team
+
+    @staticmethod
+    def from_collection(players: Collection[Player]) -> GamePlayers:
+        if len(players) != 4:
+            raise ValueError("There must be exactly 4 players")
+        blue_team = find_team(players, team_color=TeamColor.BLUE)
+        red_team = find_team(players, team_color=TeamColor.RED)
+        return GamePlayers(blue_team=blue_team, red_team=red_team)
 
     @property
-    def players(self) -> Tuple[Hinter, Guesser]:
-        return self.hinter, self.guesser
+    def hinters(self) -> Tuple[Hinter, Hinter]:
+        return self.blue_team.hinter, self.red_team.hinter
 
-    def __iter__(self):
-        return iter(self.players)
+    @property
+    def guessers(self) -> Tuple[Guesser, Guesser]:
+        return self.blue_team.guesser, self.red_team.guesser
+
+    @property
+    def all(self) -> Tuple[Hinter, Guesser, Hinter, Guesser]:
+        return self.blue_team.hinter, self.blue_team.guesser, self.red_team.hinter, self.red_team.guesser
+
+    def __iter__(self) -> Iterator[Player]:
+        return iter(self.all)
+
+    def get_player(self, team_color: TeamColor, role: PlayerRole) -> Player:
+        team = self.blue_team if team_color == TeamColor.BLUE else self.red_team
+        if role == PlayerRole.HINTER:
+            return team.hinter
+        return team.guesser
+
+
+def find_team(players: Collection[Player], team_color: TeamColor) -> Team:
+    hinter = guesser = None
+    for player in players:
+        if player.team_color == team_color:
+            if isinstance(player, Hinter):
+                hinter = player
+            elif isinstance(player, Guesser):
+                guesser = player
+            else:
+                raise ValueError(f"Player {player} is not a Hinter or Guesser")
+    if hinter is None:
+        raise ValueError(f"No Hinter found for team {team_color}")
+    if guesser is None:
+        raise ValueError(f"No Guesser found for team {team_color}")
+    return Team(hinter=hinter, guesser=guesser)

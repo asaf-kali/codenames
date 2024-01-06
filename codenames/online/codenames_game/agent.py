@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import logging
 from abc import ABC
 from typing import TYPE_CHECKING, Optional
 
+from codenames.game.color import TeamColor
 from codenames.game.move import Guess, Hint
 from codenames.game.player import Guesser, Hinter, Player
 from codenames.game.state import GuesserGameState, HinterGameState
@@ -13,11 +16,11 @@ log = logging.getLogger(__name__)
 
 
 class Agent(Player, ABC):
-    def __init__(self, name: str):
-        super().__init__(name)
-        self.adapter: Optional["CodenamesGamePlayerAdapter"] = None
+    def __init__(self, name: str, team_color: TeamColor):
+        super().__init__(name, team_color)
+        self.adapter: Optional[CodenamesGamePlayerAdapter] = None
 
-    def set_host_adapter(self, adapter: "CodenamesGamePlayerAdapter"):
+    def set_host_adapter(self, adapter: CodenamesGamePlayerAdapter):
         self.adapter = adapter
 
 
