@@ -97,6 +97,7 @@ jobs:
     concurrency: release
     permissions:
       id-token: write
+      contents: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -125,11 +126,11 @@ jobs:
           else
             make semrel-dev
           fi
-      - name: Publish to PyPI
-        if: ${{ github.ref == 'refs/heads/main' && steps.release-status.outputs.released == 'true' }}
-        uses: pypa/gh-action-pypi-publish@release/v1
       - name: Publish to TestPyPI
         if: ${{ github.ref != 'refs/heads/main' && steps.release-status.outputs.released == 'true' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+      - name: Publish to PyPI
+        if: ${{ github.ref == 'refs/heads/main' && steps.release-status.outputs.released == 'true' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
