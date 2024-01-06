@@ -22,7 +22,7 @@ install-run:
 	poetry install --only main
 
 install-test:
-	poetry install --only main --only test
+	poetry install --only main --only test --extras web
 
 install-lint:
 	poetry install --only lint
@@ -44,7 +44,7 @@ lock-check:
 # Test
 
 test:
-	python -m $(PYTHON_TEST_COMMAND)
+	python -m $(PYTHON_TEST_COMMAND) -m "not web"
 
 cover-base:
 	coverage run -m $(PYTHON_TEST_COMMAND)
