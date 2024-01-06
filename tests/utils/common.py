@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 from codenames.game.board import Board
 from codenames.game.runner import GameRunner, GuessGivenSubscriber, HintGivenSubscriber
-from tests.utils.players import DictatedTurn, build_players
+from tests.utils.players.dictated import DictatedTurn, build_players
 
 
 def run_game(

@@ -15,7 +15,7 @@ from codenames.game.move import (
 from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 from tests.utils.common import run_game
-from tests.utils.players import DictatedTurn
+from tests.utils.players.dictated import DictatedTurn
 
 
 @pytest.fixture()
