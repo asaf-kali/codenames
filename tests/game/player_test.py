@@ -2,7 +2,7 @@ import pytest
 
 from codenames.game.color import CardColor, TeamColor
 from codenames.game.player import GamePlayers, Player, PlayerRole, Team
-from tests.utils.players import DictatedGuesser, DictatedHinter
+from tests.utils.players.dictated import DictatedGuesser, DictatedHinter
 
 
 def test_player_team_card_color():

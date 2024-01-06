@@ -12,7 +12,7 @@ from codenames.game.winner import Winner, WinningReason
 from tests.utils import constants
 from tests.utils.common import run_game
 from tests.utils.hooks import hook_method
-from tests.utils.players import (
+from tests.utils.players.dictated import (
     DictatedGuesser,
     DictatedHinter,
     DictatedTurn,
