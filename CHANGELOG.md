@@ -2,9 +2,18 @@
 
 
 
+## v4.1.1 (2024-01-06)
+
+### 📜
+
+* 📜 Readme: link solvers repository. ([`1e4fa6a`](https://github.com/asaf-kali/codenames/commit/1e4fa6a6d1b6532fb5fd9835e47449570545a3b8))
+
+
 ## v4.1.0 (2024-01-06)
 
 ### Other
+
+* 🤖 Release [4.1.0] [skip ci] ([`ac63572`](https://github.com/asaf-kali/codenames/commit/ac6357290b4eb8741b632f0f8d394ed34ac66127))
 
 * 🧪 CI: add codecov for coverage monitoring. ([`857e680`](https://github.com/asaf-kali/codenames/commit/857e680c5bd423c9c04a5889173066e3e5890553))
 
