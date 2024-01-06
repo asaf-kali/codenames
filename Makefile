@@ -117,7 +117,6 @@ lint: format
 wip: format
 	git add .
 	git commit -m "Auto commit." --no-verify
-	git push
 
 amend: format
 	git add .

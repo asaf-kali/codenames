@@ -25,6 +25,7 @@ log = logging.getLogger(__name__)
 
 T = TypeVar("T")
 WEBAPP_URL = "https://codenames.game/"
+BAD_PATH_CHARS = {"\\", "/", ":", "*", "?", '"', "<", ">", "|", "\r", "\n"}
 
 
 class CodenamesGameLanguage(str, Enum):
@@ -56,8 +57,7 @@ class CodenamesGamePlayerAdapter:
         if headless:
             options.add_argument("headless")
         if not chromedriver_path:
-            log.warning("Chromedriver path not given, searching in root directory...")
-            chromedriver_path = "./chromedriver"  # TODO: Make default path a config
+            chromedriver_path = os.environ.get("CHROMEDRIVER_PATH")
         service = Service(executable_path=chromedriver_path)
         self.driver = webdriver.Chrome(service=service, options=options)
         self.driver.implicitly_wait(implicitly_wait)
@@ -165,10 +165,10 @@ class CodenamesGamePlayerAdapter:
         log.debug(f"Sending guess: {guess}")
         if guess.card_index == PASS_GUESS:
             end_guessing_button = self.poll_element(self.get_end_guessing_button)
-            multi_click(end_guessing_button, times=10)
+            multi_click(end_guessing_button, times=10, warn=False)
         else:
             picker = self.poll_element(lambda: self.get_card_picker(guess.card_index))
-            multi_click(picker, times=10)
+            multi_click(picker, times=10, warn=False)
         sleep(2)
         return self
 
@@ -258,14 +258,23 @@ class CodenamesGamePlayerAdapter:
             return poll_element(element_getter, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
         except Exception as e:
             if screenshot:
-                file_name = self.screenshot(f"failed-polling-{time()}")
+                file_name = self.screenshot("failed polling")
                 log.info(f"Failed polling, screenshot saved to {file_name}")
             raise e
 
-    def screenshot(self, file_name: str):
-        os.makedirs("./debug", exist_ok=True)
-        path = os.path.abspath(f"./debug/{file_name}.png")
-        self.driver.save_screenshot(path)
+    def screenshot(self, tag: str, directory: str = "./debug", raise_on_error: bool = False) -> Optional[str]:
+        try:
+            os.makedirs(directory, exist_ok=True)
+            now_ms = int(time() * 1000)
+            file_name = sanitize_for_path(f"{now_ms}-{self.player}-{tag}.png")
+            path = os.path.abspath(f"{directory}/{file_name}")
+            self.driver.save_screenshot(path)
+        except Exception as e:  # pylint: disable=broad-except
+            if raise_on_error:
+                raise e
+            log.warning(f"Failed to save screenshot: {e}")
+            return None
+        log.info(f"Screenshot saved to {path}")
         return path
 
     def poll_hint_given(self) -> Hint:
@@ -305,3 +314,10 @@ class CodenamesGamePlayerAdapter:
             sleep(1)
         log.debug("Returning pass guess.")
         return Guess(card_index=PASS_GUESS)
+
+
+def sanitize_for_path(string: str) -> str:
+    string = string.lower()
+    for char in BAD_PATH_CHARS:
+        string = string.replace(char, "")
+    return string
