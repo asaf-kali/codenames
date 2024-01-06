@@ -2,7 +2,32 @@
 
 
 
+## v4.1.2 (2024-01-06)
+
+### Other
+
+* 🔨 CI pipeline: fix. ([`4b2dc59`](https://github.com/asaf-kali/codenames/commit/4b2dc59669dc6dcdcf1b96ded1963c0c06440eb6))
+
+* 🔨 CI pipeline: apply best practices. ([`cd6c2e5`](https://github.com/asaf-kali/codenames/commit/cd6c2e5fa645ef2113dd215f9d28032ef196a412))
+
+* 🎆 Tests: add online tests. ([`4454432`](https://github.com/asaf-kali/codenames/commit/44544328cde5c73ad2d1692b8b2deba06e87e759))
+
+* 🔨 Tests: reorganize. ([`5af6d9c`](https://github.com/asaf-kali/codenames/commit/5af6d9c294f7bba0eafa375fe3f6b69d6c44aa9d))
+
+* 🔨 Tests: remove duplicate file. ([`e72dfc2`](https://github.com/asaf-kali/codenames/commit/e72dfc21e3357a27b01d78de416c0544ab5fa9ce))
+
+* 🔨 Tests: better naming for testing players. ([`ce2bf0e`](https://github.com/asaf-kali/codenames/commit/ce2bf0e127dc74afb190697200df164a64ed26de))
+
+### 🏗️
+
+* 🏗️ Online: support chromedriver from env variable, CodenamesGameRunner as context manager. ([`3c16032`](https://github.com/asaf-kali/codenames/commit/3c16032349b9c15bc4ddf99b883583c6227b3d8f))
+
+
 ## v4.1.1 (2024-01-06)
+
+### Other
+
+* 🤖 Release [4.1.1] [skip ci] ([`9f845d5`](https://github.com/asaf-kali/codenames/commit/9f845d5c27992fbe921e6a5de4ff65d563ade9e8))
 
 ### 📜
 
@@ -33,8 +58,6 @@
 ### Other
 
 * 🤖 Release [4.0.3] [skip ci] ([`74f78af`](https://github.com/asaf-kali/codenames/commit/74f78afab12a85a62e4b6b881c52f21c244a0aad))
-
-### 🔩
 
 * 🔩 Game state: remove language. ([`01176e9`](https://github.com/asaf-kali/codenames/commit/01176e914e69e8a95deaa58507855f252ddb7235))
 
@@ -127,6 +150,8 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 * Merge pull request #2 from asaf-kali/ci
 
 🔩 CI: unified pipeline, python 3.11, poetry caching. ([`b930aa7`](https://github.com/asaf-kali/codenames/commit/b930aa77aa75804f555fcbe6c43fd709e78a42da))
+
+* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`5935b35`](https://github.com/asaf-kali/codenames/commit/5935b3549290e1cf492d8009aa80e683952da3c6))
 
 * :sparkles: Online: work on Codenames Game agents. ([`d458401`](https://github.com/asaf-kali/codenames/commit/d458401bcfc0507a6b873d45120f2f4459ae6f8e))
 
@@ -233,7 +258,3 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 * Add readme. ([`2c761a6`](https://github.com/asaf-kali/codenames/commit/2c761a6fea7d957cc03922f2de6a2034f1740a23))
 
 * Initial commit: copy package files from solver repository. ([`555aff7`](https://github.com/asaf-kali/codenames/commit/555aff7a968fb48fa722d5072fbd0d8a8a43ac34))
-
-### 🔩
-
-* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`5935b35`](https://github.com/asaf-kali/codenames/commit/5935b3549290e1cf492d8009aa80e683952da3c6))
