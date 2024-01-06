@@ -79,6 +79,11 @@ jobs:
       - name: Run tests
         run: |
           make cover-xml
+      - name: Upload debug artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug-artifacts-${{ github.sha }}
+          path: ./debug
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:

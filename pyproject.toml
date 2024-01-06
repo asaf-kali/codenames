@@ -18,7 +18,7 @@ web = ["selenium"]
 
 [tool.poetry.dependencies]
 # Core
-python = "^3.8"
+python = "^3.9"
 pydantic = "^1.9"
 # CLI
 beautifultable = "^1.0"
@@ -28,6 +28,7 @@ selenium = { version = "^4.1", optional = true }
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.2"
 coverage = "^7.2.3"
+pytest-retry = "^1.6"
 
 [tool.poetry.group.lint.dependencies]
 ruff = "^0.0.261"
@@ -87,11 +88,12 @@ patch_tags = [
 # Test
 
 [tool.pytest.ini_options]
+retries = 3
 addopts = "-s --disable-pytest-warnings"
 
 [tool.coverage.run]
 source = ["codenames", "tests"]
-omit = ["codenames/online/*"]
+omit = ["codenames/online/namecoding/*"]
 
 # Lint
 
