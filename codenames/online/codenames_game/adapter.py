@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import os
 from dataclasses import dataclass
@@ -73,13 +75,13 @@ class CodenamesGamePlayerAdapter:
 
     # Methods #
 
-    def open(self) -> "CodenamesGamePlayerAdapter":
+    def open(self) -> CodenamesGamePlayerAdapter:
         game_url = self.game_url or WEBAPP_URL
         log.info(f"{self.log_prefix} opening {game_url}")
         self.driver.get(game_url)
         return self
 
-    def host_game(self, game_configs: Optional[GameConfigs] = None) -> "CodenamesGamePlayerAdapter":
+    def host_game(self, game_configs: Optional[GameConfigs] = None) -> CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} creating a room...")
         if game_configs is None:
             game_configs = GameConfigs()
@@ -105,7 +107,7 @@ class CodenamesGamePlayerAdapter:
         multi_click(submit_button)
         return self
 
-    def choose_role(self) -> "CodenamesGamePlayerAdapter":
+    def choose_role(self) -> CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} picking role...")
         join_button = self.get_join_button()
         # suffix = f"{self.player.name.lower()}-{time()}"
@@ -140,7 +142,7 @@ class CodenamesGamePlayerAdapter:
         log.debug("Board parsed.")
         return Board(language=language, cards=cards)
 
-    def transmit_hint(self, hint: Hint) -> "CodenamesGamePlayerAdapter":
+    def transmit_hint(self, hint: Hint) -> CodenamesGamePlayerAdapter:
         log.debug(f"Sending hint: {hint}")
         # Clue value
         clue_input = self.poll_element(self.get_clue_input)
@@ -159,7 +161,7 @@ class CodenamesGamePlayerAdapter:
         sleep(3)
         return self
 
-    def transmit_guess(self, guess: Guess) -> "CodenamesGamePlayerAdapter":
+    def transmit_guess(self, guess: Guess) -> CodenamesGamePlayerAdapter:
         log.debug(f"Sending guess: {guess}")
         if guess.card_index == PASS_GUESS:
             end_guessing_button = self.poll_element(self.get_end_guessing_button)

@@ -90,7 +90,7 @@ class NamecodingGameRunner:
 
     def auto_start(
         self, language: NamecodingLanguage = NamecodingLanguage.ENGLISH, clock: bool = True
-    ) -> "NamecodingGameRunner":
+    ) -> NamecodingGameRunner:
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
@@ -111,7 +111,7 @@ class NamecodingGameRunner:
         self.run_game()
         return self
 
-    def host_game(self, host_player: Optional[Hinter] = None) -> "NamecodingGameRunner":
+    def host_game(self, host_player: Optional[Hinter] = None) -> NamecodingGameRunner:
         if self.host:
             raise IllegalOperation("A game is already running.")
         if host_player is None:

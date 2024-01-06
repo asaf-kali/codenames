@@ -114,11 +114,11 @@ lint: format
 
 # Quick and dirty
 
-wip:
+wip: format
 	git add .
 	git commit -m "Auto commit." --no-verify
 	git push
 
-amend:
+amend: format
 	git add .
 	git commit --amend --no-edit --no-verify

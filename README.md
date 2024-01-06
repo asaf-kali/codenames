@@ -17,11 +17,13 @@ Here is a simple example of command-line based players, and a `GameRunner` that 
 
 ```python
 import logging
+
 import sys
 
 from codenames.boards.builder import generate_board
+from codenames.game.color import TeamColor
 from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter
+from codenames.game.player import Guesser, Hinter, GamePlayers
 from codenames.game.runner import GameRunner
 from codenames.game.state import GuesserGameState, HinterGameState
 
@@ -51,15 +53,12 @@ class CLIGuesser(Guesser):
 def run_cli_game():
     language = "english"
     board = generate_board(language=language)
-    red_hinter, red_guesser = CLIHinter(name="Einstein"), CLIGuesser(name="Newton")
-    blue_hinter, blue_guesser = CLIHinter(name="Yoda"), CLIGuesser(name="Luke")
-    runner = GameRunner(
-        blue_hinter=blue_hinter,
-        blue_guesser=blue_guesser,
-        red_hinter=red_hinter,
-        red_guesser=red_guesser,
-    )
-    runner.run_game(board=board)
+    blue_hinter, blue_guesser = CLIHinter("Yoda", TeamColor.BLUE), CLIGuesser("Luke", TeamColor.BLUE)
+    red_hinter, red_guesser = CLIHinter("Einstein", TeamColor.RED), CLIGuesser("Newton", TeamColor.RED)
+    players = GamePlayers.from_collection([blue_hinter, blue_guesser, red_hinter, red_guesser])
+    runner = GameRunner(players=players, board=board)
+    winner = runner.run_game()
+    print(f"Winner: {winner}")
 
 
 if __name__ == "__main__":

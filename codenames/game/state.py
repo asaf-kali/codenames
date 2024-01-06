@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 import logging
 from functools import cached_property
 from typing import Dict, List, Optional
-
-from pydantic import root_validator
 
 from codenames.game.base import BaseModel, WordGroup, canonical_format
 from codenames.game.board import Board
@@ -38,13 +38,21 @@ log = logging.getLogger(__name__)
 class BaseGameState(BaseModel):
     board: Board
     score: Score
-    current_team_color: TeamColor = TeamColor.BLUE
+    current_team_color: TeamColor
     current_player_role: PlayerRole = PlayerRole.HINTER
     given_hints: List[GivenHint] = []
     given_guesses: List[GivenGuess] = []
 
     class Config:
         abstract = True
+
+    @property
+    def given_hint_words(self) -> WordGroup:
+        return tuple(hint.formatted_word for hint in self.given_hints)
+
+    @property
+    def illegal_hint_words(self) -> WordGroup:
+        return *self.board.all_words, *self.given_hint_words
 
     @property
     def moves(self) -> List[Move]:
@@ -54,24 +62,16 @@ class BaseGameState(BaseModel):
 
 
 class GameState(BaseGameState):
+    """
+    Game state is a mutable object that represents the current state of the game.
+    """
+
     left_guesses: int = 0
     winner: Optional[Winner] = None
     raw_hints: List[Hint] = []
 
-    @root_validator(pre=True)
-    def init_score(cls, values: dict) -> dict:  # pylint: disable=no-self-argument
-        score = values.get("score")
-        if score:
-            return values
-        board = values["board"]
-        if isinstance(board, dict):
-            board = Board.parse_obj(board)
-        score = build_score(board)
-        values["score"] = score
-        return values
-
     @property
-    def hinter_state(self) -> "HinterGameState":
+    def hinter_state(self) -> HinterGameState:
         return HinterGameState(
             board=self.board,
             score=self.score,
@@ -82,7 +82,7 @@ class GameState(BaseGameState):
         )
 
     @property
-    def guesser_state(self) -> "GuesserGameState":
+    def guesser_state(self) -> GuesserGameState:
         return GuesserGameState(
             board=self.board.censured,
             score=self.score,
@@ -101,10 +101,6 @@ class GameState(BaseGameState):
     def is_game_over(self) -> bool:
         return self.winner is not None
 
-    @property
-    def given_hint_words(self) -> WordGroup:
-        return tuple(hint.word for hint in self.given_hints)
-
     def process_hint(self, hint: Hint) -> Optional[GivenHint]:
         if self.is_game_over:
             raise GameIsOver()
@@ -116,7 +112,7 @@ class GameState(BaseGameState):
             self._team_quit()
             return None
         formatted_hint_word = canonical_format(hint.word)
-        if formatted_hint_word in self.hinter_state.illegal_words:
+        if formatted_hint_word in self.illegal_hint_words:
             raise InvalidHint("Hint word is on board or was already used!")
         given_hint = GivenHint(
             word=formatted_hint_word, card_amount=hint.card_amount, team_color=self.current_team_color
@@ -196,16 +192,16 @@ class GameState(BaseGameState):
 
 
 class HinterGameState(BaseGameState):
-    @cached_property
-    def given_hint_words(self) -> WordGroup:
-        return tuple(hint.formatted_word for hint in self.given_hints)
-
-    @cached_property
-    def illegal_words(self) -> WordGroup:
-        return *self.board.all_words, *self.given_hint_words
+    """
+    HinterGameState represents all the information that is available to the Hinter.
+    """
 
 
 class GuesserGameState(BaseGameState):
+    """
+    GuesserGameState represents all the information that is available to the Guesser.
+    """
+
     left_guesses: int
 
     @cached_property
@@ -213,21 +209,24 @@ class GuesserGameState(BaseGameState):
         return self.given_hints[-1]
 
 
-def build_game_state(board: Optional[Board] = None, language: Optional[str] = None) -> GameState:
+def new_game_state(board: Optional[Board] = None, language: Optional[str] = None) -> GameState:
     if board is None and language is None:
-        raise ValueError("Either board or language must be provided")
+        raise ValueError("Either board or language must be provided.")
     if board is None:
         from codenames.boards.builder import (  # pylint: disable=import-outside-toplevel
             generate_board,
         )
 
         board = generate_board(language=language)  # type: ignore
+    if not board.is_clean:
+        raise ValueError("Board must be clean.")
     first_team_color = _determine_first_team(board)
     score = build_score(board)
     return GameState(
         board=board,
         score=score,
         current_team_color=first_team_color,
+        current_player_role=PlayerRole.HINTER,
     )
 
 
@@ -279,3 +278,6 @@ def get_guesses_by_hints(
     for guess in given_guesses:
         guesses_by_hints[guess.given_hint].append(guess)
     return guesses_by_hints
+
+
+build_game_state = new_game_state  # Support legacy name
