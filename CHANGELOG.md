@@ -2,7 +2,18 @@
 
 
 
+## v4.1.4 (2024-01-11)
+
+### 🌴
+
+* 🌴 Online: minor refactoring, better logging. ([`bf51c33`](https://github.com/asaf-kali/codenames/commit/bf51c339b22322fd3d87df4bb3ca0d9f86a86900))
+
+
 ## v4.1.3 (2024-01-11)
+
+### Other
+
+* 🤖 Release [4.1.3] [skip ci] ([`b9e6352`](https://github.com/asaf-kali/codenames/commit/b9e6352180b0b951e65cef7e27502d2d6c366815))
 
 ### 🌴
 
