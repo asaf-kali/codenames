@@ -2,9 +2,18 @@
 
 
 
+## v4.1.3 (2024-01-11)
+
+### 🌴
+
+* 🌴 Online: implemented game language selector. ([`1bc17bf`](https://github.com/asaf-kali/codenames/commit/1bc17bf64b04a8d8ffcbfaf4012f8a64b2ef023c))
+
+
 ## v4.1.2 (2024-01-06)
 
 ### Other
+
+* 🤖 Release [4.1.2] [skip ci] ([`ae56740`](https://github.com/asaf-kali/codenames/commit/ae56740e277d34a7d040240152619a1958420b61))
 
 * 🔨 CI pipeline: fix. ([`4b2dc59`](https://github.com/asaf-kali/codenames/commit/4b2dc59669dc6dcdcf1b96ded1963c0c06440eb6))
 
