@@ -94,7 +94,7 @@ class CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} creating a room...")
         create_room_button = self.poll_element(self.get_create_room_button)
         multi_click(create_room_button)
-        sleep(2)
+        sleep(1)
         self.login()
         log.info(f"{self.log_prefix} New game created")
         return self
@@ -107,7 +107,7 @@ class CodenamesGamePlayerAdapter:
             return True
         except PollingTimeout:
             log.info("Full settings button not found, trying without it")
-            self.screenshot("no-full-settings-button")
+            self.screenshot("no full settings button")
             return False
 
     def click_language_selector(self) -> bool:
@@ -118,19 +118,23 @@ class CodenamesGamePlayerAdapter:
 
     def try_pick_language(self, language: str) -> bool:
         try:
-            language_flag = self.poll_element(lambda: self.get_language_option(language), timeout_sec=3)
+
+            def get_language_flag() -> WebElement:
+                return self.get_language_option(language)
+
+            language_flag = self.poll_element(get_language_flag, timeout_sec=3)
             language_flag.click()
             sleep(0.2)
             return True
         except (PollingTimeout, ElementNotInteractableException):
             log.info(f"Language [{language}] selection failed")
-            self.screenshot("language-selection-failed")
+            self.screenshot("language selection failed")
             return False
 
     def configure_language(self, language: CodenamesGameLanguage):
-        if language == DEFAULT_LANGUAGE:
-            log.debug("Skipping language configuration")
-            return
+        # if language == DEFAULT_LANGUAGE:
+        #     log.debug("Skipping language configuration")
+        #     return
         log.info(f"{self.log_prefix} configuring language to {language}")
         self.try_click_full_settings()
         if self.try_pick_language(language.value):
@@ -191,18 +195,22 @@ class CodenamesGamePlayerAdapter:
         # Clue value
         clue_input = self.poll_element(self.get_clue_input)
         fill_input(clue_input, hint.word)
-        sleep(0.5)
+        sleep(0.1)
         # Number
         number_selector = self.poll_element(self.get_number_wrapper)
         number_selector.click()
-        sleep(1)
-        number_to_select = self.poll_element(lambda: self.get_number_option(number_selector, hint.card_amount))
+        sleep(0.5)
+
+        def get_number_option() -> WebElement:
+            return self.get_number_option(number_selector, hint.card_amount)
+
+        number_to_select = self.poll_element(get_number_option)
         number_to_select.click()
         sleep(0.5)
         # Submit
         submit_button = self.poll_element(self.get_give_clue_button)
         submit_button.click()
-        sleep(3)
+        sleep(2)
         return self
 
     def transmit_guess(self, guess: Guess) -> CodenamesGamePlayerAdapter:
@@ -211,9 +219,13 @@ class CodenamesGamePlayerAdapter:
             end_guessing_button = self.poll_element(self.get_end_guessing_button)
             multi_click(end_guessing_button, times=10, warn=False)
         else:
-            picker = self.poll_element(lambda: self.get_card_picker(guess.card_index))
+
+            def get_card_picker() -> WebElement:
+                return self.get_card_picker(guess.card_index)
+
+            picker = self.poll_element(get_card_picker)
             multi_click(picker, times=10, warn=False)
-        sleep(1)
+        sleep(1.5)
         return self
 
     def close(self):

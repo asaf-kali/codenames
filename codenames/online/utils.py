@@ -26,11 +26,11 @@ def fill_input(element: WebElement, value: str):
     sleep(0.1)
 
 
-def multi_click(element: WebElement, times: int = 3, warn: bool = True):
+def multi_click(element: WebElement, times: int = 3, warn: bool = False):
     for _ in range(times):
         try:
             element.click()
-            log.debug(f"Element [{element.accessible_name}] clicked")
+            log.debug("Element clicked")
             sleep(0.1)
         except Exception:  # pylint: disable=broad-except
             if warn:
