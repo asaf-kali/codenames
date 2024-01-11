@@ -2,7 +2,18 @@
 
 
 
+## v4.1.5 (2024-01-11)
+
+### 🐛
+
+* 🐛 Online: language-related fixes. ([`38247e5`](https://github.com/asaf-kali/codenames/commit/38247e5a94ec8f8663bd2da9b5c6ae55fe27f9a1))
+
+
 ## v4.1.4 (2024-01-11)
+
+### Other
+
+* 🤖 Release [4.1.4] [skip ci] ([`d5223fd`](https://github.com/asaf-kali/codenames/commit/d5223fda01c95292247052335087ee2aae62a6e9))
 
 ### 🌴
 
