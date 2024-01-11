@@ -1,7 +1,7 @@
 import logging
 import time
 from time import sleep
-from typing import Callable, Optional, TypeVar
+from typing import Callable, List, Optional, TypeVar
 
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -37,18 +37,23 @@ def multi_click(element: WebElement, times: int = 3, warn: bool = True):
                 log.debug("Failed to click, trying again...")
 
 
-def poll_element(element_getter: Callable[[], T], timeout_sec: float = 15, poll_interval_sec: float = 0.5) -> T:
+def poll_elements(
+    element_getters: List[Callable[[], T]],
+    timeout_sec: float = 15,
+    poll_interval_sec: float = 0.5,
+) -> T:
     def safe_getter() -> Optional[T]:
-        try:
-            return element_getter()
-        except Exception as e:  # pylint: disable=broad-except
-            error_line = str(e).replace("\n", " ")
-            log.debug(f"Element getter raised an error: {error_line}")
-            return None
+        for element_getter in element_getters:
+            try:
+                return element_getter()
+            except Exception as e:  # pylint: disable=broad-except
+                error_line = str(e).replace("\n", " ")
+                log.debug(f"Element getter raised an error: {error_line}")
+        return None
 
     start = time.time()
     while not (element := safe_getter()):
-        log.debug("Element not found, sleeping...")
+        log.debug("No element found, sleeping...")
         now = time.time()
         passed = now - start
         if passed >= timeout_sec:
@@ -59,4 +64,4 @@ def poll_element(element_getter: Callable[[], T], timeout_sec: float = 15, poll_
 
 
 def poll_condition(test: Callable[[], bool], timeout_sec: float = 5, poll_interval_sec: float = 0.2):
-    poll_element(test, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
+    poll_elements(element_getters=[test], timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)

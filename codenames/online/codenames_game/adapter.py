@@ -8,6 +8,7 @@ from time import sleep, time
 from typing import Callable, List, Optional, Set, TypeVar
 
 from selenium import webdriver
+from selenium.common import ElementNotInteractableException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -18,7 +19,12 @@ from codenames.game.player import Player, PlayerRole
 from codenames.game.state import GuesserGameState
 from codenames.online.codenames_game.agent import Agent
 from codenames.online.codenames_game.card_parser import _parse_card
-from codenames.online.utils import PollingTimeout, fill_input, multi_click, poll_element
+from codenames.online.utils import (
+    PollingTimeout,
+    fill_input,
+    multi_click,
+    poll_elements,
+)
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
@@ -29,8 +35,11 @@ BAD_PATH_CHARS = {"\\", "/", ":", "*", "?", '"', "<", ">", "|", "\r", "\n"}
 
 
 class CodenamesGameLanguage(str, Enum):
-    ENGLISH = "english"
-    HEBREW = "hebrew"
+    ENGLISH = "en"
+    HEBREW = "he"
+
+
+DEFAULT_LANGUAGE = CodenamesGameLanguage.ENGLISH
 
 
 class IllegalOperation(Exception):
@@ -39,7 +48,7 @@ class IllegalOperation(Exception):
 
 @dataclass
 class GameConfigs:
-    language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH
+    language: CodenamesGameLanguage = DEFAULT_LANGUAGE
 
 
 class CodenamesGamePlayerAdapter:
@@ -81,21 +90,55 @@ class CodenamesGamePlayerAdapter:
         self.driver.get(game_url)
         return self
 
-    def host_game(self, game_configs: Optional[GameConfigs] = None) -> CodenamesGamePlayerAdapter:
+    def host_game(self) -> CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} creating a room...")
-        if game_configs is None:
-            game_configs = GameConfigs()
         create_room_button = self.poll_element(self.get_create_room_button)
         multi_click(create_room_button)
         sleep(2)
-        self.configure_language(language=game_configs.language)
         self.login()
-        log.info("New game created")
+        log.info(f"{self.log_prefix} New game created")
         return self
 
+    def try_click_full_settings(self) -> bool:
+        try:
+            full_settings_button = self.poll_element(self.get_full_settings_button, timeout_sec=3)
+            full_settings_button.click()
+            sleep(0.2)
+            return True
+        except PollingTimeout:
+            log.info("Full settings button not found, trying without it")
+            self.screenshot("no-full-settings-button")
+            return False
+
+    def click_language_selector(self) -> bool:
+        language_selector = self.poll_element(self.get_language_selector)
+        language_selector.click()
+        sleep(0.2)
+        return True
+
+    def try_pick_language(self, language: str) -> bool:
+        try:
+            language_flag = self.poll_element(lambda: self.get_language_option(language), timeout_sec=3)
+            language_flag.click()
+            sleep(0.2)
+            return True
+        except (PollingTimeout, ElementNotInteractableException):
+            log.info(f"Language [{language}] selection failed")
+            self.screenshot("language-selection-failed")
+            return False
+
     def configure_language(self, language: CodenamesGameLanguage):
-        # TODO: Implement
-        pass
+        if language == DEFAULT_LANGUAGE:
+            log.debug("Skipping language configuration")
+            return
+        log.info(f"{self.log_prefix} configuring language to {language}")
+        self.try_click_full_settings()
+        if self.try_pick_language(language.value):
+            return
+        for i in range(2):
+            log.info(f"Trying to select language {language} (attempt {i + 2})...")
+            self.click_language_selector()
+            self.try_pick_language(language.value)
 
     def login(self):
         log.info(f"{self.log_prefix} logging in...")
@@ -129,7 +172,8 @@ class CodenamesGamePlayerAdapter:
         return self.game_url  # type: ignore
 
     def start_game(self):
-        start_game_button = self.poll_element(self.get_start_game_button)
+        possible_start_game_buttons = [self.get_start_game_button, self.get_play_with_button]
+        start_game_button = self.poll_elements(possible_start_game_buttons)
         multi_click(start_game_button)
         return self
 
@@ -169,7 +213,7 @@ class CodenamesGamePlayerAdapter:
         else:
             picker = self.poll_element(lambda: self.get_card_picker(guess.card_index))
             multi_click(picker, times=10, warn=False)
-        sleep(2)
+        sleep(1)
         return self
 
     def close(self):
@@ -183,14 +227,26 @@ class CodenamesGamePlayerAdapter:
     def get_create_room_button(self) -> WebElement:
         return self.driver.find_element(by=By.CLASS_NAME, value="create-button")
 
-    def get_start_game_button(self) -> WebElement:
+    def get_play_with_button(self) -> WebElement:
         return self.driver.find_element(By.XPATH, value="//button[contains(text(),'Play with')]")
+
+    def get_start_game_button(self) -> WebElement:
+        return self.driver.find_element(By.XPATH, value="//button[contains(text(),'Start New Game')]")
 
     def get_login_submit_button(self) -> WebElement:
         return self.driver.find_element(by=By.CSS_SELECTOR, value="button[type='submit']")
 
     def get_nickname_input(self) -> WebElement:
         return self.driver.find_element(by=By.ID, value="nickname-input")
+
+    def get_full_settings_button(self) -> WebElement:
+        return self.driver.find_element(by=By.XPATH, value="//button[contains(text(),'Full Settings')]")
+
+    def get_language_selector(self) -> WebElement:
+        return self.driver.find_element(by=By.XPATH, value="//*[contains(text(),'Select language of words')]")
+
+    def get_language_option(self, language_code: str) -> WebElement:
+        return self.driver.find_element(by=By.CLASS_NAME, value=language_code)
 
     def get_team_window(self) -> WebElement:
         team_window_id = f"teamBoard-{self.player.team_color.value.lower()}"  # type: ignore
@@ -254,12 +310,28 @@ class CodenamesGamePlayerAdapter:
         screenshot: bool = True,
     ) -> T:
         log.debug(f"Polling [{element_getter.__name__}]...")
+        return self.poll_elements(
+            element_getters=[element_getter],
+            timeout_sec=timeout_sec,
+            poll_interval_sec=poll_interval_sec,
+            screenshot=screenshot,
+        )
+
+    def poll_elements(
+        self,
+        element_getters: List[Callable[[], T]],
+        timeout_sec: float = 15,
+        poll_interval_sec: float = 0.5,
+        screenshot: bool = True,
+    ) -> T:
+        if len(element_getters) > 1:
+            log.debug(f"Polling [{len(element_getters)}] elements...")
         try:
-            return poll_element(element_getter, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
+            return poll_elements(element_getters, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
         except Exception as e:
             if screenshot:
-                file_name = self.screenshot("failed polling")
-                log.info(f"Failed polling, screenshot saved to {file_name}")
+                log.info(f"{self.log_prefix} Polling failed, saving screenshot...")
+                self.screenshot("failed polling")
             raise e
 
     def screenshot(self, tag: str, directory: str = "./debug", raise_on_error: bool = False) -> Optional[str]:
@@ -274,7 +346,7 @@ class CodenamesGamePlayerAdapter:
                 raise e
             log.warning(f"Failed to save screenshot: {e}")
             return None
-        log.info(f"Screenshot saved to {path}")
+        log.info(f"{self.log_prefix} Screenshot saved to {path}")
         return path
 
     def poll_hint_given(self) -> Hint:

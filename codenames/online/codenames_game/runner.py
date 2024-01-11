@@ -102,11 +102,13 @@ class CodenamesGameRunner(ContextManager):
             host_player = self.players.blue_team.hinter
         if not isinstance(host_player, Hinter):
             raise IllegalOperation("Host player must be a Hinter.")
+        game_configs = game_configs or GameConfigs()
         self.host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
-        self.host.open().host_game(game_configs=game_configs)
+        self.host.open().host_game()
+        self.host.configure_language(language=game_configs.language)
+        self.host.choose_role()
         self._running_game_url = self.host.get_game_url()
         log.info(f"Game URL: {self._running_game_url}")
-        self.host.choose_role()
         return self
 
     def add_to_game(self, guest_player: Player, multithreaded: bool = False) -> CodenamesGameRunner:

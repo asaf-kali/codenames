@@ -74,6 +74,7 @@ major_tags = [
 minor_tags = [
     "✨",
     "🔥",
+    "🐲",
 ]
 patch_tags = [
     "📝",
@@ -83,6 +84,7 @@ patch_tags = [
     "🐛",
     "🚑",
     "📌",
+    "🌴",
 ]
 
 # Test
@@ -112,7 +114,7 @@ profile = "black"
 
 [tool.mypy]
 ignore_missing_imports = true
-exclude = ["build", "dist", "codenames/online/namecoding"]
+exclude = ["build", "dist", "codenames/online/namecoding", "playground"]
 
 [tool.pylint]
 max-line-length = 120
