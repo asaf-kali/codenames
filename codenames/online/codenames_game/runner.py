@@ -39,7 +39,7 @@ class CodenamesGameRunner(ContextManager):
         show_host: bool = True,
         language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH,
     ):
-        self.host: Optional[CodenamesGamePlayerAdapter] = None
+        self._host: Optional[CodenamesGamePlayerAdapter] = None
         self.guests: List[CodenamesGamePlayerAdapter] = []
         blue_hinter = player_or_agent(blue_hinter, PlayerRole.HINTER, TeamColor.BLUE)
         red_hinter = player_or_agent(red_hinter, PlayerRole.HINTER, TeamColor.RED)
@@ -50,6 +50,16 @@ class CodenamesGameRunner(ContextManager):
         self._language = language
         self._running_game_url: Optional[str] = None
         self._auto_start_semaphore = Semaphore()
+
+    @property
+    def host_connected(self) -> bool:
+        return self._host is not None
+
+    @property
+    def host(self) -> CodenamesGamePlayerAdapter:
+        if not self.host_connected:
+            raise IllegalOperation("Game host not initialized.")
+        return self._host  # type: ignore
 
     @property
     def adapters(self) -> Iterable[CodenamesGamePlayerAdapter]:
@@ -67,7 +77,7 @@ class CodenamesGameRunner(ContextManager):
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
-            if not self.host:
+            if not self.host_connected:
                 self.host_game(host_player=player, game_configs=game_configs)  # type: ignore
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
@@ -81,14 +91,25 @@ class CodenamesGameRunner(ContextManager):
         log.info(f"All {number_of_guests} joined, starting.")
         return self.run_game()
 
+    def all_players_screenshots(self, tag: str):
+        for adapter in self.adapters:
+            try:
+                adapter.screenshot(tag=tag)
+            except Exception as e:  # pylint: disable=broad-except
+                log.error(f"Error taking screenshot: {e}")
+
     def run_game(self) -> GameRunner:
         self._start_game()
-        board = self.host.parse_board(language=self._language.value)  # type: ignore
+        board = self.host.parse_board(language=self._language.value)
         game_runner = GameRunner(players=self.players, board=board)
         game_runner.hint_given_subscribers.append(self._handle_hint_given)
         game_runner.guess_given_subscribers.append(self._handle_guess_given)
-        game_runner.run_game()
-        self.host.screenshot("game over")  # type: ignore
+        try:
+            game_runner.run_game()
+        except Exception as e:  # pylint: disable=broad-except
+            self.all_players_screenshots(tag="game error")
+            raise e
+        self.host.screenshot("game over")
         return game_runner
 
     def host_game(
@@ -96,14 +117,14 @@ class CodenamesGameRunner(ContextManager):
         host_player: Optional[Hinter] = None,
         game_configs: Optional[GameConfigs] = None,
     ) -> CodenamesGameRunner:
-        if self.host:
+        if self.host_connected:
             raise IllegalOperation("A game is already running.")
         if host_player is None:
             host_player = self.players.blue_team.hinter
         if not isinstance(host_player, Hinter):
             raise IllegalOperation("Host player must be a Hinter.")
         game_configs = game_configs or GameConfigs()
-        self.host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
+        self._host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
         self.host.open().host_game()
         self.host.configure_language(language=game_configs.language)
         self.host.choose_role()
@@ -136,7 +157,7 @@ class CodenamesGameRunner(ContextManager):
         log.info("Closing online manager...")
         for guest in self.guests:
             guest.close()
-        if self.host:
+        if self.host_connected:
             self.host.close()
 
     def has_joined_game(self, player: Player) -> bool:
@@ -149,7 +170,7 @@ class CodenamesGameRunner(ContextManager):
         raise ValueError(f"Player {player} not found in this game manager.")
 
     def _start_game(self) -> CodenamesGameRunner:
-        if not self.host:
+        if not self.host_connected:
             raise IllegalOperation("Can't start game before hosting initiated. Call host_game() first.")
         for agent in self.agents:
             agent.set_host_adapter(adapter=self.host)
