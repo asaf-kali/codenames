@@ -9,7 +9,6 @@ from codenames.game.move import Guess, Hint
 from codenames.game.player import GamePlayers, Guesser, Hinter, Player, PlayerRole
 from codenames.game.runner import GameRunner
 from codenames.online.codenames_game.adapter import (
-    CodenamesGameLanguage,
     CodenamesGamePlayerAdapter,
     GameConfigs,
     IllegalOperation,
@@ -37,7 +36,7 @@ class CodenamesGameRunner(ContextManager):
         blue_guesser: Optional[Guesser] = None,
         red_guesser: Optional[Guesser] = None,
         show_host: bool = True,
-        language: CodenamesGameLanguage = CodenamesGameLanguage.ENGLISH,
+        game_configs: Optional[GameConfigs] = None,
     ):
         self._host: Optional[CodenamesGamePlayerAdapter] = None
         self.guests: List[CodenamesGamePlayerAdapter] = []
@@ -47,7 +46,7 @@ class CodenamesGameRunner(ContextManager):
         red_guesser = player_or_agent(red_guesser, PlayerRole.GUESSER, TeamColor.RED)
         self.players = GamePlayers.from_collection([blue_hinter, red_hinter, blue_guesser, red_guesser])
         self._show_host = show_host
-        self._language = language
+        self.game_configs = game_configs or GameConfigs()
         self._running_game_url: Optional[str] = None
         self._auto_start_semaphore = Semaphore()
 
@@ -73,12 +72,12 @@ class CodenamesGameRunner(ContextManager):
     def __exit__(self, __exc_type, __exc_value, __traceback):
         self.close()
 
-    def auto_start(self, game_configs: Optional[GameConfigs] = None) -> GameRunner:
+    def auto_start(self) -> GameRunner:
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
-            if not self.host_connected:
-                self.host_game(host_player=player, game_configs=game_configs)  # type: ignore
+            if not self.host_connected and isinstance(player, Hinter):
+                self.host_game(host_player=player, game_configs=self.game_configs)
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
                 log.debug("Semaphore acquired.")
@@ -100,7 +99,7 @@ class CodenamesGameRunner(ContextManager):
 
     def run_game(self) -> GameRunner:
         self._start_game()
-        board = self.host.parse_board(language=self._language.value)
+        board = self.host.parse_board(language=self.game_configs.language.value)
         game_runner = GameRunner(players=self.players, board=board)
         game_runner.hint_given_subscribers.append(self._handle_hint_given)
         game_runner.guess_given_subscribers.append(self._handle_guess_given)
