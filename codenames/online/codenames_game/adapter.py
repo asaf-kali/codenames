@@ -5,7 +5,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from time import sleep, time
-from typing import Callable, List, Optional, Set, TypeVar
+from typing import Callable, List, Mapping, Optional, Set, TypeVar
 
 from selenium import webdriver
 from selenium.common import ElementNotInteractableException
@@ -35,8 +35,8 @@ BAD_PATH_CHARS = {"\\", "/", ":", "*", "?", '"', "<", ">", "|", "\r", "\n"}
 
 
 class CodenamesGameLanguage(str, Enum):
-    ENGLISH = "en"
-    HEBREW = "he"
+    ENGLISH = "english"
+    HEBREW = "hebrew"
 
 
 DEFAULT_LANGUAGE = CodenamesGameLanguage.ENGLISH
@@ -137,12 +137,13 @@ class CodenamesGamePlayerAdapter:
         #     return
         log.info(f"{self.log_prefix} configuring language to {language}")
         self.try_click_full_settings()
-        if self.try_pick_language(language.value):
+        language_code = get_language_code(language)
+        if self.try_pick_language(language_code):
             return
         for i in range(2):
             log.info(f"Trying to select language {language} (attempt {i + 2})...")
             self.click_language_selector()
-            self.try_pick_language(language.value)
+            self.try_pick_language(language_code)
 
     def login(self):
         log.info(f"{self.log_prefix} logging in...")
@@ -398,6 +399,18 @@ class CodenamesGamePlayerAdapter:
             sleep(1)
         log.debug("Returning pass guess.")
         return Guess(card_index=PASS_GUESS)
+
+
+LANGUAGE_CODES: Mapping[CodenamesGameLanguage, str] = {
+    CodenamesGameLanguage.ENGLISH: "en",
+    CodenamesGameLanguage.HEBREW: "he",
+}
+
+
+def get_language_code(language: CodenamesGameLanguage) -> str:
+    if language in LANGUAGE_CODES:
+        return LANGUAGE_CODES[language]
+    return language.value[:2]
 
 
 def sanitize_for_path(string: str) -> str:
