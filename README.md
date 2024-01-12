@@ -1,8 +1,13 @@
 # Codenames
 
+[![PyPI version](https://badge.fury.io/py/codenames.svg)](https://badge.fury.io/py/codenames)
 [![Pipeline](https://github.com/asaf-kali/codenames/actions/workflows/pipeline.yml/badge.svg)](https://github.com/asaf-kali/codenames/actions/workflows/pipeline.yml)
 [![codecov](https://codecov.io/github/asaf-kali/codenames/graph/badge.svg?token=HET5E8P1UK)](https://codecov.io/github/asaf-kali/codenames)
-[![PyPI version](https://badge.fury.io/py/codenames.svg)](https://badge.fury.io/py/codenames)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-111111.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/imports-isort-%231674b1)](https://pycqa.github.io/isort/)
+[![Type checked: mypy](https://img.shields.io/badge/type%20check-mypy-22aa11)](http://mypy-lang.org/)
+[![Linting: pylint](https://img.shields.io/badge/linting-pylint-22aa11)](https://github.com/pylint-dev/pylint)
 
 Code infrastructure for the Codenames board game. \
 Designed to serve as a base for implementing players (agents) with different strategies and algorithms. \
