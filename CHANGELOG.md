@@ -2,7 +2,24 @@
 
 
 
+## v4.1.6 (2024-01-20)
+
+### Other
+
+* 🧹 Lint dependencies upgrade. ([`59f40c0`](https://github.com/asaf-kali/codenames/commit/59f40c0680822dd7f22967cfaa2b0b3a70217726))
+
+* 🎡 Readme: add badges. ([`886bbf0`](https://github.com/asaf-kali/codenames/commit/886bbf0495ad2f48af1d43b971f911249c49ec73))
+
+### 🌴
+
+* 🌴 CI: add unit test results, use new poetry version. ([`2a43ebc`](https://github.com/asaf-kali/codenames/commit/2a43ebc6f637e44d0084f893c8c69bbe9938b66e))
+
+
 ## v4.1.5 (2024-01-11)
+
+### Other
+
+* 🤖 Release [4.1.5] [skip ci] ([`dc4f7dc`](https://github.com/asaf-kali/codenames/commit/dc4f7dc2138492111e512204aac8ff53cab66295))
 
 ### 🐛
 
