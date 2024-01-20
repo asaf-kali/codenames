@@ -64,6 +64,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -80,12 +83,13 @@ jobs:
         run: |
           make cover-xml
       - name: Test report
-        uses: dorny/test-reporter@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ ! cancelled() }}
         with:
-          name: Pytest
-          path: ./junit.xml
-          reporter: java-junit
+          files: |
+            ./junit.xml
+          check_name: test-report
+          comment_title: Test report
       - name: Upload debug artifacts
         uses: actions/upload-artifact@v3
         if: ${{ ! cancelled() }}
