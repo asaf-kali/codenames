@@ -15,7 +15,7 @@ upgrade-pip:
 	pip install --upgrade pip
 
 install-ci: upgrade-pip
-	pip install poetry==1.5.1
+	pip install poetry==1.7.1
 	poetry config virtualenvs.create false
 
 install-run:
@@ -39,11 +39,14 @@ lock:
 	poetry lock --no-update
 
 lock-check:
-	poetry lock --check
+	poetry check --lock
 
 # Test
 
 test:
+	python -m $(PYTHON_TEST_COMMAND)
+
+test-fast:
 	python -m $(PYTHON_TEST_COMMAND) -m "not web"
 
 cover-base:

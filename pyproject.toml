@@ -91,7 +91,7 @@ patch_tags = [
 
 [tool.pytest.ini_options]
 retries = 3
-addopts = "-s --disable-pytest-warnings"
+addopts = "-s --disable-pytest-warnings --junitxml=junit.xml"
 
 [tool.coverage.run]
 source = ["codenames", "tests"]
