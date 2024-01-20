@@ -6,6 +6,7 @@ exports/
 chromedriver
 language_data
 debug/
+junit.xml
 
 # Language data files
 language_data/*.bin

@@ -79,8 +79,16 @@ jobs:
       - name: Run tests
         run: |
           make cover-xml
+      - name: Test report
+        uses: dorny/test-reporter@v1
+        if: ${{ ! cancelled() }}
+        with:
+          name: Pytest
+          path: ./junit.xml
+          reporter: java-junit
       - name: Upload debug artifacts
         uses: actions/upload-artifact@v3
+        if: ${{ ! cancelled() }}
         with:
           name: debug-artifacts-${{ github.sha }}
           path: ./debug
