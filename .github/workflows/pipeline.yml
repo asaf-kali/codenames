@@ -83,7 +83,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: ${{ ! cancelled() }}
         with:
-          name: Pytest
+          name: test-report
           path: ./junit.xml
           reporter: java-junit
       - name: Upload debug artifacts
