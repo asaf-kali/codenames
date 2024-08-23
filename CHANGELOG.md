@@ -2,9 +2,22 @@
 
 
 
+## v4.1.7 (2024-08-23)
+
+### Other
+
+* 🧪 CI: rename step. ([`e164cfa`](https://github.com/asaf-kali/codenames/commit/e164cfa126c9f2f1dc32d471052f60e31a4fc018))
+
+### 🐛
+
+* 🐛 Fix. ([`a729c33`](https://github.com/asaf-kali/codenames/commit/a729c33c218bd2c3d704df31e4258b5963bb8841))
+
+
 ## v4.1.6 (2024-01-20)
 
 ### Other
+
+* 🤖 Release [4.1.6] [skip ci] ([`f1ff914`](https://github.com/asaf-kali/codenames/commit/f1ff9141f327b68891863fffa9c53a47a6b3ba99))
 
 * 🧹 Lint dependencies upgrade. ([`9a43ee5`](https://github.com/asaf-kali/codenames/commit/9a43ee5ce60d21b079cb607769f6db2ff955b827))
 
@@ -110,7 +123,7 @@
 * 🔩 Game state: remove language. ([`1733ebd`](https://github.com/asaf-kali/codenames/commit/1733ebd9d214f5134b604783836caa1c958a6d73))
 
 
-## v4.0.2 (2024-01-04)
+## v4.0.2 (2024-01-02)
 
 ### Other
 
@@ -121,7 +134,7 @@
 * 📜 README: Add example output. ([`9a0dfb7`](https://github.com/asaf-kali/codenames/commit/9a0dfb7802f497405e7e0694f1506e18d0138f17))
 
 
-## v4.0.1 (2024-01-04)
+## v4.0.1 (2024-01-02)
 
 ### Other
 
@@ -134,7 +147,7 @@
 * 🚑 Player: remove language from game start event. ([`a512e31`](https://github.com/asaf-kali/codenames/commit/a512e3154de4d8e96a39fed185470fd8b95097d9))
 
 
-## v4.0.0 (2024-01-04)
+## v4.0.0 (2024-01-02)
 
 ### Other
 
@@ -161,7 +174,7 @@ Fix ([`6582227`](https://github.com/asaf-kali/codenames/commit/65822270cf0417ad3
 * 🚀 Board model: Simplifications and refactoring. ([`d0f3062`](https://github.com/asaf-kali/codenames/commit/d0f3062f64c2e082d1f692258a55275efda4ef1d))
 
 
-## v3.0.8 (2024-01-04)
+## v3.0.8 (2024-01-02)
 
 ### Other
 
@@ -174,7 +187,7 @@ Fix ([`6582227`](https://github.com/asaf-kali/codenames/commit/65822270cf0417ad3
 * 🐛 Publish package: publish only if release was made. ([`b70daed`](https://github.com/asaf-kali/codenames/commit/b70daedaf82e550e414fc38267c1b59556067031))
 
 
-## v3.0.7 (2024-01-04)
+## v3.0.7 (2024-01-01)
 
 ### Other
 
@@ -191,7 +204,7 @@ Fix ([`6582227`](https://github.com/asaf-kali/codenames/commit/65822270cf0417ad3
 * 🛠️ Sematic release: configurations and CI fixes. ([`db86425`](https://github.com/asaf-kali/codenames/commit/db86425afd2dff53456719d3fa3910427ec01f5d))
 
 
-## v3.0.6 (2024-01-04)
+## v3.0.6 (2023-12-31)
 
 ### Other
 
