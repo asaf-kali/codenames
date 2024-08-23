@@ -6,189 +6,189 @@
 
 ### Other
 
-* 🧹 Lint dependencies upgrade. ([`59f40c0`](https://github.com/asaf-kali/codenames/commit/59f40c0680822dd7f22967cfaa2b0b3a70217726))
+* 🧹 Lint dependencies upgrade. ([`9a43ee5`](https://github.com/asaf-kali/codenames/commit/9a43ee5ce60d21b079cb607769f6db2ff955b827))
 
-* 🎡 Readme: add badges. ([`886bbf0`](https://github.com/asaf-kali/codenames/commit/886bbf0495ad2f48af1d43b971f911249c49ec73))
+* 🎡 Readme: add badges. ([`8e37f7d`](https://github.com/asaf-kali/codenames/commit/8e37f7d8f45601c7f158e5c839a3ec15c8b1594f))
 
 ### 🌴
 
-* 🌴 CI: add unit test results, use new poetry version. ([`2a43ebc`](https://github.com/asaf-kali/codenames/commit/2a43ebc6f637e44d0084f893c8c69bbe9938b66e))
+* 🌴 CI: add unit test results, use new poetry version. ([`ce34b84`](https://github.com/asaf-kali/codenames/commit/ce34b848089ec96c42232f67d4d4d32b065b76f7))
 
 
 ## v4.1.5 (2024-01-11)
 
 ### Other
 
-* 🤖 Release [4.1.5] [skip ci] ([`dc4f7dc`](https://github.com/asaf-kali/codenames/commit/dc4f7dc2138492111e512204aac8ff53cab66295))
+* 🤖 Release [4.1.5] [skip ci] ([`f97817e`](https://github.com/asaf-kali/codenames/commit/f97817e99e000797875f383eda9625be809f055c))
 
 ### 🐛
 
-* 🐛 Online: language-related fixes. ([`38247e5`](https://github.com/asaf-kali/codenames/commit/38247e5a94ec8f8663bd2da9b5c6ae55fe27f9a1))
+* 🐛 Online: language-related fixes. ([`5ab7c44`](https://github.com/asaf-kali/codenames/commit/5ab7c44c5ea1dd547f4b05f6ff505e3f9b4c7be8))
 
 
 ## v4.1.4 (2024-01-11)
 
 ### Other
 
-* 🤖 Release [4.1.4] [skip ci] ([`d5223fd`](https://github.com/asaf-kali/codenames/commit/d5223fda01c95292247052335087ee2aae62a6e9))
+* 🤖 Release [4.1.4] [skip ci] ([`34d3f97`](https://github.com/asaf-kali/codenames/commit/34d3f97d4001ab22ebeab89f8ba54224c78780b2))
 
 ### 🌴
 
-* 🌴 Online: minor refactoring, better logging. ([`bf51c33`](https://github.com/asaf-kali/codenames/commit/bf51c339b22322fd3d87df4bb3ca0d9f86a86900))
+* 🌴 Online: minor refactoring, better logging. ([`5cbf16a`](https://github.com/asaf-kali/codenames/commit/5cbf16af31d028a11d5a828dd7e0d76e99dc81d0))
 
 
 ## v4.1.3 (2024-01-11)
 
 ### Other
 
-* 🤖 Release [4.1.3] [skip ci] ([`b9e6352`](https://github.com/asaf-kali/codenames/commit/b9e6352180b0b951e65cef7e27502d2d6c366815))
+* 🤖 Release [4.1.3] [skip ci] ([`3c41d50`](https://github.com/asaf-kali/codenames/commit/3c41d5054069e4405bcea0007837a50c006348e5))
 
 ### 🌴
 
-* 🌴 Online: implemented game language selector. ([`1bc17bf`](https://github.com/asaf-kali/codenames/commit/1bc17bf64b04a8d8ffcbfaf4012f8a64b2ef023c))
+* 🌴 Online: implemented game language selector. ([`375dd27`](https://github.com/asaf-kali/codenames/commit/375dd272dc5acffc8faa9430bcd368a55574c0b4))
 
 
 ## v4.1.2 (2024-01-06)
 
 ### Other
 
-* 🤖 Release [4.1.2] [skip ci] ([`ae56740`](https://github.com/asaf-kali/codenames/commit/ae56740e277d34a7d040240152619a1958420b61))
+* 🤖 Release [4.1.2] [skip ci] ([`a1ddd00`](https://github.com/asaf-kali/codenames/commit/a1ddd00228d77782f09fa0199c2facc39b295235))
 
-* 🔨 CI pipeline: fix. ([`4b2dc59`](https://github.com/asaf-kali/codenames/commit/4b2dc59669dc6dcdcf1b96ded1963c0c06440eb6))
+* 🔨 CI pipeline: fix. ([`7126974`](https://github.com/asaf-kali/codenames/commit/712697456d4c957986452a2a84eb2bfd7f3602ca))
 
-* 🔨 CI pipeline: apply best practices. ([`cd6c2e5`](https://github.com/asaf-kali/codenames/commit/cd6c2e5fa645ef2113dd215f9d28032ef196a412))
+* 🔨 CI pipeline: apply best practices. ([`4b32fba`](https://github.com/asaf-kali/codenames/commit/4b32fba8d68e10149c1c23571ad1ccd40d1d20be))
 
-* 🎆 Tests: add online tests. ([`4454432`](https://github.com/asaf-kali/codenames/commit/44544328cde5c73ad2d1692b8b2deba06e87e759))
+* 🎆 Tests: add online tests. ([`b32ba45`](https://github.com/asaf-kali/codenames/commit/b32ba450cf2c90d6aa15abe4e133d1561d98a2aa))
 
-* 🔨 Tests: reorganize. ([`5af6d9c`](https://github.com/asaf-kali/codenames/commit/5af6d9c294f7bba0eafa375fe3f6b69d6c44aa9d))
+* 🔨 Tests: reorganize. ([`c9120d8`](https://github.com/asaf-kali/codenames/commit/c9120d8ef2b990efcf7b3587f6c35f5706b6d139))
 
-* 🔨 Tests: remove duplicate file. ([`e72dfc2`](https://github.com/asaf-kali/codenames/commit/e72dfc21e3357a27b01d78de416c0544ab5fa9ce))
+* 🔨 Tests: remove duplicate file. ([`09eb004`](https://github.com/asaf-kali/codenames/commit/09eb0047c1dea68ce07ad28d3ae09d882c975920))
 
-* 🔨 Tests: better naming for testing players. ([`ce2bf0e`](https://github.com/asaf-kali/codenames/commit/ce2bf0e127dc74afb190697200df164a64ed26de))
+* 🔨 Tests: better naming for testing players. ([`121b8b4`](https://github.com/asaf-kali/codenames/commit/121b8b459b0d96b0e0f5ea9483d2b21a221d41ec))
 
 ### 🏗️
 
-* 🏗️ Online: support chromedriver from env variable, CodenamesGameRunner as context manager. ([`3c16032`](https://github.com/asaf-kali/codenames/commit/3c16032349b9c15bc4ddf99b883583c6227b3d8f))
+* 🏗️ Online: support chromedriver from env variable, CodenamesGameRunner as context manager. ([`ecc4b29`](https://github.com/asaf-kali/codenames/commit/ecc4b29b43302c0031b049e3b58c1229b15fcc41))
 
 
 ## v4.1.1 (2024-01-06)
 
 ### Other
 
-* 🤖 Release [4.1.1] [skip ci] ([`9f845d5`](https://github.com/asaf-kali/codenames/commit/9f845d5c27992fbe921e6a5de4ff65d563ade9e8))
+* 🤖 Release [4.1.1] [skip ci] ([`39e1784`](https://github.com/asaf-kali/codenames/commit/39e178469c860a348819a71520e0d6a40cd51ebe))
 
 ### 📜
 
-* 📜 Readme: link solvers repository. ([`1e4fa6a`](https://github.com/asaf-kali/codenames/commit/1e4fa6a6d1b6532fb5fd9835e47449570545a3b8))
+* 📜 Readme: link solvers repository. ([`bea27be`](https://github.com/asaf-kali/codenames/commit/bea27beb8b471138bdf0af72dfba68d9f372f5f9))
 
 
 ## v4.1.0 (2024-01-06)
 
 ### Other
 
-* 🤖 Release [4.1.0] [skip ci] ([`ac63572`](https://github.com/asaf-kali/codenames/commit/ac6357290b4eb8741b632f0f8d394ed34ac66127))
+* 🤖 Release [4.1.0] [skip ci] ([`aa797bd`](https://github.com/asaf-kali/codenames/commit/aa797bd500cfa52dffa8d531ef1b56e9e7a20fab))
 
-* 🧪 CI: add codecov for coverage monitoring. ([`857e680`](https://github.com/asaf-kali/codenames/commit/857e680c5bd423c9c04a5889173066e3e5890553))
+* 🧪 CI: add codecov for coverage monitoring. ([`1c4364f`](https://github.com/asaf-kali/codenames/commit/1c4364f225b2fd294c542748b66183c75aeb516d))
 
-* 🧪 Makefile: adjust coverage commands. ([`c0ab67c`](https://github.com/asaf-kali/codenames/commit/c0ab67cb59e8d420ec0228a7cac573e954db1b7a))
+* 🧪 Makefile: adjust coverage commands. ([`34969a9`](https://github.com/asaf-kali/codenames/commit/34969a9249f6fb8ee1dc8325f052c057daa36554))
 
-* 🩹 Changelog: fix commit hash. ([`94bc248`](https://github.com/asaf-kali/codenames/commit/94bc248353bbe4e356c4f5e64dce2a9e4d6088d1))
+* 🩹 Changelog: fix commit hash. ([`3d834ac`](https://github.com/asaf-kali/codenames/commit/3d834acab24460a4809961fe78f94262567c5a61))
 
-* 🩹 Coverage: ignore online module. ([`07739ff`](https://github.com/asaf-kali/codenames/commit/07739ff3325185fba01d620ec0bfa407cf4d5fc8))
+* 🩹 Coverage: ignore online module. ([`bcac942`](https://github.com/asaf-kali/codenames/commit/bcac9426e6ac89589d4be53db468ee032efd1d26))
 
 ### 🔥
 
-* 🔥 Refactor: GameRunner simplification, add GamePlayers model. ([`a7dc188`](https://github.com/asaf-kali/codenames/commit/a7dc188be75e30c71dca0fe9eb08c10c9c3ee2a0))
+* 🔥 Refactor: GameRunner simplification, add GamePlayers model. ([`dc730cf`](https://github.com/asaf-kali/codenames/commit/dc730cfe163ec233c389d07b26e08ea2d916d3ce))
 
 
 ## v4.0.3 (2024-01-02)
 
 ### Other
 
-* 🤖 Release [4.0.3] [skip ci] ([`74f78af`](https://github.com/asaf-kali/codenames/commit/74f78afab12a85a62e4b6b881c52f21c244a0aad))
+* 🤖 Release [4.0.3] [skip ci] ([`50fa9b1`](https://github.com/asaf-kali/codenames/commit/50fa9b197f7ea2378083c8f62ad51ae2a8dac62a))
 
-* 🔩 Game state: remove language. ([`01176e9`](https://github.com/asaf-kali/codenames/commit/01176e914e69e8a95deaa58507855f252ddb7235))
+* 🔩 Game state: remove language. ([`1733ebd`](https://github.com/asaf-kali/codenames/commit/1733ebd9d214f5134b604783836caa1c958a6d73))
 
 
 ## v4.0.2 (2024-01-04)
 
 ### Other
 
-* 🤖 Release [4.0.2] [skip ci] ([`a6e7c17`](https://github.com/asaf-kali/codenames/commit/a6e7c17ebc9eeaac45365d941ae14b776a47eead))
+* 🤖 Release [4.0.2] [skip ci] ([`d299f4e`](https://github.com/asaf-kali/codenames/commit/d299f4e8a22c85ec77354d5b998243e836adb673))
 
 ### 📜
 
-* 📜 README: Add example output. ([`981bdc9`](https://github.com/asaf-kali/codenames/commit/981bdc95f5f76e6678125364e805161f090d900c))
+* 📜 README: Add example output. ([`9a0dfb7`](https://github.com/asaf-kali/codenames/commit/9a0dfb7802f497405e7e0694f1506e18d0138f17))
 
 
 ## v4.0.1 (2024-01-04)
 
 ### Other
 
-* 🤖 Release [4.0.1] [skip ci] ([`70eca85`](https://github.com/asaf-kali/codenames/commit/70eca85a2b959744f47bcdef0d4cf4367566ec1b))
+* 🤖 Release [4.0.1] [skip ci] ([`c0c3fb4`](https://github.com/asaf-kali/codenames/commit/c0c3fb46035120e5085e4f119dafe9eaa1a470ae))
 
-* ⚙️ Update lock dependencies. ([`c7c7aab`](https://github.com/asaf-kali/codenames/commit/c7c7aab0fc04308bbd418835dd92d2cddb8e5d2d))
+* ⚙️ Update lock dependencies. ([`29dab81`](https://github.com/asaf-kali/codenames/commit/29dab81875d3ee0ff0f52156e19ecdfe03d5b784))
 
 ### 🚑
 
-* 🚑 Player: remove language from game start event. ([`7d48a91`](https://github.com/asaf-kali/codenames/commit/7d48a91849865c041978585e564be7c748f48f3b))
+* 🚑 Player: remove language from game start event. ([`a512e31`](https://github.com/asaf-kali/codenames/commit/a512e3154de4d8e96a39fed185470fd8b95097d9))
 
 
 ## v4.0.0 (2024-01-04)
 
 ### Other
 
-* 🤖 Release [4.0.0] [skip ci] ([`8be0222`](https://github.com/asaf-kali/codenames/commit/8be02223f24529791f11d9d684c385dd6358042b))
+* 🤖 Release [4.0.0] [skip ci] ([`45630cf`](https://github.com/asaf-kali/codenames/commit/45630cfc52338a9667ddfa030617ce0f1ac54f6e))
 
 * Merge pull request #5 from asaf-kali/fix
 
-Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249bf8744b9d2e8e8b1c2f1a605))
+Fix ([`6582227`](https://github.com/asaf-kali/codenames/commit/65822270cf0417ad3ef24df4ca7915fcbc27da04))
 
-* 🖋️ Semantic release commit author. ([`609ae06`](https://github.com/asaf-kali/codenames/commit/609ae064542a05c38e02a4bc8ab2f5eebbaa3987))
+* 🖋️ Semantic release commit author. ([`8907b21`](https://github.com/asaf-kali/codenames/commit/8907b21fe5da296c395cd6de6818b2d955d34f2e))
 
 ### 📜
 
-* 📜 Readme: Add simple example. ([`d7fcc5d`](https://github.com/asaf-kali/codenames/commit/d7fcc5d6aed086c43c964df4e9f3f080c7b85daa))
+* 📜 Readme: Add simple example. ([`3e5a259`](https://github.com/asaf-kali/codenames/commit/3e5a25985f64d3275948d4f580e8ff886ebbee6f))
 
-* 📜 README: badge fix. ([`6e78dc5`](https://github.com/asaf-kali/codenames/commit/6e78dc59e968f8e2da3cc160e7d71c115b0d7e0e))
+* 📜 README: badge fix. ([`1ad508d`](https://github.com/asaf-kali/codenames/commit/1ad508d9ae963c44c569f9c8d4143a0acedbdeb7))
 
 ### 🔥
 
-* 🔥 Board builder: extended builder capabilities, add tests, minor refactoring. ([`7831dd0`](https://github.com/asaf-kali/codenames/commit/7831dd0c6a7e0cab7e07aa124819cf8c6b12734c))
+* 🔥 Board builder: extended builder capabilities, add tests, minor refactoring. ([`45f31ef`](https://github.com/asaf-kali/codenames/commit/45f31ef2629bc9e15431c69c256b486cec8cbfeb))
 
 ### 🚀
 
-* 🚀 Board model: Simplifications and refactoring. ([`7f0ba56`](https://github.com/asaf-kali/codenames/commit/7f0ba56a6e3569d75045efd7e6fa226431e95dd6))
+* 🚀 Board model: Simplifications and refactoring. ([`d0f3062`](https://github.com/asaf-kali/codenames/commit/d0f3062f64c2e082d1f692258a55275efda4ef1d))
 
 
 ## v3.0.8 (2024-01-04)
 
 ### Other
 
-* 🤖 Release [3.0.8] [skip ci] ([`aec5587`](https://github.com/asaf-kali/codenames/commit/aec558792ab13bd2f92974f0b514cdd09d1ffe4e))
+* 🤖 Release [3.0.8] [skip ci] ([`3b39043`](https://github.com/asaf-kali/codenames/commit/3b390437e39b7e55e7d0fcaf59a942830b372a1f))
 
-* 🔍️ Small fixes. ([`e55cf10`](https://github.com/asaf-kali/codenames/commit/e55cf10e3f271da641575008d1a7a595dbe7bf12))
+* 🔍️ Small fixes. ([`9b8eca5`](https://github.com/asaf-kali/codenames/commit/9b8eca59de185e178a58a6fd553c5b5cd5500575))
 
 ### 🐛
 
-* 🐛 Publish package: publish only if release was made. ([`2b0af2a`](https://github.com/asaf-kali/codenames/commit/2b0af2a690da29a8de50f39e3e995b885a8799ec))
+* 🐛 Publish package: publish only if release was made. ([`b70daed`](https://github.com/asaf-kali/codenames/commit/b70daedaf82e550e414fc38267c1b59556067031))
 
 
 ## v3.0.7 (2024-01-04)
 
 ### Other
 
-* 🤖 Release [3.0.7] [skip ci] ([`030f087`](https://github.com/asaf-kali/codenames/commit/030f087c24386670a89397ead52cc6278f9635ea))
+* 🤖 Release [3.0.7] [skip ci] ([`258509a`](https://github.com/asaf-kali/codenames/commit/258509a50a8a37605d6cb297ec3be10e553b18f2))
 
 * Merge pull request #3 from asaf-kali/release
 
-🛠️ Sematic release in CI. ([`92a6ab7`](https://github.com/asaf-kali/codenames/commit/92a6ab7e90a47d13540ae13ad4897d7fc97447df))
+🛠️ Sematic release in CI. ([`f41f291`](https://github.com/asaf-kali/codenames/commit/f41f2913f085e188e7837ec94ea72274e3d0b31a))
 
-* 📦️ CI: add python semantic release basics. ([`24f962a`](https://github.com/asaf-kali/codenames/commit/24f962a591decc4744719b01fc3ebd7844799d78))
+* 📦️ CI: add python semantic release basics. ([`d626df6`](https://github.com/asaf-kali/codenames/commit/d626df666b20ca72e995eda4434aaaceca895fa9))
 
 ### 🛠️
 
-* 🛠️ Sematic release: configurations and CI fixes. ([`6185b1d`](https://github.com/asaf-kali/codenames/commit/6185b1dbe588735e9c5853442bd24966e2b6f767))
+* 🛠️ Sematic release: configurations and CI fixes. ([`db86425`](https://github.com/asaf-kali/codenames/commit/db86425afd2dff53456719d3fa3910427ec01f5d))
 
 
 ## v3.0.6 (2024-01-04)
@@ -197,112 +197,112 @@ Fix ([`635112c`](https://github.com/asaf-kali/codenames/commit/635112cd5477d249b
 
 * Merge pull request #2 from asaf-kali/ci
 
-🔩 CI: unified pipeline, python 3.11, poetry caching. ([`b930aa7`](https://github.com/asaf-kali/codenames/commit/b930aa77aa75804f555fcbe6c43fd709e78a42da))
+🔩 CI: unified pipeline, python 3.11, poetry caching. ([`0c3f477`](https://github.com/asaf-kali/codenames/commit/0c3f4772f001123ec4581a4bcde6d2aa377aa46f))
 
-* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`5935b35`](https://github.com/asaf-kali/codenames/commit/5935b3549290e1cf492d8009aa80e683952da3c6))
+* 🔩 CI: unified pipeline, python 3.11, pip caching. ([`3c29359`](https://github.com/asaf-kali/codenames/commit/3c293595c5d05dd31108dabf7a16a352894441f4))
 
-* :sparkles: Online: work on Codenames Game agents. ([`d458401`](https://github.com/asaf-kali/codenames/commit/d458401bcfc0507a6b873d45120f2f4459ae6f8e))
+* :sparkles: Online: work on Codenames Game agents. ([`7b180ca`](https://github.com/asaf-kali/codenames/commit/7b180ca1189579957ce594e0ba8feb24aee59a3c))
 
-* Update project manifest. ([`3d43ea4`](https://github.com/asaf-kali/codenames/commit/3d43ea425332862b45c906784f18d425f7975018))
+* Update project manifest. ([`cb36708`](https://github.com/asaf-kali/codenames/commit/cb367084ed3c1ad9af0dd6f8590726947fd10b26))
 
-* Set project URLs. ([`888fcf4`](https://github.com/asaf-kali/codenames/commit/888fcf426856685bdcdcfb6b017fb55e3d951542))
+* Set project URLs. ([`38d8c1c`](https://github.com/asaf-kali/codenames/commit/38d8c1c8dffa85a48cdc1c684d98ae8b805f1955))
 
-* Small fixes. ([`8393077`](https://github.com/asaf-kali/codenames/commit/83930775a3d8d33e367c3a345fd03ebf8437b095))
+* Small fixes. ([`9288b43`](https://github.com/asaf-kali/codenames/commit/9288b432f6ef50db0a4405300baa700db7789acb))
 
-* Minor timing fixes. ([`25d6de7`](https://github.com/asaf-kali/codenames/commit/25d6de75cc8676eee85e926b7493327993aedeb9))
+* Minor timing fixes. ([`0982639`](https://github.com/asaf-kali/codenames/commit/09826391c180820e316179835767431e308273c0))
 
-* Wait longer times. ([`59f9469`](https://github.com/asaf-kali/codenames/commit/59f9469bb4f83d5e494b7e10e7f943431abc81d3))
+* Wait longer times. ([`9bf5b8c`](https://github.com/asaf-kali/codenames/commit/9bf5b8c0b8d5cca3d950bf998243253b115fa953))
 
-* Auto commit. ([`07c01cd`](https://github.com/asaf-kali/codenames/commit/07c01cd425397b5080857c340be4362cb364d02d))
+* Auto commit. ([`ef96662`](https://github.com/asaf-kali/codenames/commit/ef96662d8a88bffdcc0e5af0c1d837d301a90db1))
 
-* Final fixes. ([`f0a7236`](https://github.com/asaf-kali/codenames/commit/f0a7236aec6f3ef73f716bf081b2ed91f9c8d3aa))
+* Final fixes. ([`4660b6a`](https://github.com/asaf-kali/codenames/commit/4660b6a1b9301a256c931b8505c9b5384f1c2688))
 
-* Auto commit. ([`0db36dc`](https://github.com/asaf-kali/codenames/commit/0db36dc2bdf7aff281a941d9aeb52971656a34bb))
+* Auto commit. ([`4639aa4`](https://github.com/asaf-kali/codenames/commit/4639aa424bf3626bf96fda881abbd91f8507e12d))
 
-* Auto commit. ([`b6c4804`](https://github.com/asaf-kali/codenames/commit/b6c4804268cc088ba654858b8d2706bf15870e04))
+* Auto commit. ([`3c6d7d1`](https://github.com/asaf-kali/codenames/commit/3c6d7d1f2347c30bc601d570dba9ce3230a75169))
 
-* Online game improvements WIP. ([`f0eae21`](https://github.com/asaf-kali/codenames/commit/f0eae212a6d22297902ed154ac150f39f3dfdfeb))
+* Online game improvements WIP. ([`2d81e1b`](https://github.com/asaf-kali/codenames/commit/2d81e1b8d27e4af3c2f3b19e1aa325fdde6588e8))
 
-* Refactoring. ([`0c96045`](https://github.com/asaf-kali/codenames/commit/0c96045e50cfb8c0bc3e269a32cd68fa13cee4f3))
+* Refactoring. ([`93c9142`](https://github.com/asaf-kali/codenames/commit/93c91423b510a0aa488317a8ca4fcacb012a92ce))
 
-* Copy and rename Namecoding online logic. ([`f0ebba8`](https://github.com/asaf-kali/codenames/commit/f0ebba89a1e2c2b895eb97967c21a13f840ea306))
+* Copy and rename Namecoding online logic. ([`da72d24`](https://github.com/asaf-kali/codenames/commit/da72d247ea09bb447c7498ebd6f6f4d49bb7675c))
 
-* Typing fixes. ([`bb71253`](https://github.com/asaf-kali/codenames/commit/bb71253398f8a59121233d92b8532fa22339b881))
+* Typing fixes. ([`24f61ff`](https://github.com/asaf-kali/codenames/commit/24f61ffb2c51e2946ac84968dcf641bd85ad6176))
 
-* Refactor Namecoding online logic into a module. ([`ac0ead3`](https://github.com/asaf-kali/codenames/commit/ac0ead3576ba25e331253516c2bacdef7fa8c3bd))
+* Refactor Namecoding online logic into a module. ([`49f72cb`](https://github.com/asaf-kali/codenames/commit/49f72cb6d4fbfc21b70641dd7f807afde23128d1))
 
-* Update Github actions version. ([`3b60f9b`](https://github.com/asaf-kali/codenames/commit/3b60f9ba843e47c7e1702ff8484ef5e7250e78e7))
+* Update Github actions version. ([`de63984`](https://github.com/asaf-kali/codenames/commit/de63984d8bfa921260c9ceda46b0abb8fe2f6cac))
 
-* Makefile work. ([`b279c57`](https://github.com/asaf-kali/codenames/commit/b279c571f53b2326da06c0cdeb79f47d439b7955))
+* Makefile work. ([`1d5e6cc`](https://github.com/asaf-kali/codenames/commit/1d5e6cc6ddafe6530756100963e1b2826c1f2bb8))
 
-* Small poetry config fix. ([`fa34a85`](https://github.com/asaf-kali/codenames/commit/fa34a858692b7e201bc2a4962872d447d85a008d))
+* Small poetry config fix. ([`9f476e4`](https://github.com/asaf-kali/codenames/commit/9f476e465b54cf5cec5f65ae9931056aded58687))
 
-* Use poetry. ([`b2436af`](https://github.com/asaf-kali/codenames/commit/b2436af548da1cbec31695129ec4492c76ba02ec))
+* Use poetry. ([`8082808`](https://github.com/asaf-kali/codenames/commit/8082808397773e20ba393cb78b8486a9d0a565c5))
 
-* Remove bonus_given from game state. ([`bb8b759`](https://github.com/asaf-kali/codenames/commit/bb8b75985d62db4ca06fc9a3eee7012df24ec1c4))
+* Remove bonus_given from game state. ([`419ca85`](https://github.com/asaf-kali/codenames/commit/419ca8582a3b2df07d6f438f201cc18462fa4a9f))
 
-* Guess str fix. ([`5965b33`](https://github.com/asaf-kali/codenames/commit/5965b3367d574c28c69cfe295efb38e965892f7b))
+* Guess str fix. ([`20415b5`](https://github.com/asaf-kali/codenames/commit/20415b5860613f0c0db38c7cb2538592d71b5094))
 
-* Add get_player. ([`620fee3`](https://github.com/asaf-kali/codenames/commit/620fee301bfe23ec4e206150911f7dc74dbba8a1))
+* Add get_player. ([`7dda0ab`](https://github.com/asaf-kali/codenames/commit/7dda0ab61eb2579b1f608f7325417edb8200815c))
 
-* Player str fix. ([`61c242a`](https://github.com/asaf-kali/codenames/commit/61c242ae3b3606879c2028021c48c772cf7871fb))
+* Player str fix. ([`abe07d2`](https://github.com/asaf-kali/codenames/commit/abe07d2f8355a125fcb7305f5dc32dce63683f5d))
 
-* Fix moves logic. ([`e3e98e2`](https://github.com/asaf-kali/codenames/commit/e3e98e2d57f7a2bc7e50e883fbe7048231b3f56a))
+* Fix moves logic. ([`2bcdaa3`](https://github.com/asaf-kali/codenames/commit/2bcdaa304690834edfa0620e01a6458126eed8bd))
 
-* Restructure package. ([`95fe518`](https://github.com/asaf-kali/codenames/commit/95fe51837e4531cc03a819767ab1fd9f5f341c10))
+* Restructure package. ([`c15b049`](https://github.com/asaf-kali/codenames/commit/c15b049166445c113db6d2f7926e408824193c97))
 
-* Add moves to state. ([`e7c83b6`](https://github.com/asaf-kali/codenames/commit/e7c83b69dc1ed0013ef540766cc21422ced4b7d5))
+* Add moves to state. ([`653e293`](https://github.com/asaf-kali/codenames/commit/653e2934baa5fd422268a7bd0a9c10a1e88dad17))
 
-* Small fix. ([`67bf63f`](https://github.com/asaf-kali/codenames/commit/67bf63f5fca6ad63f3a2de2b3d1795e9cb70425d))
+* Small fix. ([`c104cfb`](https://github.com/asaf-kali/codenames/commit/c104cfbce767a5eae6b5e81f8d61282c15df3c57))
 
-* Pylint fixes. ([`151cc2c`](https://github.com/asaf-kali/codenames/commit/151cc2cfec3409b97f502fdeb70e915534d37296))
+* Pylint fixes. ([`c77b189`](https://github.com/asaf-kali/codenames/commit/c77b189da4572f10a51c4420cf607edbb1aa19e3))
 
-* Loose deps. ([`b43c978`](https://github.com/asaf-kali/codenames/commit/b43c978a91a1e66ca836ae4eeda54d0ad780956c))
+* Loose deps. ([`56b4f04`](https://github.com/asaf-kali/codenames/commit/56b4f0414670fd8b14ecee11502d466d2e2b2fea))
 
-* Parsing bug fix. ([`023aec0`](https://github.com/asaf-kali/codenames/commit/023aec01e365412cb890b360fd2260f3bca4e2d5))
+* Parsing bug fix. ([`dca995c`](https://github.com/asaf-kali/codenames/commit/dca995c12cf75bfa164913933f0c0daa11556c1c))
 
-* Add score. ([`a82245b`](https://github.com/asaf-kali/codenames/commit/a82245bd7115498808d5a1e97e4010d0d1802246))
+* Add score. ([`19b89b8`](https://github.com/asaf-kali/codenames/commit/19b89b875ba4d1e389b4419b0beb9ea512dc249a))
 
-* Player string fixes. ([`843d336`](https://github.com/asaf-kali/codenames/commit/843d33606f1afdede650db4bafbbf703f7429194))
+* Player string fixes. ([`b3e2acf`](https://github.com/asaf-kali/codenames/commit/b3e2acfe913bcd68ca8c525dd9de4e538d908960))
 
-* String method for enums. ([`19ce766`](https://github.com/asaf-kali/codenames/commit/19ce7665bd095c874ec3b1544744c7d506f21ff2))
+* String method for enums. ([`3511f30`](https://github.com/asaf-kali/codenames/commit/3511f30456536f62bb39cfc2f6cbcffc7afb0fae))
 
-* String method for enums. ([`3cf3d40`](https://github.com/asaf-kali/codenames/commit/3cf3d400ef80c4b07658a8122399c73909b96b3c))
+* String method for enums. ([`c3090da`](https://github.com/asaf-kali/codenames/commit/c3090dabcfd294e46a004260ca24d2c702d47d0e))
 
-* CI fix. ([`9f808e9`](https://github.com/asaf-kali/codenames/commit/9f808e90d5e68987c1e3c05a767f449a9dbd2c2f))
+* CI fix. ([`2809a88`](https://github.com/asaf-kali/codenames/commit/2809a8887b682b289f160916684943c9293f2482))
 
-* Makefile fix. ([`82ddd49`](https://github.com/asaf-kali/codenames/commit/82ddd49c4ba483e5097f7788865e1a3729d08d0b))
+* Makefile fix. ([`a850efe`](https://github.com/asaf-kali/codenames/commit/a850efef3b6dec25315b1f880f3553bc3e1e40bc))
 
-* Release package. ([`4c796e8`](https://github.com/asaf-kali/codenames/commit/4c796e80c6396f99b10b63f883dab55680a2382e))
+* Release package. ([`3640242`](https://github.com/asaf-kali/codenames/commit/364024243adb2d58c61ff123ce758f87d4758af1))
 
-* Infra upgrade. ([`b4d8bc4`](https://github.com/asaf-kali/codenames/commit/b4d8bc4bd2f051f15cecb30b84f83449e119c21c))
+* Infra upgrade. ([`18c7635`](https://github.com/asaf-kali/codenames/commit/18c76353d46ccdb860406862a19766e48b980d38))
 
-* Small addition. ([`7bc1dcb`](https://github.com/asaf-kali/codenames/commit/7bc1dcbc7afa1c71bdf2ac9fb30c41c0e567cbce))
+* Small addition. ([`98d8f04`](https://github.com/asaf-kali/codenames/commit/98d8f046b4a19d23a16bfbbe03535097fda47bd7))
 
-* Small dependencies fix. ([`694c3a4`](https://github.com/asaf-kali/codenames/commit/694c3a4f8968a0e0c430f7a2e0e0f64d80768b6f))
+* Small dependencies fix. ([`e66a697`](https://github.com/asaf-kali/codenames/commit/e66a697da2792754830090447425fb070ef4f32d))
 
-* Limit concurrency. ([`48908f6`](https://github.com/asaf-kali/codenames/commit/48908f6dcff1bf1ba0603874dda6848da4121adc))
+* Limit concurrency. ([`b32c84a`](https://github.com/asaf-kali/codenames/commit/b32c84a16c3f7b6ce42ca46dc787e0b10ecfe3c1))
 
-* Makefile fix. ([`ebc64d0`](https://github.com/asaf-kali/codenames/commit/ebc64d030d42f604d6d5c8ca17319ba746c427ec))
+* Makefile fix. ([`1bfb26c`](https://github.com/asaf-kali/codenames/commit/1bfb26cbb60ed6a7171e8c448cdc4fef5b373e5c))
 
-* Minor Makefile fix. ([`dcf4fee`](https://github.com/asaf-kali/codenames/commit/dcf4fee16e90d5bbf14c160363c1af2688534ec7))
+* Minor Makefile fix. ([`b122670`](https://github.com/asaf-kali/codenames/commit/b122670e821fd023c9a97e5942ff56c27d44dc7f))
 
-* Fix pydantic in place changes bug. ([`3a9a19e`](https://github.com/asaf-kali/codenames/commit/3a9a19e932215bbc80d9b8f74cf9e09f7c9b558e))
+* Fix pydantic in place changes bug. ([`ef14a0a`](https://github.com/asaf-kali/codenames/commit/ef14a0a10123fcf3b9ff3b28c7369a22fca38bfc))
 
-* CI fix. ([`21c6b8b`](https://github.com/asaf-kali/codenames/commit/21c6b8b64376ef61ebf7ebf058a44506aaa2a5fa))
+* CI fix. ([`11ca395`](https://github.com/asaf-kali/codenames/commit/11ca395b7864956bdefc1c70247122e310a15b20))
 
-* Small dependencies upgrade. ([`3b68279`](https://github.com/asaf-kali/codenames/commit/3b68279abd5bec478fbf84c61bd5cbd2f7e763b9))
+* Small dependencies upgrade. ([`27c75c3`](https://github.com/asaf-kali/codenames/commit/27c75c34f3e1d4750a1bcdd3ef99d2f72b77740a))
 
-* Import changes. ([`15dc1ec`](https://github.com/asaf-kali/codenames/commit/15dc1ec4da11fa0dcc78aa3b08c34e549131dfa2))
+* Import changes. ([`eb53d14`](https://github.com/asaf-kali/codenames/commit/eb53d14df77b0b4808913fd8583c7e7e0ce8143a))
 
-* Better make upload command. ([`c7d28e6`](https://github.com/asaf-kali/codenames/commit/c7d28e6b5135e13eed62e3e11ec1725596a8ca3f))
+* Better make upload command. ([`a89d6c9`](https://github.com/asaf-kali/codenames/commit/a89d6c9128148508d03165295cf1ddd98aa18a1e))
 
-* Remove model adapter from package. ([`3d9305b`](https://github.com/asaf-kali/codenames/commit/3d9305bbb6e8b8af70b026cb0592f1bfa8429703))
+* Remove model adapter from package. ([`93d56d0`](https://github.com/asaf-kali/codenames/commit/93d56d01194eec432ea14083f5608665660aa44c))
 
-* Add game runner to module init. ([`bb52087`](https://github.com/asaf-kali/codenames/commit/bb520877ae8c33796830107794343e3b668dceca))
+* Add game runner to module init. ([`86198c8`](https://github.com/asaf-kali/codenames/commit/86198c8a23e1a73f98c860cdf565cc56faeefccc))
 
-* Add pypi badge. ([`299977b`](https://github.com/asaf-kali/codenames/commit/299977bf39922dfa18b774d24184d5e941087b3e))
+* Add pypi badge. ([`4c8c7e4`](https://github.com/asaf-kali/codenames/commit/4c8c7e4b944aa28557727a183400037121038d1b))
 
-* Add readme. ([`2c761a6`](https://github.com/asaf-kali/codenames/commit/2c761a6fea7d957cc03922f2de6a2034f1740a23))
+* Add readme. ([`6be463e`](https://github.com/asaf-kali/codenames/commit/6be463e78ee0bd31fe764ca077891e52b5cf03a2))
 
-* Initial commit: copy package files from solver repository. ([`555aff7`](https://github.com/asaf-kali/codenames/commit/555aff7a968fb48fa722d5072fbd0d8a8a43ac34))
+* Initial commit: copy package files from solver repository. ([`1564587`](https://github.com/asaf-kali/codenames/commit/156458728c316245bcd4a6b08aa6cdcaf26a8cf3))
