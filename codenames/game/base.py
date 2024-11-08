@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from functools import cached_property
 from typing import Set, Tuple
 
@@ -13,13 +12,8 @@ class BaseModel(PydanticBaseModel):
     class Config:
         keep_untouched = (cached_property,)
 
-    @classmethod
-    def from_json(cls, string: str) -> BaseModel:
-        data = json.loads(string)
-        return cls(**data)
-
     def dict(self, *args, **kwargs) -> dict:
-        result = super().dict(*args, **kwargs)
+        result = super().model_dump(*args, **kwargs)
         cached_properties = get_cached_properties_names(self.__class__)
         include = kwargs.get("include", None) or set()
         for prop in cached_properties:
