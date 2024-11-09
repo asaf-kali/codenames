@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.runner import ClassicGameRunner
 from codenames.classic.state import ClassicOperativeState

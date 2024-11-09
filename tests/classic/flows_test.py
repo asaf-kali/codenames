@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicTeam
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.move import (

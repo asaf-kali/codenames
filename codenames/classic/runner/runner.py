@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 from typing import Callable
 
+from codenames.classic.board import ClassicBoard
 from codenames.classic.builder import generate_board
-from codenames.classic.classic_board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.models import GamePlayers, TeamPlayers
 from codenames.classic.score import Score, TeamScore
@@ -57,7 +57,7 @@ class ClassicGameRunner:
         return winner
 
     def _notify_game_starts(self):
-        censored_board = self.state.board.censured
+        censored_board = self.state.board.censored
         for spymaster in self.spymasters:
             spymaster.on_game_start(board=self.state.board)
         for operative in self.operatives:

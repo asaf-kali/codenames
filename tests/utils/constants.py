@@ -1,4 +1,4 @@
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor
 from codenames.classic.types import ClassicCard
 

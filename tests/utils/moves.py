@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from codenames.classic.state import ClassicGameState
+from codenames.classic.state import ClassicState
 from codenames.generic.move import GivenClue, GivenGuess
 from codenames.generic.player import PlayerRole, Team
 
@@ -39,7 +39,7 @@ class PassMove(Move):
         return self.team
 
 
-def get_moves(state: ClassicGameState) -> list[Move]:
+def get_moves(state: ClassicState) -> list[Move]:
     return _get_moves(
         given_clues=state.given_clues,
         given_guesses=state.given_guesses,

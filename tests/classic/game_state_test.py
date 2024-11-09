@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.runner import new_game_state
 from codenames.classic.state import ClassicGameState
@@ -105,13 +105,13 @@ def test_game_state_flow(board_10: ClassicBoard):
         ClueMove(given_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE)),
         GuessMove(
             given_guess=GivenGuess(
-                given_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
+                for_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
                 guessed_card=Card(word="Card 0", color=ClassicColor.BLUE, revealed=True),
             )
         ),
         GuessMove(
             given_guess=GivenGuess(
-                given_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
+                for_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
                 guessed_card=Card(word="Card 1", color=ClassicColor.BLUE, revealed=True),
             )
         ),
@@ -119,13 +119,13 @@ def test_game_state_flow(board_10: ClassicBoard):
         ClueMove(given_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED)),
         GuessMove(
             given_guess=GivenGuess(
-                given_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
+                for_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
                 guessed_card=Card(word="Card 4", color=ClassicColor.RED, revealed=True),
             )
         ),
         GuessMove(
             given_guess=GivenGuess(
-                given_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
+                for_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
                 guessed_card=Card(word="Card 5", color=ClassicColor.RED, revealed=True),
             )
         ),
@@ -134,13 +134,13 @@ def test_game_state_flow(board_10: ClassicBoard):
         ClueMove(given_clue=GivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED)),
         GuessMove(
             given_guess=GivenGuess(
-                given_clue=GivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED),
+                for_clue=GivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED),
                 guessed_card=Card(word="Card 9", color=ClassicColor.ASSASSIN, revealed=True),
             )
         ),
     ]
     assert get_moves(game_state) == expected_moves
-    assert game_state.operative_state.moves == expected_moves
+    assert get_moves(game_state.operative_state) == expected_moves
 
 
 def test_game_state_json_serialization_and_load(board_10: ClassicBoard):
@@ -150,7 +150,7 @@ def test_game_state_json_serialization_and_load(board_10: ClassicBoard):
     game_state.process_guess(Guess(card_index=1))
 
     game_state_json = game_state.model_dump_json()
-    game_state_data = json.loads(game_state_json)
-    game_state_from_json = ClassicGameState(**game_state_data)
-    assert game_state_from_json.model_dump() == game_state.model_dump()
+    game_state_dict = json.loads(game_state_json)
+    game_state_from_json = ClassicGameState.model_validate(game_state_dict)
     assert game_state_from_json == game_state
+    assert game_state_dict == game_state.model_dump()

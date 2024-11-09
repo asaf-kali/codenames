@@ -72,7 +72,7 @@ class Board(BaseModel, Generic[C]):
         return tuple(card for card in self.cards if card.revealed)
 
     @property
-    def censured(self) -> Board[C]:
+    def censored(self) -> Board[C]:
         return Board(language=self.language, cards=[card.censored for card in self.cards])
 
     @property

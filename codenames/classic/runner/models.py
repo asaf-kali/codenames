@@ -12,6 +12,10 @@ class TeamPlayers:
     spymaster: Spymaster
     operative: Operative
 
+    def __post_init__(self):
+        if self.spymaster.team != self.operative.team:
+            raise ValueError("Spymaster and Operative must be on the same team")
+
 
 @dataclass(frozen=True)
 class GamePlayers:

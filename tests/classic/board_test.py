@@ -1,7 +1,7 @@
 import pytest
 
+from codenames.classic.board import ClassicBoard
 from codenames.classic.builder import SupportedLanguage, generate_board
-from codenames.classic.classic_board import ClassicBoard
 from codenames.classic.color import ClassicTeam
 from codenames.generic.board import two_integer_factors
 from codenames.generic.exceptions import CardNotFoundError

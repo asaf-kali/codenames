@@ -1,6 +1,6 @@
 import logging
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.score import Score
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
@@ -55,7 +55,7 @@ class ClassicGameState(ClassicSpymasterState):
     @property
     def operative_state(self) -> ClassicOperativeState:
         return ClassicOperativeState(
-            board=self.board,
+            board=self.board.censored,
             given_clues=self.given_clues,
             given_guesses=self.given_guesses,
             score=self.score,

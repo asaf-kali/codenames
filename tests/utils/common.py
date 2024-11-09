@@ -1,7 +1,7 @@
 from typing import Optional
 from unittest.mock import Mock
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.classic.runner.runner import (
     ClassicGameRunner,
     ClueGivenSubscriber,

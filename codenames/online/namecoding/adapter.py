@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from codenames.classic.classic_board import Board, Card
+from codenames.classic.board import Board, Card
 from codenames.classic.players import Player, PlayerRole
 from codenames.generic.card import CardColor
 from codenames.generic.move import PASS_GUESS, Clue, Guess

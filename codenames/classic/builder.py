@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Union
 
-from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.board import ClassicBoard
 from codenames.generic.player import T
 from codenames.resources.english import ENGLISH_WORDS
 from codenames.resources.hebrew import HEBREW_WORDS
