@@ -1,11 +1,11 @@
-from typing import List, Tuple
+from typing import tuple
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
 
 
-def _by_to_using(by: str, value: str) -> Tuple[str, str]:
+def _by_to_using(by: str, value: str) -> tuple[str, str]:
     if by == By.ID:
         by = By.CSS_SELECTOR
         value = f'[id="{value}"]'
@@ -28,6 +28,6 @@ class ShadowRootElement:
         using, value = _by_to_using(by, value)
         return self.shadow_root.find_element(using=using, value=value)  # type: ignore
 
-    def find_elements(self, by: str, value: str) -> List[WebElement]:
+    def find_elements(self, by: str, value: str) -> list[WebElement]:
         using, value = _by_to_using(by, value)
         return self.shadow_root.find_elements(using=using, value=value)  # type: ignore

@@ -1,25 +1,25 @@
 import pytest
 
-from codenames.game.color import TeamColor
-from codenames.game.player import GamePlayers
-from codenames.game.winner import WinningReason
+from codenames.classic.color import ClassicTeam
+from codenames.classic.runner.models import GamePlayers
+from codenames.classic.winner import WinningReason
 from codenames.online.codenames_game.runner import CodenamesGameRunner
-from tests.utils.players.cheaters import CheaterGuesser, CheaterHinter
+from tests.utils.players.cheaters import CheaterOperative, CheaterSpymaster
 
 
 def get_cheaters() -> GamePlayers:
-    blue_hinter = CheaterHinter(name="Yoda", team_color=TeamColor.BLUE, card_amount=5)
-    red_hinter = CheaterHinter(name="Einstein", team_color=TeamColor.RED, card_amount=1)
-    blue_guesser = CheaterGuesser(name="Anakin", team_color=TeamColor.BLUE, hinter=blue_hinter)
-    red_guesser = CheaterGuesser(name="Newton", team_color=TeamColor.RED, hinter=red_hinter)
-    return GamePlayers.from_collection([blue_hinter, blue_guesser, red_hinter, red_guesser])
+    blue_spymaster = CheaterSpymaster(name="Yoda", team=ClassicTeam.BLUE, card_amount=5)
+    red_spymaster = CheaterSpymaster(name="Einstein", team=ClassicTeam.RED, card_amount=1)
+    blue_operative = CheaterOperative(name="Anakin", team=ClassicTeam.BLUE, spymaster=blue_spymaster)
+    red_operative = CheaterOperative(name="Newton", team=ClassicTeam.RED, spymaster=red_spymaster)
+    return GamePlayers.from_collection([blue_spymaster, blue_operative, red_spymaster, red_operative])
 
 
 @pytest.mark.web
 @pytest.mark.flaky(retries=3)
 def test_full_codenames_game_flow():
     players = get_cheaters()
-    with CodenamesGameRunner(*players.hinters, *players.guessers, show_host=False) as manager:
+    with CodenamesGameRunner(*players.spymasters, *players.operatives, show_host=False) as manager:
         runner = manager.auto_start()
         assert runner.winner is not None
         assert runner.winner.reason == WinningReason.TARGET_SCORE_REACHED

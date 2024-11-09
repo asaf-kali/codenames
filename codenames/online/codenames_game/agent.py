@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import logging
 from abc import ABC
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from codenames.game.color import TeamColor
-from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player
-from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.game.move import Clue, Guess
+from codenames.game.player import Operative, Player, Spymaster
+from codenames.game.state import OperativeGameState, SpymasterGameState
 
 if TYPE_CHECKING:
     from codenames.online.codenames_game.adapter import CodenamesGamePlayerAdapter
@@ -16,23 +16,23 @@ log = logging.getLogger(__name__)
 
 
 class Agent(Player, ABC):
-    def __init__(self, name: str, team_color: TeamColor):
-        super().__init__(name, team_color)
-        self.adapter: Optional[CodenamesGamePlayerAdapter] = None
+    def __init__(self, name: str, team: TeamColor):
+        super().__init__(name, team)
+        self.adapter: CodenamesGamePlayerAdapter | None = None
 
     def set_host_adapter(self, adapter: CodenamesGamePlayerAdapter):
         self.adapter = adapter
 
 
-class HinterAgent(Agent, Hinter):
-    def pick_hint(self, game_state: HinterGameState) -> Hint:
+class SpymasterAgent(Agent, Spymaster):
+    def give_clue(self, game_state: SpymasterGameState) -> Clue:
         if not self.adapter:
-            raise RuntimeError("HinterAgent.adapter is not set")
-        return self.adapter.poll_hint_given()  # type: ignore
+            raise RuntimeError("SpymasterAgent.adapter is not set")
+        return self.adapter.poll_clue_given()  # type: ignore
 
 
-class GuesserAgent(Agent, Guesser):
-    def guess(self, game_state: GuesserGameState) -> Guess:
+class OperativeAgent(Agent, Operative):
+    def guess(self, game_state: OperativeGameState) -> Guess:
         if not self.adapter:
-            raise RuntimeError("GuesserAgent.adapter is not set")
+            raise RuntimeError("OperativeAgent.adapter is not set")
         return self.adapter.poll_guess_given(game_state=game_state)  # type: ignore

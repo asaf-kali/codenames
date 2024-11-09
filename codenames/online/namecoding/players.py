@@ -1,10 +1,9 @@
 import logging
 from abc import ABC
-from typing import Optional
 
-from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player
-from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.game.move import Clue, Guess
+from codenames.game.player import Operative, Player, Spymaster
+from codenames.game.state import OperativeGameState, SpymasterGameState
 from codenames.online.namecoding.adapter import NamecodingPlayerAdapter
 
 log = logging.getLogger(__name__)
@@ -13,21 +12,21 @@ log = logging.getLogger(__name__)
 class Agent(Player, ABC):
     def __init__(self, name: str):
         super().__init__(name)
-        self.adapter: Optional[NamecodingPlayerAdapter] = None
+        self.adapter: NamecodingPlayerAdapter | None = None
 
     def set_host_adapter(self, adapter: NamecodingPlayerAdapter):
         self.adapter = adapter
 
 
-class HinterAgent(Agent, Hinter):
-    def pick_hint(self, game_state: HinterGameState) -> Hint:
+class SpymasterAgent(Agent, Spymaster):
+    def give_clue(self, game_state: SpymasterGameState) -> Clue:
         if not self.adapter:
-            raise RuntimeError("HinterAgent.adapter is not set")
-        return self.adapter.poll_hint_given()
+            raise RuntimeError("SpymasterAgent.adapter is not set")
+        return self.adapter.poll_clue_given()
 
 
-class GuesserAgent(Agent, Guesser):
-    def guess(self, game_state: GuesserGameState) -> Guess:
+class OperativeAgent(Agent, Operative):
+    def guess(self, game_state: OperativeGameState) -> Guess:
         if not self.adapter:
-            raise RuntimeError("GuesserAgent.adapter is not set")
+            raise RuntimeError("OperativeAgent.adapter is not set")
         return self.adapter.poll_guess_given(game_state=game_state)

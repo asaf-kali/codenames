@@ -1,48 +1,49 @@
 import pytest
 
-from codenames.boards.builder import SupportedLanguage, generate_board
-from codenames.game.board import Board, two_integer_factors
-from codenames.game.color import TeamColor
-from codenames.game.exceptions import CardNotFoundError
+from codenames.classic.builder import SupportedLanguage, generate_board
+from codenames.classic.classic_board import ClassicBoard
+from codenames.classic.color import ClassicTeam
+from codenames.generic.board import two_integer_factors
+from codenames.generic.exceptions import CardNotFoundError
 from tests.utils import constants
 
 
 @pytest.fixture()
-def board_10() -> Board:
+def board_10() -> ClassicBoard:
     return constants.board_10()
 
 
 @pytest.fixture()
-def board_25() -> Board:
+def board_25() -> ClassicBoard:
     return constants.board_25()
 
 
-def test_get_board_at_integer_index_returns_card(board_10: Board):
+def test_get_board_at_integer_index_returns_card(board_10: ClassicBoard):
     card = board_10[0]
     assert card.word == "Card 0"
 
 
-def test_get_board_at_negative_index_raises_error(board_10: Board):
+def test_get_board_at_negative_index_raises_error(board_10: ClassicBoard):
     with pytest.raises(IndexError):
         _ = board_10[-1]
 
 
-def test_get_board_at_upper_bound_index_raises_error(board_10: Board):
+def test_get_board_at_upper_bound_index_raises_error(board_10: ClassicBoard):
     with pytest.raises(IndexError):
         _ = board_10[10]
 
 
-def test_get_board_at_existing_word_index_returns_card(board_10: Board):
+def test_get_board_at_existing_word_index_returns_card(board_10: ClassicBoard):
     card = board_10["Card 0"]
     assert card.word == "Card 0"
 
 
-def test_get_board_at_non_existing_word_raises_error(board_10: Board):
+def test_get_board_at_non_existing_word_raises_error(board_10: ClassicBoard):
     with pytest.raises(CardNotFoundError):
         _ = board_10["foo"]
 
 
-def test_get_board_at_float_index_raises_error(board_10: Board):
+def test_get_board_at_float_index_raises_error(board_10: ClassicBoard):
     with pytest.raises(IndexError):
         _ = board_10[1.1]  # type: ignore
 
@@ -58,7 +59,7 @@ def test_two_integer_factors():
     assert x == 17 and y == 1
 
 
-def test_str_is_printable_string(board_10: Board, board_25: Board):
+def test_str_is_printable_string(board_10: ClassicBoard, board_25: ClassicBoard):
     assert str(board_10) == board_10.printable_string
     print()
     print(board_10)
@@ -85,22 +86,22 @@ def test_build_board_with_params():
     board = generate_board(
         language=SupportedLanguage.ENGLISH,
         board_size=17,
-        black_amount=2,
+        assassin_amount=2,
         seed=42,
-        first_team=TeamColor.RED,
+        first_team=ClassicTeam.RED,
     )
     assert len(board.cards) == 17
     assert len(board.revealed_cards) == 0
     assert len(board.red_cards) == 6
     assert len(board.blue_cards) == 5
-    assert len(board.gray_cards) == 4
-    assert len(board.black_cards) == 2
+    assert len(board.neutral_cards) == 4
+    assert len(board.assassin_cards) == 2
 
 
-def _validate_standard_board(board: Board):
+def _validate_standard_board(board: ClassicBoard):
     assert len(board.cards) == 25
     assert len(board.revealed_cards) == 0
     assert len(board.red_cards) >= 8
     assert len(board.blue_cards) >= 8
-    assert len(board.gray_cards) == 7
-    assert len(board.black_cards) == 1
+    assert len(board.neutral_cards) == 7
+    assert len(board.assassin_cards) == 1

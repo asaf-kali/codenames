@@ -21,7 +21,7 @@ class GameIsOver(InvalidTurn):
         super().__init__("Game is over!")
 
 
-class InvalidHint(GameRuleError):
+class InvalidClue(GameRuleError):
     pass
 
 

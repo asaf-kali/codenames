@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import logging
-from enum import Enum
+from enum import StrEnum
 from time import sleep
-from typing import Iterable, Optional
+from typing import Iterable
 
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException
@@ -11,11 +11,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from codenames.game.board import Board, Card
-from codenames.game.color import CardColor
-from codenames.game.move import PASS_GUESS, Guess, Hint
-from codenames.game.player import Player, PlayerRole
-from codenames.game.state import GuesserGameState
+from codenames.classic.classic_board import Board, Card
+from codenames.classic.players import Player, PlayerRole
+from codenames.generic.card import CardColor
+from codenames.generic.move import PASS_GUESS, Clue, Guess
+from codenames.generic.state import OperativeState
 from codenames.online.namecoding.shadow import ShadowRootElement
 from codenames.online.utils import poll_condition
 from codenames.utils.formatting import wrap
@@ -26,7 +26,7 @@ WEBAPP_URL = "https://namecoding.herokuapp.com/"
 CLEAR = "\b\b\b\b\b"
 
 
-class NamecodingLanguage(str, Enum):
+class NamecodingLanguage(StrEnum):
     ENGLISH = "english"
     HEBREW = "hebrew"
 
@@ -67,7 +67,7 @@ def get_shadow_root(parent, tag_name: str) -> ShadowRootElement:
 
 class NamecodingPlayerAdapter:
     def __init__(
-        self, player: Player, implicitly_wait: int = 1, headless: bool = True, chromedriver_path: Optional[str] = None
+        self, player: Player, implicitly_wait: int = 1, headless: bool = True, chromedriver_path: str | None = None
     ):
         options = webdriver.ChromeOptions()
         if player.is_human:
@@ -152,8 +152,8 @@ class NamecodingPlayerAdapter:
     def choose_role(self) -> NamecodingPlayerAdapter:
         log.info(f"{self.log_prefix} is picking role...")
         lobby_page = self.get_lobby_page()
-        team_element_id = f"{self.player.team_color.value.lower()}-team"  # type: ignore
-        role_button_class_name = "guessers" if self.player.role == PlayerRole.GUESSER else "hinters"
+        team_element_id = f"{self.player.as_team.value.lower()}-team"  # type: ignore
+        role_button_class_name = "operatives" if self.player.role == PlayerRole.OPERATIVE else "spymasters"
         team_element = lobby_page.find_element(by=By.ID, value=team_element_id)
         role_button = team_element.find_element(by=By.CLASS_NAME, value=role_button_class_name)
         role_button.click()
@@ -206,12 +206,12 @@ class NamecodingPlayerAdapter:
     # def is_my_turn(self) -> bool:
     #     clue_area = self.get_clue_area()
     #     if (
-    #         self.player.role == PlayerRole.HINTER
+    #         self.player.role == PlayerRole.SPYMASTER
     #         and clue_area.find_elements(by=By.ID, value="submit-clue-button") != []
     #     ):
     #         return True
     #     if (
-    #         self.player.role == PlayerRole.GUESSER
+    #         self.player.role == PlayerRole.OPERATIVE
     #         and clue_area.find_elements(by=By.ID, value="finish-turn-button") != []
     #     ):
     #         return True
@@ -226,7 +226,7 @@ class NamecodingPlayerAdapter:
         log.debug("Parse board done")
         return Board(language=language, cards=cards)
 
-    def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> Optional[int]:
+    def detect_visibility_change(self, revealed_card_indexes: Iterable[int]) -> int | None:
         log.debug("Looking for visibility change...")
         game_page = self.get_game_page()
         card_containers = game_page.find_elements(by=By.ID, value="card-padding-container")
@@ -239,15 +239,15 @@ class NamecodingPlayerAdapter:
         log.debug("No visibility change found")
         return None
 
-    def transmit_hint(self, hint: Hint) -> NamecodingPlayerAdapter:
-        log.debug(f"Sending hint: {hint}")
+    def transmit_clue(self, clue: Clue) -> NamecodingPlayerAdapter:
+        log.debug(f"Sending clue: {clue}")
         clue_area = self.get_clue_area()
         sleep(0.1)
         clue_input = clue_area.find_element(by=By.ID, value="clue-input")
         cards_input = clue_area.find_element(by=By.ID, value="cards-input")
         submit_clue_button = clue_area.find_element(by=By.ID, value="submit-clue-button")
-        fill_input(clue_input, hint.word.title())
-        fill_input(cards_input, str(hint.card_amount))
+        fill_input(clue_input, clue.word.title())
+        fill_input(cards_input, str(clue.card_amount))
         submit_clue_button.click()
         sleep(0.2)
         self.approve_alert()
@@ -286,17 +286,17 @@ class NamecodingPlayerAdapter:
         sleep(0.5)
         return self
 
-    def poll_hint_given(self) -> Hint:
-        log.debug("Polling for hint given...")
+    def poll_clue_given(self) -> Clue:
+        log.debug("Polling for clue given...")
         clue_area = self.get_clue_area()
         sleep(0.1)
 
         poll_condition(lambda: self.has_clue_text(clue_area), timeout_sec=600)
         clue_input = clue_area.find_element(by=By.ID, value="clue-text")
         cards_input = clue_area.find_element(by=By.ID, value="cards-num-container")
-        return Hint(word=clue_input.text.strip(), card_amount=int(cards_input.text[0]))
+        return Clue(word=clue_input.text.strip(), card_amount=int(cards_input.text[0]))
 
-    def poll_guess_given(self, game_state: GuesserGameState) -> Guess:
+    def poll_guess_given(self, game_state: OperativeState) -> Guess:
         log.debug("Polling for guess given...")
         revealed_card_indexes = game_state.board.revealed_card_indexes
         clue_area = self.get_clue_area()
@@ -311,7 +311,7 @@ class NamecodingPlayerAdapter:
         log.debug("Returning pass guess.")
         return Guess(card_index=PASS_GUESS)
 
-    def has_clue_text(self, clue_area: Optional[ShadowRootElement] = None) -> bool:
+    def has_clue_text(self, clue_area: ShadowRootElement | None = None) -> bool:
         if not clue_area:
             clue_area = self.get_clue_area()
         return clue_area.find_elements(by=By.ID, value="clue-text") != []
@@ -326,5 +326,5 @@ class NamecodingPlayerAdapter:
 def parse_card_color(namecoding_color: str) -> CardColor:
     namecoding_color = namecoding_color.strip().upper()
     if namecoding_color == "GREEN":
-        namecoding_color = "GRAY"
+        namecoding_color = "NEUTRAL"
     return CardColor[namecoding_color]

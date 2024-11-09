@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from codenames.game.base import BaseModel
-from codenames.game.color import TeamColor
+from pydantic import BaseModel
+
+from codenames.classic.color import ClassicTeam
 
 
 class TeamScore(BaseModel):
@@ -25,8 +26,8 @@ class Score(BaseModel):
     def new(blue: int, red: int) -> Score:
         return Score(blue=TeamScore.new(blue), red=TeamScore.new(red))
 
-    def add_point(self, team_color: TeamColor) -> bool:
-        team_score = self.blue if team_color == TeamColor.BLUE else self.red
+    def add_point(self, team: ClassicTeam) -> bool:
+        team_score = self.blue if team == ClassicTeam.BLUE else self.red
         team_score.revealed += 1
         if team_score.unrevealed == 0:
             return True

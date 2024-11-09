@@ -1,6 +1,6 @@
 import copy
 from dataclasses import dataclass
-from typing import Callable, ContextManager, List
+from typing import Callable, ContextManager
 from unittest import mock
 
 
@@ -13,7 +13,7 @@ class FunctionCall:
 
 class FunctionHook:
     def __init__(self):
-        self.calls: List[FunctionCall] = []
+        self.calls: list[FunctionCall] = []
 
     def append(self, call: FunctionCall):
         self.calls.append(call)

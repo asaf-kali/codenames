@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import logging
 from threading import Semaphore, Thread
-from typing import Iterable, List, Optional, Tuple, TypeVar
+from typing import Iterable, TypeVar, tuple
 
 from selenium.common.exceptions import WebDriverException
 
 from codenames.game.board import Board
-from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter, Player, PlayerRole
+from codenames.game.move import Clue, Guess
+from codenames.game.player import Operative, Player, PlayerRole, Spymaster
 from codenames.game.runner import GameRunner
 from codenames.game.winner import Winner
 from codenames.online.namecoding.adapter import (
@@ -16,7 +16,7 @@ from codenames.online.namecoding.adapter import (
     NamecodingLanguage,
     NamecodingPlayerAdapter,
 )
-from codenames.online.namecoding.players import Agent, GuesserAgent, HinterAgent
+from codenames.online.namecoding.players import Agent, OperativeAgent, SpymasterAgent
 
 log = logging.getLogger(__name__)
 
@@ -26,36 +26,36 @@ T = TypeVar("T")
 def player_or_agent(player: T, role: PlayerRole) -> T:
     if player is not None:
         return player
-    player_class = HinterAgent if role == PlayerRole.HINTER else GuesserAgent
+    player_class = SpymasterAgent if role == PlayerRole.SPYMASTER else OperativeAgent
     return player_class("Agent")
 
 
 class NamecodingGameRunner:
     def __init__(
         self,
-        blue_hinter: Optional[Hinter] = None,
-        red_hinter: Optional[Hinter] = None,
-        blue_guesser: Optional[Guesser] = None,
-        red_guesser: Optional[Guesser] = None,
+        blue_spymaster: Spymaster | None = None,
+        red_spymaster: Spymaster | None = None,
+        blue_operative: Operative | None = None,
+        red_operative: Operative | None = None,
         show_host: bool = True,
     ):
-        self.host: Optional[NamecodingPlayerAdapter] = None
-        self.guests: List[NamecodingPlayerAdapter] = []
-        blue_hinter = player_or_agent(blue_hinter, PlayerRole.HINTER)
-        red_hinter = player_or_agent(red_hinter, PlayerRole.HINTER)
-        blue_guesser = player_or_agent(blue_guesser, PlayerRole.GUESSER)
-        red_guesser = player_or_agent(red_guesser, PlayerRole.GUESSER)
+        self.host: NamecodingPlayerAdapter | None = None
+        self.guests: list[NamecodingPlayerAdapter] = []
+        blue_spymaster = player_or_agent(blue_spymaster, PlayerRole.SPYMASTER)
+        red_spymaster = player_or_agent(red_spymaster, PlayerRole.SPYMASTER)
+        blue_operative = player_or_agent(blue_operative, PlayerRole.OPERATIVE)
+        red_operative = player_or_agent(red_operative, PlayerRole.OPERATIVE)
         self.game_runner = GameRunner(
-            blue_hinter=blue_hinter,  # type: ignore
-            red_hinter=red_hinter,  # type: ignore
-            blue_guesser=blue_guesser,  # type: ignore
-            red_guesser=red_guesser,  # type: ignore
+            blue_spymaster=blue_spymaster,  # type: ignore
+            red_spymaster=red_spymaster,  # type: ignore
+            blue_operative=blue_operative,  # type: ignore
+            red_operative=red_operative,  # type: ignore
         )
         self._show_host = show_host
-        self._running_game_id: Optional[str] = None
+        self._running_game_id: str | None = None
         self._auto_start_semaphore = Semaphore()
         self._language: NamecodingLanguage = NamecodingLanguage.HEBREW
-        self.game_runner.hint_given_subscribers.append(self._handle_hint_given)
+        self.game_runner.clue_given_subscribers.append(self._handle_clue_given)
         self.game_runner.guess_given_subscribers.append(self._handle_guess_given)
 
     @property
@@ -64,7 +64,7 @@ class NamecodingGameRunner:
         yield from self.guests
 
     @property
-    def winner(self) -> Optional[Winner]:
+    def winner(self) -> Winner | None:
         return self.game_runner.winner
 
     @property
@@ -72,11 +72,11 @@ class NamecodingGameRunner:
         return self.game_runner.state.board
 
     @property
-    def players(self) -> Tuple[Player, ...]:
+    def players(self) -> tuple[Player, ...]:
         return self.game_runner.players
 
     @property
-    def agents(self) -> Tuple[Agent, ...]:
+    def agents(self) -> tuple[Agent, ...]:
         return tuple(player for player in self.players if isinstance(player, Agent))
 
     def _get_adapter_for_player(self, player: Player) -> NamecodingPlayerAdapter:
@@ -111,13 +111,13 @@ class NamecodingGameRunner:
         self.run_game()
         return self
 
-    def host_game(self, host_player: Optional[Hinter] = None) -> NamecodingGameRunner:
+    def host_game(self, host_player: Spymaster | None = None) -> NamecodingGameRunner:
         if self.host:
             raise IllegalOperation("A game is already running.")
         if host_player is None:
-            host_player = self.game_runner.blue_hinter
-        if not isinstance(host_player, Hinter):
-            raise IllegalOperation("Host player must be a Hinter.")
+            host_player = self.game_runner.blue_spymaster
+        if not isinstance(host_player, Spymaster):
+            raise IllegalOperation("Host player must be a Spymaster.")
         host = NamecodingPlayerAdapter(player=host_player, headless=not self._show_host)
         host.open().host_game().choose_role().ready()
         self._running_game_id = host.get_game_id()
@@ -176,18 +176,18 @@ class NamecodingGameRunner:
         self.host.click_start_game()
         return self
 
-    def _handle_hint_given(self, hinter: Hinter, hint: Hint):
-        if isinstance(hinter, Agent):
-            log.debug("Skipped hint given by agent.")
+    def _handle_clue_given(self, spymaster: Spymaster, clue: Clue):
+        if isinstance(spymaster, Agent):
+            log.debug("Skipped clue given by agent.")
             return
-        adapter = self._get_adapter_for_player(player=hinter)
-        adapter.transmit_hint(hint=hint)
+        adapter = self._get_adapter_for_player(player=spymaster)
+        adapter.transmit_clue(clue=clue)
 
-    def _handle_guess_given(self, guesser: Guesser, guess: Guess):
-        if isinstance(guesser, Agent):
+    def _handle_guess_given(self, operative: Operative, guess: Guess):
+        if isinstance(operative, Agent):
             log.debug("Skipped guess given by agent.")
             return
-        adapter = self._get_adapter_for_player(player=guesser)
+        adapter = self._get_adapter_for_player(player=operative)
         adapter.transmit_guess(guess=guess)
 
     def close(self):

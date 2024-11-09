@@ -54,7 +54,7 @@ ENGLISH_WORDS = [
     "bible",
     "bike",
     "birthday",
-    "black",
+    "assassin",
     "blind",
     "blue",
     "bomb",

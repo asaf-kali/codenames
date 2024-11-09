@@ -2,52 +2,52 @@ from __future__ import annotations
 
 import logging
 from threading import Semaphore, Thread
-from typing import ContextManager, Iterable, List, Optional, Tuple, TypeVar
+from typing import ContextManager, Iterable, TypeVar
 
 from codenames.game.color import TeamColor
-from codenames.game.move import Guess, Hint
-from codenames.game.player import GamePlayers, Guesser, Hinter, Player, PlayerRole
+from codenames.game.move import Clue, Guess
+from codenames.game.player import GamePlayers, Operative, Player, PlayerRole, Spymaster
 from codenames.game.runner import GameRunner
 from codenames.online.codenames_game.adapter import (
     CodenamesGamePlayerAdapter,
     GameConfigs,
     IllegalOperation,
 )
-from codenames.online.codenames_game.agent import Agent, GuesserAgent, HinterAgent
+from codenames.online.codenames_game.agent import Agent, OperativeAgent, SpymasterAgent
 
 log = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=Player)
 
 
-def player_or_agent(player: Optional[T], role: PlayerRole, team_color: TeamColor) -> T:
+def player_or_agent(player: T | None, role: PlayerRole, team: TeamColor) -> T:
     if player is not None:
         return player
-    player_class = HinterAgent if role == PlayerRole.HINTER else GuesserAgent
-    name = f"{team_color} {role} Agent"
-    return player_class(name=name, team_color=team_color)  # type: ignore
+    player_class = SpymasterAgent if role == PlayerRole.SPYMASTER else OperativeAgent
+    name = f"{team} {role} Agent"
+    return player_class(name=name, team=team)  # type: ignore
 
 
 class CodenamesGameRunner(ContextManager):
     def __init__(
         self,
-        blue_hinter: Optional[Hinter] = None,
-        red_hinter: Optional[Hinter] = None,
-        blue_guesser: Optional[Guesser] = None,
-        red_guesser: Optional[Guesser] = None,
+        blue_spymaster: Spymaster | None = None,
+        red_spymaster: Spymaster | None = None,
+        blue_operative: Operative | None = None,
+        red_operative: Operative | None = None,
         show_host: bool = True,
-        game_configs: Optional[GameConfigs] = None,
+        game_configs: GameConfigs | None = None,
     ):
-        self._host: Optional[CodenamesGamePlayerAdapter] = None
-        self.guests: List[CodenamesGamePlayerAdapter] = []
-        blue_hinter = player_or_agent(blue_hinter, PlayerRole.HINTER, TeamColor.BLUE)
-        red_hinter = player_or_agent(red_hinter, PlayerRole.HINTER, TeamColor.RED)
-        blue_guesser = player_or_agent(blue_guesser, PlayerRole.GUESSER, TeamColor.BLUE)
-        red_guesser = player_or_agent(red_guesser, PlayerRole.GUESSER, TeamColor.RED)
-        self.players = GamePlayers.from_collection([blue_hinter, red_hinter, blue_guesser, red_guesser])
+        self._host: CodenamesGamePlayerAdapter | None = None
+        self.guests: list[CodenamesGamePlayerAdapter] = []
+        blue_spymaster = player_or_agent(blue_spymaster, PlayerRole.SPYMASTER, TeamColor.BLUE)
+        red_spymaster = player_or_agent(red_spymaster, PlayerRole.SPYMASTER, TeamColor.RED)
+        blue_operative = player_or_agent(blue_operative, PlayerRole.OPERATIVE, TeamColor.BLUE)
+        red_operative = player_or_agent(red_operative, PlayerRole.OPERATIVE, TeamColor.RED)
+        self.players = GamePlayers.from_collection([blue_spymaster, red_spymaster, blue_operative, red_operative])
         self._show_host = show_host
         self.game_configs = game_configs or GameConfigs()
-        self._running_game_url: Optional[str] = None
+        self._running_game_url: str | None = None
         self._auto_start_semaphore = Semaphore()
 
     @property
@@ -66,7 +66,7 @@ class CodenamesGameRunner(ContextManager):
         yield from self.guests
 
     @property
-    def agents(self) -> Tuple[Agent, ...]:
+    def agents(self) -> tuple[Agent, ...]:
         return tuple(player for player in self.players if isinstance(player, Agent))
 
     def __exit__(self, __exc_type, __exc_value, __traceback):
@@ -76,7 +76,7 @@ class CodenamesGameRunner(ContextManager):
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
-            if not self.host_connected and isinstance(player, Hinter):
+            if not self.host_connected and isinstance(player, Spymaster):
                 self.host_game(host_player=player, game_configs=self.game_configs)
             else:
                 self._auto_start_semaphore.acquire()  # pylint: disable=consider-using-with
@@ -101,7 +101,7 @@ class CodenamesGameRunner(ContextManager):
         self._start_game()
         board = self.host.parse_board(language=self.game_configs.language.value)
         game_runner = GameRunner(players=self.players, board=board)
-        game_runner.hint_given_subscribers.append(self._handle_hint_given)
+        game_runner.clue_given_subscribers.append(self._handle_clue_given)
         game_runner.guess_given_subscribers.append(self._handle_guess_given)
         try:
             game_runner.run_game()
@@ -113,15 +113,15 @@ class CodenamesGameRunner(ContextManager):
 
     def host_game(
         self,
-        host_player: Optional[Hinter] = None,
-        game_configs: Optional[GameConfigs] = None,
+        host_player: Spymaster | None = None,
+        game_configs: GameConfigs | None = None,
     ) -> CodenamesGameRunner:
         if self.host_connected:
             raise IllegalOperation("A game is already running.")
         if host_player is None:
-            host_player = self.players.blue_team.hinter
-        if not isinstance(host_player, Hinter):
-            raise IllegalOperation("Host player must be a Hinter.")
+            host_player = self.players.blue_team.spymaster
+        if not isinstance(host_player, Spymaster):
+            raise IllegalOperation("Host player must be a Spymaster.")
         game_configs = game_configs or GameConfigs()
         self._host = CodenamesGamePlayerAdapter(player=host_player, headless=not self._show_host)
         self.host.open().host_game()
@@ -177,16 +177,16 @@ class CodenamesGameRunner(ContextManager):
         self.host.start_game()
         return self
 
-    def _handle_hint_given(self, hinter: Hinter, hint: Hint):
-        if isinstance(hinter, Agent):
-            log.debug("Skipped hint given by agent.")
+    def _handle_clue_given(self, spymaster: Spymaster, clue: Clue):
+        if isinstance(spymaster, Agent):
+            log.debug("Skipped clue given by agent.")
             return
-        adapter = self._get_adapter_for_player(player=hinter)
-        adapter.transmit_hint(hint=hint)
+        adapter = self._get_adapter_for_player(player=spymaster)
+        adapter.transmit_clue(clue=clue)
 
-    def _handle_guess_given(self, guesser: Guesser, guess: Guess):
-        if isinstance(guesser, Agent):
+    def _handle_guess_given(self, operative: Operative, guess: Guess):
+        if isinstance(operative, Agent):
             log.debug("Skipped guess given by agent.")
             return
-        adapter = self._get_adapter_for_player(player=guesser)
+        adapter = self._get_adapter_for_player(player=operative)
         adapter.transmit_guess(guess=guess)
