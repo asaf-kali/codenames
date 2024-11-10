@@ -11,24 +11,8 @@ class ClassicColor(CardColor):
     ASSASSIN = "ASSASSIN"
 
     @property
-    def as_team(self) -> ClassicTeam:
-        if self == ClassicColor.RED:
-            return ClassicTeam.RED
-        if self == ClassicColor.BLUE:
-            return ClassicTeam.BLUE
-        raise ValueError(f"No such team color: {self.value}.")
-
-    @property
     def emoji(self) -> str:
         return CARD_COLOR_TO_EMOJI[self]
-
-    @property
-    def opponent(self) -> ClassicColor:
-        if self == ClassicColor.RED:
-            return ClassicColor.BLUE
-        if self == ClassicColor.BLUE:
-            return ClassicColor.RED
-        raise ValueError(f"No such team color: {self.value}.")
 
 
 class ClassicTeam(Team):

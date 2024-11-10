@@ -12,10 +12,6 @@ class CardColor(StrEnum):
     def emoji(self) -> str:
         raise NotImplementedError
 
-    @property
-    def as_team(self) -> str:
-        raise NotImplementedError
-
 
 C = TypeVar("C", bound=CardColor)
 
