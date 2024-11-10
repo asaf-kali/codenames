@@ -1,28 +1,32 @@
-from typing import List, Optional
+from typing import Optional
 from unittest.mock import Mock
 
-from codenames.game.board import Board
-from codenames.game.runner import GameRunner, GuessGivenSubscriber, HintGivenSubscriber
+from codenames.classic.board import ClassicBoard
+from codenames.classic.runner.runner import (
+    ClassicGameRunner,
+    ClueGivenSubscriber,
+    GuessGivenSubscriber,
+)
 from tests.utils.players.dictated import DictatedTurn, build_players
 
 
 def run_game(
-    board: Board,
-    all_turns: List[DictatedTurn],
-    hint_given_sub: Optional[HintGivenSubscriber] = None,
+    board: ClassicBoard,
+    all_turns: list[DictatedTurn],
+    clue_given_sub: Optional[ClueGivenSubscriber] = None,
     guess_given_sub: Optional[GuessGivenSubscriber] = None,
-    on_hint_given_mock: Optional[Mock] = None,
+    on_clue_given_mock: Optional[Mock] = None,
     on_guess_given_mock: Optional[Mock] = None,
-) -> GameRunner:
+) -> ClassicGameRunner:
     players = build_players(all_turns=all_turns)
-    runner = GameRunner(players=players, board=board)
-    if hint_given_sub:
-        runner.hint_given_subscribers.append(hint_given_sub)
+    runner = ClassicGameRunner(players=players, board=board)
+    if clue_given_sub:
+        runner.clue_given_subscribers.append(clue_given_sub)
     if guess_given_sub:
         runner.guess_given_subscribers.append(guess_given_sub)
     for player in players:
-        if on_hint_given_mock:
-            player.on_hint_given = on_hint_given_mock  # type: ignore
+        if on_clue_given_mock:
+            player.on_clue_given = on_clue_given_mock  # type: ignore
         if on_guess_given_mock:
             player.on_guess_given = on_guess_given_mock  # type: ignore
     runner.run_game()

@@ -1,86 +1,87 @@
-from codenames.game.board import Board, Card
-from codenames.game.color import CardColor
+from codenames.classic.board import ClassicBoard
+from codenames.classic.color import ClassicColor
+from codenames.classic.types import ClassicCard
 
 
-def board_10() -> Board:
-    return Board(
+def board_10() -> ClassicBoard:
+    return ClassicBoard(
         language="english",
         cards=[
-            Card(word="Card 0", color=CardColor.BLUE),  # 0
-            Card(word="Card 1", color=CardColor.BLUE),  # 1
-            Card(word="Card 2", color=CardColor.BLUE),  # 2
-            Card(word="Card 3", color=CardColor.BLUE),  # 3
-            Card(word="Card 4", color=CardColor.RED),  # 4
-            Card(word="Card 5", color=CardColor.RED),  # 5
-            Card(word="Card 6", color=CardColor.RED),  # 6
-            Card(word="Card 7", color=CardColor.GRAY),  # 7
-            Card(word="Card 8", color=CardColor.GRAY),  # 8
-            Card(word="Card 9", color=CardColor.BLACK),  # 9
+            ClassicCard(word="Card 0", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 1", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 2", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 3", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 4", color=ClassicColor.RED),
+            ClassicCard(word="Card 5", color=ClassicColor.RED),
+            ClassicCard(word="Card 6", color=ClassicColor.RED),
+            ClassicCard(word="Card 7", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 8", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 9", color=ClassicColor.ASSASSIN),
         ],
     )
 
 
-def board_25() -> Board:
-    return Board(
+def board_25() -> ClassicBoard:
+    return ClassicBoard(
         language="english",
         cards=[
-            Card(word="Card 0", color=CardColor.BLUE),
-            Card(word="Card 1", color=CardColor.BLUE),
-            Card(word="Card 2", color=CardColor.BLUE),
-            Card(word="Card 3", color=CardColor.BLUE),
-            Card(word="Card 4", color=CardColor.BLUE),
-            Card(word="Card 5", color=CardColor.BLUE),
-            Card(word="Card 6", color=CardColor.BLUE),
-            Card(word="Card 7", color=CardColor.BLUE),
-            Card(word="Card 8", color=CardColor.BLUE),
-            Card(word="Card 9", color=CardColor.RED),
-            Card(word="Card 10", color=CardColor.RED),
-            Card(word="Card 11", color=CardColor.RED),
-            Card(word="Card 12", color=CardColor.RED),
-            Card(word="Card 13", color=CardColor.RED),
-            Card(word="Card 14", color=CardColor.RED),
-            Card(word="Card 15", color=CardColor.RED),
-            Card(word="Card 16", color=CardColor.RED),
-            Card(word="Card 17", color=CardColor.GRAY),
-            Card(word="Card 18", color=CardColor.GRAY),
-            Card(word="Card 19", color=CardColor.GRAY),
-            Card(word="Card 20", color=CardColor.GRAY),
-            Card(word="Card 21", color=CardColor.GRAY),
-            Card(word="Card 22", color=CardColor.GRAY),
-            Card(word="Card 23", color=CardColor.GRAY),
-            Card(word="Card 24", color=CardColor.BLACK),
+            ClassicCard(word="Card 0", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 1", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 2", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 3", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 4", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 5", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 6", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 7", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 8", color=ClassicColor.BLUE),
+            ClassicCard(word="Card 9", color=ClassicColor.RED),
+            ClassicCard(word="Card 10", color=ClassicColor.RED),
+            ClassicCard(word="Card 11", color=ClassicColor.RED),
+            ClassicCard(word="Card 12", color=ClassicColor.RED),
+            ClassicCard(word="Card 13", color=ClassicColor.RED),
+            ClassicCard(word="Card 14", color=ClassicColor.RED),
+            ClassicCard(word="Card 15", color=ClassicColor.RED),
+            ClassicCard(word="Card 16", color=ClassicColor.RED),
+            ClassicCard(word="Card 17", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 18", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 19", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 20", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 21", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 22", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 23", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="Card 24", color=ClassicColor.ASSASSIN),
         ],
     )
 
 
-def hebrew_board() -> Board:
-    return Board(
+def hebrew_board() -> ClassicBoard:
+    return ClassicBoard(
         language="hebrew",
         cards=[
-            Card(word="חיים", color=CardColor.GRAY),
-            Card(word="ערך", color=CardColor.BLACK),
-            Card(word="מסוק", color=CardColor.BLUE),
-            Card(word="שבוע", color=CardColor.GRAY),
-            Card(word="רובוט", color=CardColor.RED),
-            Card(word="פוטר", color=CardColor.GRAY),
-            Card(word="אסור", color=CardColor.BLUE),
-            Card(word="דינוזאור", color=CardColor.BLUE),
-            Card(word="מחשב", color=CardColor.RED),
-            Card(word="מעמד", color=CardColor.GRAY),
-            Card(word="בעל", color=CardColor.RED),
-            Card(word="פנים", color=CardColor.RED),
-            Card(word="פרק", color=CardColor.RED),
-            Card(word="גפילטע", color=CardColor.BLUE),
-            Card(word="שונה", color=CardColor.RED),
-            Card(word="שכר", color=CardColor.RED),
-            Card(word="קפיץ", color=CardColor.BLUE),
-            Card(word="תרסיס", color=CardColor.GRAY),
-            Card(word="דגל", color=CardColor.GRAY),
-            Card(word="חופשה", color=CardColor.BLUE),
-            Card(word="מועדון", color=CardColor.RED),
-            Card(word="ציון", color=CardColor.BLUE),
-            Card(word="שק", color=CardColor.GRAY),
-            Card(word="אקורדיון", color=CardColor.RED),
-            Card(word="ילד", color=CardColor.BLUE),
+            ClassicCard(word="חיים", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="ערך", color=ClassicColor.ASSASSIN),
+            ClassicCard(word="מסוק", color=ClassicColor.BLUE),
+            ClassicCard(word="שבוע", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="רובוט", color=ClassicColor.RED),
+            ClassicCard(word="פוטר", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="אסור", color=ClassicColor.BLUE),
+            ClassicCard(word="דינוזאור", color=ClassicColor.BLUE),
+            ClassicCard(word="מחשב", color=ClassicColor.RED),
+            ClassicCard(word="מעמד", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="בעל", color=ClassicColor.RED),
+            ClassicCard(word="פנים", color=ClassicColor.RED),
+            ClassicCard(word="פרק", color=ClassicColor.RED),
+            ClassicCard(word="גפילטע", color=ClassicColor.BLUE),
+            ClassicCard(word="שונה", color=ClassicColor.RED),
+            ClassicCard(word="שכר", color=ClassicColor.RED),
+            ClassicCard(word="קפיץ", color=ClassicColor.BLUE),
+            ClassicCard(word="תרסיס", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="דגל", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="חופשה", color=ClassicColor.BLUE),
+            ClassicCard(word="מועדון", color=ClassicColor.RED),
+            ClassicCard(word="ציון", color=ClassicColor.BLUE),
+            ClassicCard(word="שק", color=ClassicColor.NEUTRAL),
+            ClassicCard(word="אקורדיון", color=ClassicColor.RED),
+            ClassicCard(word="ילד", color=ClassicColor.BLUE),
         ],
     )

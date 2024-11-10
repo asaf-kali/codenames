@@ -1,10 +1,11 @@
-from typing import Dict, Iterable, List, NamedTuple
+from typing import Iterable, NamedTuple
 
-from codenames.game.color import TeamColor
-from codenames.game.exceptions import QuitGame
-from codenames.game.move import Guess, Hint
-from codenames.game.player import GamePlayers, Guesser, Hinter, Player, Team
-from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.classic.color import ClassicTeam
+from codenames.classic.runner.models import GamePlayers, TeamPlayers
+from codenames.generic.exceptions import QuitGame
+from codenames.generic.move import Clue, Guess
+from codenames.generic.player import Operative, Player, Spymaster
+from codenames.generic.state import OperativeState, SpymasterState
 
 
 class UnexpectedEndOfInput(Exception):
@@ -12,43 +13,43 @@ class UnexpectedEndOfInput(Exception):
         self.player = player
 
 
-class DictatedHinter(Hinter):
+class DictatedSpymaster(Spymaster):
     def __init__(
         self,
-        hints: Iterable[Hint],
-        team_color: TeamColor,
-        name: str = "Test Hinter",
+        clues: Iterable[Clue],
+        team: ClassicTeam,
+        name: str = "Test Spymaster",
         auto_quit: bool = False,
     ):
-        super().__init__(name=name, team_color=team_color)
-        self.hints = list(hints)
+        super().__init__(name=name, team=team)
+        self.clues = list(clues)
         self.current_index = 0
         self.auto_quit = auto_quit
 
-    def pick_hint(self, game_state: HinterGameState) -> Hint:
-        if self.current_index >= len(self.hints):
+    def give_clue(self, game_state: SpymasterState) -> Clue:
+        if self.current_index >= len(self.clues):
             if self.auto_quit:
                 raise QuitGame(self)
             raise UnexpectedEndOfInput(self)
-        hint = self.hints[self.current_index]
+        clue = self.clues[self.current_index]
         self.current_index += 1
-        return hint
+        return clue
 
 
-class DictatedGuesser(Guesser):
+class DictatedOperative(Operative):
     def __init__(
         self,
         guesses: Iterable[Guess],
-        team_color: TeamColor,
-        name: str = "Test Guesser",
+        team: ClassicTeam,
+        name: str = "Test Operative",
         auto_quit: bool = False,
     ):
-        super().__init__(name=name, team_color=team_color)
+        super().__init__(name=name, team=team)
         self.guesses = list(guesses)
         self.current_index = 0
         self.auto_quit = auto_quit
 
-    def guess(self, game_state: GuesserGameState) -> Guess:
+    def guess(self, game_state: OperativeState) -> Guess:
         if self.current_index >= len(self.guesses):
             if self.auto_quit:
                 raise QuitGame(self)
@@ -59,24 +60,24 @@ class DictatedGuesser(Guesser):
 
 
 class DictatedTurn(NamedTuple):
-    hint: Hint
-    guesses: List[int]
+    clue: Clue
+    guesses: list[int]
 
 
-def build_players(all_turns: Iterable[DictatedTurn], first_team: TeamColor = TeamColor.BLUE) -> GamePlayers:
-    team_to_turns: Dict[TeamColor, List[DictatedTurn]] = {TeamColor.BLUE: [], TeamColor.RED: []}
-    current_team_color = first_team
+def build_players(all_turns: Iterable[DictatedTurn], first_team: ClassicTeam = ClassicTeam.BLUE) -> GamePlayers:
+    team_to_turns: dict[ClassicTeam, list[DictatedTurn]] = {ClassicTeam.BLUE: [], ClassicTeam.RED: []}
+    current_team = first_team
     for turn in all_turns:
-        team_to_turns[current_team_color].append(turn)
-        current_team_color = current_team_color.opponent
-    blue_team = build_team(TeamColor.BLUE, turns=team_to_turns[TeamColor.BLUE])
-    red_team = build_team(TeamColor.RED, turns=team_to_turns[TeamColor.RED])
+        team_to_turns[current_team].append(turn)
+        current_team = current_team.opponent
+    blue_team = build_team(ClassicTeam.BLUE, turns=team_to_turns[ClassicTeam.BLUE])
+    red_team = build_team(ClassicTeam.RED, turns=team_to_turns[ClassicTeam.RED])
     return GamePlayers(blue_team=blue_team, red_team=red_team)
 
 
-def build_team(team_color: TeamColor, turns: Iterable[DictatedTurn]) -> Team:
-    hints = [turn.hint for turn in turns]
+def build_team(team: ClassicTeam, turns: Iterable[DictatedTurn]) -> TeamPlayers:
+    clues = [turn.clue for turn in turns]
     guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    hinter = DictatedHinter(hints=hints, team_color=team_color)
-    guesser = DictatedGuesser(guesses=guesses, team_color=team_color)
-    return Team(hinter=hinter, guesser=guesser)
+    spymaster = DictatedSpymaster(clues=clues, team=team)
+    operative = DictatedOperative(guesses=guesses, team=team)
+    return TeamPlayers(spymaster=spymaster, operative=operative)

@@ -18,8 +18,8 @@ web = ["selenium"]
 
 [tool.poetry.dependencies]
 # Core
-python = "^3.9"
-pydantic = "^1.9"
+python = "^3.12"
+pydantic = "^2.0"
 # CLI
 beautifultable = "^1.0"
 # Web
@@ -31,10 +31,10 @@ coverage = "^7.2.3"
 pytest-retry = "^1.6"
 
 [tool.poetry.group.lint.dependencies]
-ruff = "^0.1.13"
-black = "^23.3.0"
+ruff = "^0.7"
+black = "^24.10"
 isort = "^5.12.0"
-mypy = "^1.2.0"
+mypy = "^1.13.0"
 pylint = "^3.0"
 types-requests = "^2.28.11.17"
 
@@ -95,15 +95,17 @@ addopts = "-s --disable-pytest-warnings --junitxml=junit.xml"
 
 [tool.coverage.run]
 source = ["codenames", "tests"]
-omit = ["codenames/online/namecoding/*"]
+omit = []
 
 # Lint
 
 [tool.ruff]
 line-length = 120
+exclude = ["local", ".deployment"]
+
+[tool.ruff.lint]
 select = ["B", "C", "E", "F", "W"]
 ignore = []
-exclude = ["local", ".deployment"]
 
 [tool.black]
 line-length = 120
@@ -114,7 +116,8 @@ profile = "black"
 
 [tool.mypy]
 ignore_missing_imports = true
-exclude = ["build", "dist", "codenames/online/namecoding", "playground"]
+check_untyped_defs = true
+exclude = ["build", "dist", "playground"]
 
 [tool.pylint]
 max-line-length = 120
@@ -131,6 +134,7 @@ disable = [
     "C0116",
     "R0801",
     "R0903",
+    "R0917",
     "W1203",
     "fixme",
     "too-many-arguments",
@@ -141,4 +145,4 @@ disable = [
 extension-pkg-allow-list = ["pydantic"]
 
 [tool.pylint.MASTER]
-ignore-paths = '^codenames/online/namecoding/.*$'
+ignore-paths = ""
