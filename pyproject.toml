@@ -95,7 +95,7 @@ addopts = "-s --disable-pytest-warnings --junitxml=junit.xml"
 
 [tool.coverage.run]
 source = ["codenames", "tests"]
-omit = ["codenames/online/namecoding/*"]
+omit = []
 
 # Lint
 
@@ -117,7 +117,7 @@ profile = "black"
 [tool.mypy]
 ignore_missing_imports = true
 check_untyped_defs = true
-exclude = ["build", "dist", "codenames/online/namecoding", "playground"]
+exclude = ["build", "dist", "playground"]
 
 [tool.pylint]
 max-line-length = 120
@@ -145,4 +145,4 @@ disable = [
 extension-pkg-allow-list = ["pydantic"]
 
 [tool.pylint.MASTER]
-ignore-paths = '^codenames/online/namecoding/.*$'
+ignore-paths = ""
