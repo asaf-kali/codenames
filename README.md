@@ -23,31 +23,31 @@ Here is a simple example of command-line based players, and a `GameRunner` that 
 
 ```python
 import logging
-
 import sys
 
-from codenames.boards.builder import generate_board
-from codenames.game.color import TeamColor
-from codenames.game.move import Guess, Hint
-from codenames.game.player import Guesser, Hinter, GamePlayers
-from codenames.game.runner import GameRunner
-from codenames.game.state import GuesserGameState, HinterGameState
+from codenames.classic.builder import generate_board
+from codenames.classic.color import ClassicTeam
+from codenames.classic.runner.models import GamePlayers
+from codenames.classic.runner.runner import ClassicGameRunner
+from codenames.generic.move import Clue, Guess
+from codenames.generic.player import Operative, Spymaster
+from codenames.generic.state import OperativeState, SpymasterState
 
 logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
 
 
 # Implement basic players
 
-class CLIHinter(Hinter):
-    def pick_hint(self, game_state: HinterGameState) -> Hint:
+class CLIHinter(Spymaster):
+    def give_clue(self, game_state: SpymasterState) -> Clue:
         print("Board state: \n" + game_state.board.printable_string)
         hint_word = input("Enter hint word: ")
         card_amount = int(input("Enter card amount: "))
-        return Hint(word=hint_word, card_amount=card_amount)
+        return Clue(word=hint_word, card_amount=card_amount)
 
 
-class CLIGuesser(Guesser):
-    def guess(self, game_state: GuesserGameState) -> Guess:
+class CLIGuesser(Operative):
+    def guess(self, game_state: OperativeState) -> Guess:
         print(game_state.board.printable_string)
         card_word = input("Enter card word: ")
         card_index = game_state.board.find_card_index(word=card_word)
@@ -59,10 +59,10 @@ class CLIGuesser(Guesser):
 def run_cli_game():
     language = "english"
     board = generate_board(language=language)
-    blue_hinter, blue_guesser = CLIHinter("Yoda", TeamColor.BLUE), CLIGuesser("Luke", TeamColor.BLUE)
-    red_hinter, red_guesser = CLIHinter("Einstein", TeamColor.RED), CLIGuesser("Newton", TeamColor.RED)
+    blue_hinter, blue_guesser = CLIHinter("Yoda", ClassicTeam.BLUE), CLIGuesser("Luke", ClassicTeam.BLUE)
+    red_hinter, red_guesser = CLIHinter("Einstein", ClassicTeam.RED), CLIGuesser("Newton", ClassicTeam.RED)
     players = GamePlayers.from_collection([blue_hinter, blue_guesser, red_hinter, red_guesser])
-    runner = GameRunner(players=players, board=board)
+    runner = ClassicGameRunner(players=players, board=board)
     winner = runner.run_game()
     print(f"Winner: {winner}")
 
