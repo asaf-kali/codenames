@@ -158,12 +158,12 @@ class CodenamesGamePlayerAdapter:
     def choose_role(self) -> CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} picking role...")
         join_button = self.get_join_button()
-        # suffix = f"{self.player.name.lower()}-{time()}"
-        # self.screenshot(f"before-join-{suffix}")
+        suffix = f"{self.player.name.lower()}-{time()}"
+        self.screenshot(f"before-join-{suffix}")
         sleep(0.3)
         multi_click(join_button)
         sleep(0.2)
-        # self.screenshot(f"after-join-{suffix}")
+        self.screenshot(f"after-join-{suffix}")
         return self
 
     def get_game_url(self) -> str:
