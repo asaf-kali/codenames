@@ -6,6 +6,7 @@ from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.runner import ClassicGameRunner
 from codenames.classic.state import ClassicOperativeState
+from codenames.classic.types import ClassicGivenClue
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.move import Clue, GivenClue, GivenGuess
 from tests.utils import constants
@@ -38,8 +39,8 @@ def test_game_runner_notifies_all_players_on_clue_given(board: ClassicBoard):
         on_guess_given_mock=on_guess_given_mock,
     )
 
-    expected_given_clue_1 = GivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE)
-    expected_given_clue_2 = GivenClue(word="b", card_amount=1, team=ClassicTeam.RED)
+    expected_given_clue_1 = ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE)
+    expected_given_clue_2 = ClassicGivenClue(word="b", card_amount=1, team=ClassicTeam.RED)
     assert on_clue_given_mock.call_count == 2 * 4
     assert on_clue_given_mock.call_args_list[0][1] == {"given_clue": expected_given_clue_1}
     assert on_clue_given_mock.call_args_list[4][1] == {"given_clue": expected_given_clue_2}
