@@ -54,9 +54,11 @@ cover-base:
 
 cover-xml: cover-base
 	coverage xml
+	coverage report
 
 cover-html: cover-base
 	coverage html
+	coverage report
 
 cover: cover-html
 	$(OPEN_FILE_COMMAND) htmlcov/index.html &
