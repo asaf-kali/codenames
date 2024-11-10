@@ -10,6 +10,14 @@ from codenames.classic.types import ClassicCard
 log = logging.getLogger(__name__)
 
 
+CSS_CLASS_TO_CLASSIC_COLOR = {
+    "red": ClassicColor.RED,
+    "blue": ClassicColor.BLUE,
+    "gray": ClassicColor.NEUTRAL,
+    "black": ClassicColor.ASSASSIN,
+}
+
+
 @dataclass
 class ParseResult:
     card: ClassicCard
@@ -38,9 +46,9 @@ def _parse_card_word(card_element: WebElement) -> str:
 
 def _parse_card_color(card_element: WebElement) -> ClassicColor:
     element_classes = card_element.get_attribute("class").split(" ")  # type: ignore
-    for card_color in ClassicColor:
-        if card_color.lower() in element_classes:
-            return card_color  # type: ignore
+    for css_class, classic_color in CSS_CLASS_TO_CLASSIC_COLOR.items():
+        if css_class.lower() in element_classes:
+            return classic_color
     raise ValueError(f"Could not parse card color from element classes: {element_classes}")
 
 

@@ -238,7 +238,7 @@ class CodenamesGamePlayerAdapter:
     # Elements #
 
     def get_create_room_button(self) -> WebElement:
-        return self.driver.find_element(by=By.CLASS_NAME, value="create-button")
+        return self.driver.find_element(by=By.LINK_TEXT, value="CREATE ROOM")
 
     def get_play_with_button(self) -> WebElement:
         return self.driver.find_element(By.XPATH, value="//button[contains(text(),'Play with')]")
@@ -267,7 +267,7 @@ class CodenamesGamePlayerAdapter:
 
     def get_join_button(self) -> WebElement:
         team_window = self.poll_element(self.get_team_window)
-        role_name = "Spymaster" if isinstance(self, Spymaster) else "Operative"
+        role_name = "Spymaster" if isinstance(self.player, Spymaster) else "Operative"
         join_button_text = f"Join as {role_name}"
         return team_window.find_element(by=By.XPATH, value=f".//*[contains(text(),'{join_button_text}')]")
 
