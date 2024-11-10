@@ -4,7 +4,7 @@ import logging
 import os
 from dataclasses import dataclass
 from enum import StrEnum
-from time import sleep, time
+from time import sleep
 from typing import Callable, Mapping, TypeVar
 
 from selenium import webdriver
@@ -19,6 +19,7 @@ from codenames.generic.player import Player, Spymaster
 from codenames.generic.state import OperativeState
 from codenames.online.codenames_game.agent import Agent
 from codenames.online.codenames_game.card_parser import _parse_card
+from codenames.online.codenames_game.screenshot import save_screenshot
 from codenames.online.utils import (
     PollingTimeout,
     fill_input,
@@ -31,7 +32,6 @@ log = logging.getLogger(__name__)
 
 T = TypeVar("T")
 WEBAPP_URL = "https://codenames.game/"
-BAD_PATH_CHARS = {"\\", "/", ":", "*", "?", '"', "<", ">", "|", "\r", "\n"}
 
 
 class CodenamesGameLanguage(StrEnum):
@@ -158,12 +158,11 @@ class CodenamesGamePlayerAdapter:
     def choose_role(self) -> CodenamesGamePlayerAdapter:
         log.info(f"{self.log_prefix} picking role...")
         join_button = self.get_join_button()
-        suffix = f"{self.player.name.lower()}-{time()}"
-        self.screenshot(f"before-join-{suffix}")
+        # self.screenshot(f"before-join")
         sleep(0.3)
         multi_click(join_button)
         sleep(0.2)
-        self.screenshot(f"after-join-{suffix}")
+        self.screenshot("after-join")
         return self
 
     def get_game_url(self) -> str:
@@ -347,20 +346,8 @@ class CodenamesGamePlayerAdapter:
                 self.screenshot("failed polling")
             raise e
 
-    def screenshot(self, tag: str, directory: str = "./debug", raise_on_error: bool = False) -> str | None:
-        try:
-            os.makedirs(directory, exist_ok=True)
-            now_ms = int(time() * 1000)
-            file_name = sanitize_for_path(f"{now_ms}-{self.player}-{tag}.png")
-            path = os.path.abspath(f"{directory}/{file_name}")
-            self.driver.save_screenshot(path)
-        except Exception as e:  # pylint: disable=broad-except
-            if raise_on_error:
-                raise e
-            log.warning(f"Failed to save screenshot: {e}")
-            return None
-        log.info(f"{self.log_prefix} Screenshot saved to {path}")
-        return path
+    def screenshot(self, tag: str, raise_on_error: bool = False) -> str | None:
+        return save_screenshot(adapter=self, tag=tag, raise_on_error=raise_on_error)
 
     def poll_clue_given(self) -> Clue:
         log.debug("Polling for clue given...")
@@ -411,10 +398,3 @@ def get_language_code(language: CodenamesGameLanguage) -> str:
     if language in LANGUAGE_CODES:
         return LANGUAGE_CODES[language]
     return language.value[:2]
-
-
-def sanitize_for_path(string: str) -> str:
-    string = string.lower()
-    for char in BAD_PATH_CHARS:
-        string = string.replace(char, "")
-    return string
