@@ -2,9 +2,18 @@
 
 
 
+## v5.0.0 (2024-11-10)
+
+### 🚀
+
+* 🚀 Release V5 ([`1372ec6`](https://github.com/asaf-kali/codenames/commit/1372ec6f12d14984d66a810f931a1c34c629f89d))
+
+
 ## v4.1.7 (2024-08-23)
 
 ### Other
+
+* 🤖 Release [4.1.7] [skip ci] ([`6827396`](https://github.com/asaf-kali/codenames/commit/6827396638423799af09cefaa800928ba8c623b9))
 
 * 🧪 CI: rename step. ([`e164cfa`](https://github.com/asaf-kali/codenames/commit/e164cfa126c9f2f1dc32d471052f60e31a4fc018))
 
