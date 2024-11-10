@@ -35,33 +35,37 @@ from codenames.generic.state import OperativeState, SpymasterState
 
 logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
 
+####################################
+# Naive CLI players implementation #
+####################################
 
-# Implement basic players
 
-class CLIHinter(Spymaster):
+class CLISpymaster(Spymaster):
     def give_clue(self, game_state: SpymasterState) -> Clue:
-        print("Board state: \n" + game_state.board.printable_string)
+        print("\nGive a hint. Board: \n" + game_state.board.printable_string)
+        print(f"Revealed cards: {list(game_state.board.revealed_card_indexes)}")
         hint_word = input("Enter hint word: ")
         card_amount = int(input("Enter card amount: "))
         return Clue(word=hint_word, card_amount=card_amount)
 
 
-class CLIGuesser(Operative):
+class CLIOperative(Operative):
     def guess(self, game_state: OperativeState) -> Guess:
+        print(f"\nGuess a card. Given clue: {game_state.current_clue}. Current board state: ")
         print(game_state.board.printable_string)
         card_word = input("Enter card word: ")
         card_index = game_state.board.find_card_index(word=card_word)
         return Guess(card_index=card_index)
 
 
-# Run game
-
 def run_cli_game():
     language = "english"
     board = generate_board(language=language)
-    blue_hinter, blue_guesser = CLIHinter("Yoda", ClassicTeam.BLUE), CLIGuesser("Luke", ClassicTeam.BLUE)
-    red_hinter, red_guesser = CLIHinter("Einstein", ClassicTeam.RED), CLIGuesser("Newton", ClassicTeam.RED)
-    players = GamePlayers.from_collection([blue_hinter, blue_guesser, red_hinter, red_guesser])
+    blue_spymaster = CLISpymaster("Yoda", ClassicTeam.BLUE)
+    blue_operative = CLIOperative("Luke", ClassicTeam.BLUE)
+    red_spymaster = CLISpymaster("Einstein", ClassicTeam.RED)
+    red_operative = CLIOperative("Newton", ClassicTeam.RED)
+    players = GamePlayers.from_collection([blue_spymaster, blue_operative, red_spymaster, red_operative])
     runner = ClassicGameRunner(players=players, board=board)
     winner = runner.run_game()
     print(f"Winner: {winner}")
@@ -70,50 +74,91 @@ def run_cli_game():
 if __name__ == "__main__":
     run_cli_game()
 ```
+
 Example output:
 ```
-[Blue] turn.
-Board state:
-+------------+------------+--------------+-------------+-------------------+
-|   ‎🟦 tax   |  ‎⬜ drama  |   ‎⬜ thick   |  ‎🟥 africa  | ‎💀 transformation |
-+------------+------------+--------------+-------------+-------------------+
-| ‎⬜ project | ‎🟦 athlete | ‎🟥 vegetable | ‎⬜ engineer |     ‎🟥 human      |
-+------------+------------+--------------+-------------+-------------------+
-|  ‎⬜ chain  |  ‎🟦 cake   |   ‎🟦 shift   |  ‎🟦 study   |      ‎🟥 will      |
-+------------+------------+--------------+-------------+-------------------+
-| ‎🟥 outcome |  ‎🟥 desk   |  ‎🟥 soviet   |   ‎⬜ rare   |     ‎🟥 youth      |
-+------------+------------+--------------+-------------+-------------------+
-| ‎🟦 account | ‎🟦 couple  |   ‎⬜ solve   | ‎🟦 academic |     ‎🟦 stable     |
-+------------+------------+--------------+-------------+-------------------+
+-----
+[RED] turn.
+
+Give a hint. Board:
++-----------+-------------+------------+-----------------+------------+
+| ‎🟦 pretty |  ‎⬜ young   |  ‎⬜ essay  |    ‎🟥 apple     |  ‎⬜ kiss   |
++-----------+-------------+------------+-----------------+------------+
+|  ‎⬜ poem  |  ‎🟦 solve   |   ‎🟥 pan   | ‎🟦 organization |  ‎🟦 union  |
++-----------+-------------+------------+-----------------+------------+
+|  ‎🟥 myth  |   ‎🟥 neck   | ‎🟥 shelter |    ‎🟦 locate    |   ‎🟥 pet   |
++-----------+-------------+------------+-----------------+------------+
+| ‎🟥 react  |  ‎⬜ person  |  ‎⬜ mood   |    ‎🟥 heart     | ‎⬜ breath  |
++-----------+-------------+------------+-----------------+------------+
+|  ‎🟥 rich  | ‎🟦 standard |  ‎🟦 crop   |   ‎💀 chicken    | ‎🟦 wedding |
++-----------+-------------+------------+-----------------+------------+
+Revealed cards: []
 Enter hint word: example
 Enter card amount: 2
-Hinter: [example] 2 card(s)
-+---------+---------+-----------+----------+----------------+
-|   ‎tax   |  ‎drama  |   ‎thick   |  ‎africa  | ‎transformation |
-+---------+---------+-----------+----------+----------------+
-| ‎project | ‎athlete | ‎vegetable | ‎engineer |     ‎human      |
-+---------+---------+-----------+----------+----------------+
-|  ‎chain  |  ‎cake   |   ‎shift   |  ‎study   |      ‎will      |
-+---------+---------+-----------+----------+----------------+
-| ‎outcome |  ‎desk   |  ‎soviet   |   ‎rare   |     ‎youth      |
-+---------+---------+-----------+----------+----------------+
-| ‎account | ‎couple  |   ‎solve   | ‎academic |     ‎stable     |
-+---------+---------+-----------+----------+----------------+
-Enter card word: account
-Guesser: '🟦 account', correct!
-+------------+---------+-----------+----------+----------------+
-|    ‎tax     |  ‎drama  |   ‎thick   |  ‎africa  | ‎transformation |
-+------------+---------+-----------+----------+----------------+
-|  ‎project   | ‎athlete | ‎vegetable | ‎engineer |     ‎human      |
-+------------+---------+-----------+----------+----------------+
-|   ‎chain    |  ‎cake   |   ‎shift   |  ‎study   |      ‎will      |
-+------------+---------+-----------+----------+----------------+
-|  ‎outcome   |  ‎desk   |  ‎soviet   |   ‎rare   |     ‎youth      |
-+------------+---------+-----------+----------+----------------+
-| ‎🟦 account | ‎couple  |   ‎solve   | ‎academic |     ‎stable     |
-+------------+---------+-----------+----------+----------------+
-Enter card word: rare
-Guesser: '⬜ rare', wrong!
-Guesser wrong, turn is over
-...
+Spymaster: [example] 2 card(s)
+
+Guess a card. Given clue: [example] [2]. Current board state:
++--------+----------+---------+--------------+---------+
+| ‎pretty |  ‎young   |  ‎essay  |    ‎apple     |  ‎kiss   |
++--------+----------+---------+--------------+---------+
+|  ‎poem  |  ‎solve   |   ‎pan   | ‎organization |  ‎union  |
++--------+----------+---------+--------------+---------+
+|  ‎myth  |   ‎neck   | ‎shelter |    ‎locate    |   ‎pet   |
++--------+----------+---------+--------------+---------+
+| ‎react  |  ‎person  |  ‎mood   |    ‎heart     | ‎breath  |
++--------+----------+---------+--------------+---------+
+|  ‎rich  | ‎standard |  ‎crop   |   ‎chicken    | ‎wedding |
++--------+----------+---------+--------------+---------+
+Enter card word: heart
+Operative: '🟥 heart', correct!
+
+Guess a card. Given clue: [example] [2]. Current board state:
++--------+----------+---------+--------------+---------+
+| ‎pretty |  ‎young   |  ‎essay  |    ‎apple     |  ‎kiss   |
++--------+----------+---------+--------------+---------+
+|  ‎poem  |  ‎solve   |   ‎pan   | ‎organization |  ‎union  |
++--------+----------+---------+--------------+---------+
+|  ‎myth  |   ‎neck   | ‎shelter |    ‎locate    |   ‎pet   |
++--------+----------+---------+--------------+---------+
+| ‎react  |  ‎person  |  ‎mood   |   ‎🟥 heart   | ‎breath  |
++--------+----------+---------+--------------+---------+
+|  ‎rich  | ‎standard |  ‎crop   |   ‎chicken    | ‎wedding |
++--------+----------+---------+--------------+---------+
+Enter card word: pet
+Operative: '🟥 pet', correct!
+
+Guess a card. Given clue: [example] [2]. Current board state:
++--------+----------+---------+--------------+---------+
+| ‎pretty |  ‎young   |  ‎essay  |    ‎apple     |  ‎kiss   |
++--------+----------+---------+--------------+---------+
+|  ‎poem  |  ‎solve   |   ‎pan   | ‎organization |  ‎union  |
++--------+----------+---------+--------------+---------+
+|  ‎myth  |   ‎neck   | ‎shelter |    ‎locate    | ‎🟥 pet  |
++--------+----------+---------+--------------+---------+
+| ‎react  |  ‎person  |  ‎mood   |   ‎🟥 heart   | ‎breath  |
++--------+----------+---------+--------------+---------+
+|  ‎rich  | ‎standard |  ‎crop   |   ‎chicken    | ‎wedding |
++--------+----------+---------+--------------+---------+
+Enter card word: mood
+Operative: '⬜ mood', wrong!
+Operative wrong, turn is over
+
+-----
+[BLUE] turn.
+
+Give a hint. Board:
++-----------+-------------+------------+-----------------+------------+
+| ‎🟦 pretty |  ‎⬜ young   |  ‎⬜ essay  |    ‎🟥 apple     |  ‎⬜ kiss   |
++-----------+-------------+------------+-----------------+------------+
+|  ‎⬜ poem  |  ‎🟦 solve   |   ‎🟥 pan   | ‎🟦 organization |  ‎🟦 union  |
++-----------+-------------+------------+-----------------+------------+
+|  ‎🟥 myth  |   ‎🟥 neck   | ‎🟥 shelter |    ‎🟦 locate    |   ‎🟥 pet   |
++-----------+-------------+------------+-----------------+------------+
+| ‎🟥 react  |  ‎⬜ person  |  ‎⬜ mood   |    ‎🟥 heart     | ‎⬜ breath  |
++-----------+-------------+------------+-----------------+------------+
+|  ‎🟥 rich  | ‎🟦 standard |  ‎🟦 crop   |   ‎💀 chicken    | ‎🟦 wedding |
++-----------+-------------+------------+-----------------+------------+
+Revealed cards: [14, 17, 18]
+Enter hint word:
+......
 ```
