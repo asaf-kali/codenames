@@ -4,10 +4,11 @@ import logging
 from threading import Semaphore, Thread
 from typing import ContextManager, Iterable, TypeVar
 
-from codenames.game.color import TeamColor
-from codenames.game.move import Clue, Guess
-from codenames.game.player import GamePlayers, Operative, Player, PlayerRole, Spymaster
-from codenames.game.runner import GameRunner
+from codenames.classic.color import ClassicTeam
+from codenames.classic.runner.models import GamePlayers
+from codenames.classic.runner.runner import ClassicGameRunner
+from codenames.generic.move import Clue, Guess
+from codenames.generic.player import Operative, Player, PlayerRole, Spymaster
 from codenames.online.codenames_game.adapter import (
     CodenamesGamePlayerAdapter,
     GameConfigs,
@@ -20,7 +21,7 @@ log = logging.getLogger(__name__)
 T = TypeVar("T", bound=Player)
 
 
-def player_or_agent(player: T | None, role: PlayerRole, team: TeamColor) -> T:
+def player_or_agent(player: T | None, role: PlayerRole, team: ClassicTeam) -> T:
     if player is not None:
         return player
     player_class = SpymasterAgent if role == PlayerRole.SPYMASTER else OperativeAgent
@@ -40,10 +41,10 @@ class CodenamesGameRunner(ContextManager):
     ):
         self._host: CodenamesGamePlayerAdapter | None = None
         self.guests: list[CodenamesGamePlayerAdapter] = []
-        blue_spymaster = player_or_agent(blue_spymaster, PlayerRole.SPYMASTER, TeamColor.BLUE)
-        red_spymaster = player_or_agent(red_spymaster, PlayerRole.SPYMASTER, TeamColor.RED)
-        blue_operative = player_or_agent(blue_operative, PlayerRole.OPERATIVE, TeamColor.BLUE)
-        red_operative = player_or_agent(red_operative, PlayerRole.OPERATIVE, TeamColor.RED)
+        blue_spymaster = player_or_agent(blue_spymaster, PlayerRole.SPYMASTER, ClassicTeam.BLUE)
+        red_spymaster = player_or_agent(red_spymaster, PlayerRole.SPYMASTER, ClassicTeam.RED)
+        blue_operative = player_or_agent(blue_operative, PlayerRole.OPERATIVE, ClassicTeam.BLUE)
+        red_operative = player_or_agent(red_operative, PlayerRole.OPERATIVE, ClassicTeam.RED)
         self.players = GamePlayers.from_collection([blue_spymaster, red_spymaster, blue_operative, red_operative])
         self._show_host = show_host
         self.game_configs = game_configs or GameConfigs()
@@ -72,7 +73,7 @@ class CodenamesGameRunner(ContextManager):
     def __exit__(self, __exc_type, __exc_value, __traceback):
         self.close()
 
-    def auto_start(self) -> GameRunner:
+    def auto_start(self) -> ClassicGameRunner:
         number_of_guests = 3
         self._auto_start_semaphore = Semaphore(value=number_of_guests)
         for player in self.players:
@@ -97,10 +98,10 @@ class CodenamesGameRunner(ContextManager):
             except Exception as e:  # pylint: disable=broad-except
                 log.error(f"Error taking screenshot: {e}")
 
-    def run_game(self) -> GameRunner:
+    def run_game(self) -> ClassicGameRunner:
         self._start_game()
         board = self.host.parse_board(language=self.game_configs.language.value)
-        game_runner = GameRunner(players=self.players, board=board)
+        game_runner = ClassicGameRunner(players=self.players, board=board)
         game_runner.clue_given_subscribers.append(self._handle_clue_given)
         game_runner.guess_given_subscribers.append(self._handle_guess_given)
         try:

@@ -4,10 +4,10 @@ import logging
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from codenames.game.color import TeamColor
-from codenames.game.move import Clue, Guess
-from codenames.game.player import Operative, Player, Spymaster
-from codenames.game.state import OperativeGameState, SpymasterGameState
+from codenames.classic.color import ClassicTeam
+from codenames.generic.move import Clue, Guess
+from codenames.generic.player import Operative, Player, Spymaster
+from codenames.generic.state import OperativeState, SpymasterState
 
 if TYPE_CHECKING:
     from codenames.online.codenames_game.adapter import CodenamesGamePlayerAdapter
@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class Agent(Player, ABC):
-    def __init__(self, name: str, team: TeamColor):
+    def __init__(self, name: str, team: ClassicTeam):
         super().__init__(name, team)
         self.adapter: CodenamesGamePlayerAdapter | None = None
 
@@ -25,14 +25,14 @@ class Agent(Player, ABC):
 
 
 class SpymasterAgent(Agent, Spymaster):
-    def give_clue(self, game_state: SpymasterGameState) -> Clue:
+    def give_clue(self, game_state: SpymasterState) -> Clue:
         if not self.adapter:
             raise RuntimeError("SpymasterAgent.adapter is not set")
-        return self.adapter.poll_clue_given()  # type: ignore
+        return self.adapter.poll_clue_given()
 
 
 class OperativeAgent(Agent, Operative):
-    def guess(self, game_state: OperativeGameState) -> Guess:
+    def guess(self, game_state: OperativeState) -> Guess:
         if not self.adapter:
             raise RuntimeError("OperativeAgent.adapter is not set")
-        return self.adapter.poll_guess_given(game_state=game_state)  # type: ignore
+        return self.adapter.poll_guess_given(game_state=game_state)

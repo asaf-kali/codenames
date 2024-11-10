@@ -13,10 +13,10 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from codenames.game.board import Board
-from codenames.game.move import PASS_GUESS, Clue, Guess
-from codenames.game.player import Player, PlayerRole
-from codenames.game.state import OperativeGameState
+from codenames.classic.board import ClassicBoard
+from codenames.generic.move import PASS_GUESS, Clue, Guess
+from codenames.generic.player import Player, Spymaster
+from codenames.generic.state import OperativeState
 from codenames.online.codenames_game.agent import Agent
 from codenames.online.codenames_game.card_parser import _parse_card
 from codenames.online.utils import (
@@ -182,14 +182,14 @@ class CodenamesGamePlayerAdapter:
         multi_click(start_game_button)
         return self
 
-    def parse_board(self, language: str) -> Board:
+    def parse_board(self, language: str) -> ClassicBoard:
         log.debug("Parsing board...")
         card_containers = self.poll_element(self.get_card_containers)
         parse_results = [_parse_card(card) for card in card_containers]
         parse_results.sort(key=lambda result: result.index)
         cards = [result.card for result in parse_results]
         log.debug("Board parsed.")
-        return Board(language=language, cards=cards)
+        return ClassicBoard(language=language, cards=cards)
 
     def transmit_clue(self, clue: Clue) -> CodenamesGamePlayerAdapter:
         log.debug(f"Sending clue: {clue}")
@@ -267,7 +267,7 @@ class CodenamesGamePlayerAdapter:
 
     def get_join_button(self) -> WebElement:
         team_window = self.poll_element(self.get_team_window)
-        role_name = "Spymaster" if self.player.role == PlayerRole.SPYMASTER else "Operative"
+        role_name = "Spymaster" if isinstance(self, Spymaster) else "Operative"
         join_button_text = f"Join as {role_name}"
         return team_window.find_element(by=By.XPATH, value=f".//*[contains(text(),'{join_button_text}')]")
 
@@ -385,7 +385,7 @@ class CodenamesGamePlayerAdapter:
         except PollingTimeout:
             return False
 
-    def poll_guess_given(self, game_state: OperativeGameState) -> Guess:
+    def poll_guess_given(self, game_state: OperativeState) -> Guess:
         log.debug("Polling for guess given...")
         revealed_card_indexes = set(game_state.board.revealed_card_indexes)
         should_return = False
