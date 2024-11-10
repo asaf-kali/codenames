@@ -2,7 +2,18 @@
 
 
 
+## v5.0.2 (2024-11-10)
+
+### 📜
+
+* 📜 README: fix example ([`2eca39f`](https://github.com/asaf-kali/codenames/commit/2eca39f29b727ae322625cce9c44777f7a095ca2))
+
+
 ## v5.0.1 (2024-11-10)
+
+### Other
+
+* 🤖 Release [5.0.1] [skip ci] ([`d52770c`](https://github.com/asaf-kali/codenames/commit/d52770cc27073044841cde65dd816f41740d9ffb))
 
 ### 📜
 
