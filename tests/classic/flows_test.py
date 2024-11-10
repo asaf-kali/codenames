@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock
 
-import pytest
-
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicTeam
 from codenames.classic.winner import Winner, WinningReason
@@ -13,14 +11,8 @@ from codenames.generic.move import (
     GivenGuess,
     Guess,
 )
-from tests.utils import constants
 from tests.utils.common import run_game
 from tests.utils.players.dictated import DictatedTurn
-
-
-@pytest.fixture()
-def board_10() -> ClassicBoard:
-    return constants.board_10()
 
 
 def test_blue_reveals_all_and_wins(board_10: ClassicBoard):

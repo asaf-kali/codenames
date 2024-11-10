@@ -11,13 +11,7 @@ from codenames.generic.card import Card
 from codenames.generic.exceptions import InvalidGuess, InvalidTurn
 from codenames.generic.move import PASS_GUESS, Clue, GivenClue, GivenGuess, Guess
 from codenames.generic.player import PlayerRole
-from tests.utils import constants
 from tests.utils.moves import ClueMove, GuessMove, PassMove, get_moves
-
-
-@pytest.fixture()
-def board_10() -> ClassicBoard:
-    return constants.board_10()
 
 
 def test_game_state_flow(board_10: ClassicBoard):

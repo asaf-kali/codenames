@@ -8,16 +8,6 @@ from codenames.generic.exceptions import CardNotFoundError
 from tests.utils import constants
 
 
-@pytest.fixture()
-def board_10() -> ClassicBoard:
-    return constants.board_10()
-
-
-@pytest.fixture()
-def board_25() -> ClassicBoard:
-    return constants.board_25()
-
-
 def test_get_board_at_integer_index_returns_card(board_10: ClassicBoard):
     card = board_10[0]
     assert card.word == "Card 0"

@@ -1,4 +1,7 @@
 import logging
+from typing import Any
+
+from pydantic import field_validator
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
@@ -26,6 +29,23 @@ class ClassicState(PlayerState[ClassicColor]):
     score: Score
     current_team: ClassicTeam
     current_player_role: PlayerRole = PlayerRole.SPYMASTER
+
+    @field_validator("board", mode="before")
+    @classmethod
+    def check_board(cls, v: Any) -> ClassicBoard:
+        return ClassicBoard.model_validate(v)
+
+    @field_validator("given_clues", mode="before")
+    @classmethod
+    def check_given_clues(cls, v: Any) -> list[ClassicGivenClue]:
+        clues = [ClassicGivenClue.model_validate(value) for value in v]
+        return clues
+
+    @field_validator("given_guesses", mode="before")
+    @classmethod
+    def check_given_guesses(cls, v: Any) -> list[ClassicGivenGuess]:
+        guesses = [ClassicGivenGuess.model_validate(value) for value in v]
+        return guesses
 
 
 class ClassicSpymasterState(SpymasterState, ClassicState):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Generic, TypeVar
 
-from pydantic import BaseModel, computed_field, field_validator
+from pydantic import BaseModel, computed_field
 
 
 class CardColor(StrEnum):
@@ -39,21 +39,12 @@ class Card(BaseModel, Generic[C]):
     def censored(self) -> Card[C]:
         if self.revealed:
             return self
-        return Card(word=self.word, color=None, revealed=self.revealed)
+        return self.__class__(word=self.word, color=None, revealed=self.revealed)
 
     @computed_field  # type: ignore[prop-decorator]
     @property
     def formatted_word(self) -> str:
         return canonical_format(self.word)
-
-    @field_validator("color")
-    @classmethod
-    def check_color(cls, v: C | None) -> C | None:
-        if v is None:
-            return v
-        if not isinstance(v, CardColor):
-            raise ValueError(f"Color must be a CardColor: {v}")
-        return v
 
 
 Cards = tuple[Card[C], ...]

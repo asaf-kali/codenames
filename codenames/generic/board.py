@@ -73,7 +73,7 @@ class Board(BaseModel, Generic[C]):
 
     @property
     def censored(self) -> Board[C]:
-        return Board(language=self.language, cards=[card.censored for card in self.cards])
+        return self.__class__(language=self.language, cards=[card.censored for card in self.cards])
 
     @property
     def as_table(self) -> BeautifulTable:

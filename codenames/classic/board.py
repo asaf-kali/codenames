@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import random
 from typing import Sequence
 
@@ -7,6 +8,7 @@ from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.types import ClassicCard, ClassicCards
 from codenames.generic.board import Board
 
+log = logging.getLogger(__name__)
 LTR = "\u200E"
 
 
