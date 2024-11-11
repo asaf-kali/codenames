@@ -2,7 +2,18 @@
 
 
 
+## v5.0.3 (2024-11-11)
+
+### 🐛
+
+* 🐛 Abstraction fixes ([`e664871`](https://github.com/asaf-kali/codenames/commit/e6648713e6cc7fb2c1c7d21dc378f8fa2e736cfa))
+
+
 ## v5.0.2 (2024-11-10)
+
+### Other
+
+* 🤖 Release [5.0.2] [skip ci] ([`a06274d`](https://github.com/asaf-kali/codenames/commit/a06274d872f0359511a968d89133aa4257ca94e0))
 
 ### 📜
 
