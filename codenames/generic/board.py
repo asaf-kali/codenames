@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from abc import ABC
 from typing import TYPE_CHECKING, Any, Generic, Iterator, Union
 
 from pydantic import BaseModel, field_validator
@@ -16,7 +17,7 @@ LTR = "\u200E"
 WordGroup = tuple[str, ...]
 
 
-class Board(BaseModel, Generic[C]):
+class Board(BaseModel, Generic[C], ABC):
     language: str
     cards: list[Card[C]]
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC
 from enum import StrEnum
 from typing import Generic, TypeVar
 
@@ -16,7 +17,7 @@ class CardColor(StrEnum):
 C = TypeVar("C", bound=CardColor)
 
 
-class Card(BaseModel, Generic[C]):
+class Card(BaseModel, Generic[C], ABC):
     word: str
     color: C | None  # None for operatives.
     revealed: bool = False

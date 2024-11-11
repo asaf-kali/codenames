@@ -6,10 +6,10 @@ from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.runner import new_game_state
 from codenames.classic.state import ClassicGameState
+from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
-from codenames.generic.card import Card
 from codenames.generic.exceptions import InvalidGuess, InvalidTurn
-from codenames.generic.move import PASS_GUESS, Clue, GivenClue, GivenGuess, Guess
+from codenames.generic.move import PASS_GUESS, Clue, Guess
 from codenames.generic.player import PlayerRole
 from tests.utils.moves import ClueMove, GuessMove, PassMove, get_moves
 
@@ -96,40 +96,40 @@ def test_game_state_flow(board_10: ClassicBoard):
         game_state.process_guess(Guess(card_index=8))
 
     expected_moves = [
-        ClueMove(given_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE)),
+        ClueMove(given_clue=ClassicGivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE)),
         GuessMove(
-            given_guess=GivenGuess(
-                for_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
-                guessed_card=Card(word="Card 0", color=ClassicColor.BLUE, revealed=True),
+            given_guess=ClassicGivenGuess(
+                for_clue=ClassicGivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
+                guessed_card=ClassicCard(word="Card 0", color=ClassicColor.BLUE, revealed=True),
             )
         ),
         GuessMove(
-            given_guess=GivenGuess(
-                for_clue=GivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
-                guessed_card=Card(word="Card 1", color=ClassicColor.BLUE, revealed=True),
+            given_guess=ClassicGivenGuess(
+                for_clue=ClassicGivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
+                guessed_card=ClassicCard(word="Card 1", color=ClassicColor.BLUE, revealed=True),
             )
         ),
         PassMove(team=ClassicTeam.BLUE),
-        ClueMove(given_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED)),
+        ClueMove(given_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED)),
         GuessMove(
-            given_guess=GivenGuess(
-                for_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
-                guessed_card=Card(word="Card 4", color=ClassicColor.RED, revealed=True),
+            given_guess=ClassicGivenGuess(
+                for_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
+                guessed_card=ClassicCard(word="Card 4", color=ClassicColor.RED, revealed=True),
             )
         ),
         GuessMove(
-            given_guess=GivenGuess(
-                for_clue=GivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
-                guessed_card=Card(word="Card 5", color=ClassicColor.RED, revealed=True),
+            given_guess=ClassicGivenGuess(
+                for_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
+                guessed_card=ClassicCard(word="Card 5", color=ClassicColor.RED, revealed=True),
             )
         ),
-        ClueMove(given_clue=GivenClue(word="clue 3", card_amount=2, team=ClassicTeam.BLUE)),
+        ClueMove(given_clue=ClassicGivenClue(word="clue 3", card_amount=2, team=ClassicTeam.BLUE)),
         PassMove(team=ClassicTeam.BLUE),
-        ClueMove(given_clue=GivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED)),
+        ClueMove(given_clue=ClassicGivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED)),
         GuessMove(
-            given_guess=GivenGuess(
-                for_clue=GivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED),
-                guessed_card=Card(word="Card 9", color=ClassicColor.ASSASSIN, revealed=True),
+            given_guess=ClassicGivenGuess(
+                for_clue=ClassicGivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED),
+                guessed_card=ClassicCard(word="Card 9", color=ClassicColor.ASSASSIN, revealed=True),
             )
         ),
     ]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC
 from typing import Generic
 
 from pydantic import BaseModel
@@ -25,7 +26,7 @@ class Clue(BaseModel):
         return result
 
 
-class GivenClue(BaseModel, Generic[T]):
+class GivenClue(BaseModel, Generic[T], ABC):
     word: str
     card_amount: int
     team: T
@@ -49,7 +50,7 @@ class Guess(BaseModel):
     card_index: int
 
 
-class GivenGuess(BaseModel, Generic[C, T]):
+class GivenGuess(BaseModel, Generic[C, T], ABC):
     guessed_card: Card[C]
     for_clue: GivenClue
 

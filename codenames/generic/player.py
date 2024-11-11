@@ -30,7 +30,7 @@ class PlayerRole(StrEnum):
         return PlayerRole.SPYMASTER if self == PlayerRole.OPERATIVE else PlayerRole.OPERATIVE
 
 
-class Player(Generic[T]):
+class Player(Generic[T], ABC):
     def __init__(self, name: str, team: T):
         self.name = name
         self.team = team

@@ -8,18 +8,20 @@ from pydantic import BaseModel
 from codenames.generic.board import Board, WordGroup
 from codenames.generic.card import C
 from codenames.generic.move import Clue, GivenClue, GivenGuess
+from codenames.generic.player import T
 
 log = logging.getLogger(__name__)
 
 
-class PlayerState(BaseModel, Generic[C]):
+class PlayerState(BaseModel, Generic[C, T]):
     """
     Represents all the information that is available to any player
     """
 
     board: Board[C]
-    given_clues: list[GivenClue] = []
-    given_guesses: list[GivenGuess] = []
+    current_team: T
+    given_clues: list[GivenClue[T]] = []
+    given_guesses: list[GivenGuess[C, T]] = []
 
     @property
     def given_clue_words(self) -> WordGroup:

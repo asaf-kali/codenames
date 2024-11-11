@@ -6,9 +6,9 @@ from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.runner.runner import ClassicGameRunner
 from codenames.classic.state import ClassicOperativeState
-from codenames.classic.types import ClassicGivenClue
+from codenames.classic.types import ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
-from codenames.generic.move import Clue, GivenClue, GivenGuess
+from codenames.generic.move import Clue
 from tests.utils import constants
 from tests.utils.common import run_game
 from tests.utils.hooks import hook_method
@@ -47,19 +47,19 @@ def test_game_runner_notifies_all_players_on_clue_given(board: ClassicBoard):
 
     assert on_guess_given_mock.call_count == 5 * 4
     assert on_guess_given_mock.call_args_list[0][1] == {
-        "given_guess": GivenGuess(for_clue=expected_given_clue_1, guessed_card=board[0])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board[0])
     }
     assert on_guess_given_mock.call_args_list[4][1] == {
-        "given_guess": GivenGuess(for_clue=expected_given_clue_1, guessed_card=board[1])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board[1])
     }
     assert on_guess_given_mock.call_args_list[8][1] == {
-        "given_guess": GivenGuess(for_clue=expected_given_clue_1, guessed_card=board[2])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board[2])
     }
     assert on_guess_given_mock.call_args_list[12][1] == {
-        "given_guess": GivenGuess(for_clue=expected_given_clue_2, guessed_card=board[4])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board[4])
     }
     assert on_guess_given_mock.call_args_list[16][1] == {
-        "given_guess": GivenGuess(for_clue=expected_given_clue_2, guessed_card=board[9])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board[9])
     }
 
 
@@ -102,11 +102,11 @@ def test_game_runner_spymaster_state(board: ClassicBoard):
     for card in game_state_2.board:
         assert card.color is not None
     assert game_state_2.current_team == ClassicTeam.RED
-    assert game_state_2.given_clues == [GivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE)]
+    assert game_state_2.given_clues == [ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE)]
     assert game_state_2.given_guesses == [
-        GivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[0]),
-        GivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[1]),
-        GivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[2]),
+        ClassicGivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[0]),
+        ClassicGivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[1]),
+        ClassicGivenGuess(for_clue=game_state_2.given_clues[0], guessed_card=board[2]),
     ]
     assert game_state_2.given_clue_words == ("a",)
 
@@ -129,7 +129,7 @@ def test_game_runner_operative_state(board: ClassicBoard):
     assert game_state_1.current_team == ClassicTeam.BLUE
     assert game_state_1.left_guesses == 3
     assert game_state_1.given_clues == [
-        GivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
+        ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
     ]
     assert game_state_1.given_guesses == []
     assert game_state_1.current_clue == game_state_1.given_clues[0]
@@ -139,11 +139,11 @@ def test_game_runner_operative_state(board: ClassicBoard):
     assert game_state_3.current_team == ClassicTeam.BLUE
     assert game_state_3.left_guesses == 1
     assert game_state_3.given_clues == [
-        GivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
+        ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
     ]
     assert game_state_3.given_guesses == [
-        GivenGuess(for_clue=game_state_3.given_clues[0], guessed_card=board[0]),
-        GivenGuess(for_clue=game_state_3.given_clues[0], guessed_card=board[1]),
+        ClassicGivenGuess(for_clue=game_state_3.given_clues[0], guessed_card=board[0]),
+        ClassicGivenGuess(for_clue=game_state_3.given_clues[0], guessed_card=board[1]),
     ]
     assert game_state_3.current_clue == game_state_3.given_clues[0]
 
@@ -152,13 +152,13 @@ def test_game_runner_operative_state(board: ClassicBoard):
     assert game_state_5.current_team == ClassicTeam.RED
     assert game_state_5.left_guesses == 1
     assert game_state_5.given_clues == [
-        GivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
-        GivenClue(word="b", card_amount=1, team=ClassicTeam.RED),
+        ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
+        ClassicGivenClue(word="b", card_amount=1, team=ClassicTeam.RED),
     ]
     assert game_state_5.given_guesses == [
-        GivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[0]),
-        GivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[1]),
-        GivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[2]),
-        GivenGuess(for_clue=game_state_5.given_clues[1], guessed_card=board[4]),
+        ClassicGivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[0]),
+        ClassicGivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[1]),
+        ClassicGivenGuess(for_clue=game_state_5.given_clues[0], guessed_card=board[2]),
+        ClassicGivenGuess(for_clue=game_state_5.given_clues[1], guessed_card=board[4]),
     ]
     assert game_state_5.current_clue == game_state_5.given_clues[1]

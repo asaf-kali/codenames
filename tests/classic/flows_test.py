@@ -2,9 +2,9 @@ from unittest.mock import MagicMock
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicTeam
-from codenames.classic.types import ClassicGivenClue
+from codenames.classic.types import ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
-from codenames.generic.move import PASS_GUESS, QUIT_GAME, Clue, GivenGuess, Guess
+from codenames.generic.move import PASS_GUESS, QUIT_GAME, Clue, Guess
 from tests.utils.common import run_game
 from tests.utils.players.dictated import DictatedTurn
 
@@ -54,13 +54,13 @@ def test_blue_picks_red_and_red_wins(board_10: ClassicBoard):
     assert runner.winner == Winner(team=ClassicTeam.RED, reason=WinningReason.TARGET_SCORE_REACHED)
     assert runner.state.given_clues == expected_given_clues
     assert runner.state.given_guesses == [
-        GivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[0]),
-        GivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[7]),
-        GivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[4]),
-        GivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[5]),
-        GivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[1]),
-        GivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[2]),
-        GivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[6]),
+        ClassicGivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[0]),
+        ClassicGivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[7]),
+        ClassicGivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[4]),
+        ClassicGivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[5]),
+        ClassicGivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[1]),
+        ClassicGivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[2]),
+        ClassicGivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[6]),
     ]
 
 
@@ -158,12 +158,12 @@ def test_turns_switch_when_operatives_use_extra_guess(board_10: ClassicBoard):
     assert runner.winner == Winner(team=ClassicTeam.BLUE, reason=WinningReason.TARGET_SCORE_REACHED)
     assert runner.state.given_clues == expected_given_clues
     assert runner.state.given_guesses == [
-        GivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[0]),
-        GivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[1]),
-        GivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[2]),
-        GivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[4]),
-        GivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[5]),
-        GivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[3]),
+        ClassicGivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[0]),
+        ClassicGivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[1]),
+        ClassicGivenGuess(for_clue=expected_given_clues[0], guessed_card=board_10[2]),
+        ClassicGivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[4]),
+        ClassicGivenGuess(for_clue=expected_given_clues[1], guessed_card=board_10[5]),
+        ClassicGivenGuess(for_clue=expected_given_clues[2], guessed_card=board_10[3]),
     ]
 
 
@@ -179,8 +179,8 @@ def test_spymaster_quit_ends_game(board_10: ClassicBoard):
         ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
     ]
     assert runner.state.given_guesses == [
-        GivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[0]),
-        GivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[1]),
+        ClassicGivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[0]),
+        ClassicGivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[1]),
     ]
 
 
@@ -195,6 +195,6 @@ def test_operative_quit_ends_game(board_10: ClassicBoard):
         ClassicGivenClue(word="a", card_amount=2, team=ClassicTeam.BLUE),
     ]
     assert runner.state.given_guesses == [
-        GivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[0]),
-        GivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[1]),
+        ClassicGivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[0]),
+        ClassicGivenGuess(for_clue=runner.state.given_clues[0], guessed_card=board_10[1]),
     ]

@@ -24,16 +24,20 @@ from codenames.utils.formatting import wrap
 log = logging.getLogger(__name__)
 
 
-class ClassicState(PlayerState[ClassicColor]):
+class ClassicState(PlayerState[ClassicColor, ClassicTeam]):
     board: ClassicBoard
     score: Score
-    current_team: ClassicTeam
     current_player_role: PlayerRole = PlayerRole.SPYMASTER
 
     @field_validator("board", mode="before")
     @classmethod
     def check_board(cls, v: Any) -> ClassicBoard:
         return ClassicBoard.model_validate(v)
+
+    @field_validator("current_team", mode="before")
+    @classmethod
+    def check_current_team(cls, v: Any) -> ClassicTeam:
+        return ClassicTeam(v)
 
     @field_validator("given_clues", mode="before")
     @classmethod
