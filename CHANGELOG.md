@@ -2,7 +2,18 @@
 
 
 
+## v5.0.4 (2024-11-12)
+
+### 🌴
+
+* 🌴 OperativeState: add turn_guesses property ([`d4742da`](https://github.com/asaf-kali/codenames/commit/d4742da3a45e2b165f1082110d528c2af9686f1b))
+
+
 ## v5.0.3 (2024-11-11)
+
+### Other
+
+* 🤖 Release [5.0.3] [skip ci] ([`053f5e4`](https://github.com/asaf-kali/codenames/commit/053f5e48632cc6c752fc3b73e6fcba4af8c6fc42))
 
 ### 🐛
 
@@ -63,11 +74,13 @@
 
 * 🧹 Lint dependencies upgrade. ([`9a43ee5`](https://github.com/asaf-kali/codenames/commit/9a43ee5ce60d21b079cb607769f6db2ff955b827))
 
-* 🎡 Readme: add badges. ([`8e37f7d`](https://github.com/asaf-kali/codenames/commit/8e37f7d8f45601c7f158e5c839a3ec15c8b1594f))
-
 ### 🌴
 
 * 🌴 CI: add unit test results, use new poetry version. ([`ce34b84`](https://github.com/asaf-kali/codenames/commit/ce34b848089ec96c42232f67d4d4d32b065b76f7))
+
+### 🎡
+
+* 🎡 Readme: add badges. ([`8e37f7d`](https://github.com/asaf-kali/codenames/commit/8e37f7d8f45601c7f158e5c839a3ec15c8b1594f))
 
 
 ## v4.1.5 (2024-01-11)
