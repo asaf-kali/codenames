@@ -40,11 +40,15 @@ class SpymasterState(PlayerState):
     clues: list[Clue] = []
 
 
-class OperativeState(PlayerState):
+class OperativeState(PlayerState, Generic[C, T]):
     """
     Represents all the information that is available to an Operative.
     """
 
     @property
-    def current_clue(self) -> GivenClue:
+    def current_clue(self) -> GivenClue[T]:
         return self.given_clues[-1]
+
+    @property
+    def turn_guesses(self) -> list[GivenGuess[C, T]]:
+        return [guess for guess in self.given_guesses if guess.for_clue == self.current_clue]

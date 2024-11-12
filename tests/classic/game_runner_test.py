@@ -133,6 +133,7 @@ def test_game_runner_operative_state(board: ClassicBoard):
     ]
     assert game_state_1.given_guesses == []
     assert game_state_1.current_clue == game_state_1.given_clues[0]
+    assert len(game_state_1.turn_guesses) == 0
 
     # game_state_3
     assert sum(1 for card in game_state_3.board if card.color is not None) == 2
@@ -146,6 +147,7 @@ def test_game_runner_operative_state(board: ClassicBoard):
         ClassicGivenGuess(for_clue=game_state_3.given_clues[0], guessed_card=board[1]),
     ]
     assert game_state_3.current_clue == game_state_3.given_clues[0]
+    assert len(game_state_3.turn_guesses) == 2
 
     # game_state_5
     assert sum(1 for card in game_state_5.board if card.color is not None) == 4
@@ -162,3 +164,4 @@ def test_game_runner_operative_state(board: ClassicBoard):
         ClassicGivenGuess(for_clue=game_state_5.given_clues[1], guessed_card=board[4]),
     ]
     assert game_state_5.current_clue == game_state_5.given_clues[1]
+    assert len(game_state_5.turn_guesses) == 1
