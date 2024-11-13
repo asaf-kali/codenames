@@ -13,6 +13,9 @@ Code infrastructure for the Codenames board game. \
 Designed to serve as a base for implementing players (agents) with different strategies and algorithms. \
 See the [codenames-solvers](https://github.com/asaf-kali/codenames-solvers) repository for such examples.
 
+**Game rules**:
+* [Classic](https://czechgames.com/files/rules/codenames-rules-en.pdf)
+* [Duet](https://czechgames.com/files/rules/codenames-duet-rules-en.pdf)
 
 ### Installation
 
@@ -25,15 +28,16 @@ Here is a simple example of command-line based players, and a `GameRunner` that 
 import logging
 import sys
 
-from codenames.classic.builder import generate_board
+from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicTeam
-from codenames.classic.runner.models import GamePlayers
-from codenames.classic.runner.runner import ClassicGameRunner
+from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Spymaster
 from codenames.generic.state import OperativeState, SpymasterState
+from codenames.utils.vocabulary.languages import get_vocabulary
 
 logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
+
 
 ####################################
 # Naive CLI players implementation #
@@ -57,22 +61,28 @@ class CLIOperative(Operative):
         card_index = game_state.board.find_card_index(word=card_word)
         return Guess(card_index=card_index)
 
+############
+# Run Game #
+############
 
-def run_cli_game():
-    language = "english"
-    board = generate_board(language=language)
-    blue_spymaster = CLISpymaster("Yoda", ClassicTeam.BLUE)
-    blue_operative = CLIOperative("Luke", ClassicTeam.BLUE)
-    red_spymaster = CLISpymaster("Einstein", ClassicTeam.RED)
-    red_operative = CLIOperative("Newton", ClassicTeam.RED)
-    players = GamePlayers.from_collection([blue_spymaster, blue_operative, red_spymaster, red_operative])
+def run_classic_cli_game():
+    # Init players
+    blue_spymaster = CLISpymaster(name="Yoda",team= ClassicTeam.BLUE)
+    blue_operative = CLIOperative(name="Luke", team=ClassicTeam.BLUE)
+    red_spymaster = CLISpymaster(name="Einstein", team=ClassicTeam.RED)
+    red_operative = CLIOperative(name="Newton", team=ClassicTeam.RED)
+    players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
+    # Init board
+    vocabulary = get_vocabulary(language="english")
+    board = ClassicBoard.from_vocabulary(vocabulary=vocabulary)
+    # Run game
     runner = ClassicGameRunner(players=players, board=board)
     winner = runner.run_game()
     print(f"Winner: {winner}")
 
 
 if __name__ == "__main__":
-    run_cli_game()
+    run_classic_cli_game()
 ```
 
 Example output:

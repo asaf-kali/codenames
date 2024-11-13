@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import math
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Generic, Iterator, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Collection, Generic, Iterator, Union
 
 from pydantic import BaseModel, field_validator
 
@@ -98,13 +99,13 @@ class Board(BaseModel, Generic[C], ABC):
                 row[i] = LTR + str(card)
         return str(table)
 
-    def cards_for_color(self, card_color: C) -> Cards[C]:
+    def cards_for_color(self, card_color: str) -> Cards[C]:
         return tuple(card for card in self.cards if card.color == card_color)
 
-    def revealed_cards_for_color(self, card_color: C) -> Cards[C]:
+    def revealed_cards_for_color(self, card_color: str) -> Cards[C]:
         return tuple(card for card in self.cards if card.color == card_color and card.revealed)
 
-    def unrevealed_cards_for_color(self, card_color: C) -> Cards[C]:
+    def unrevealed_cards_for_color(self, card_color: str) -> Cards[C]:
         return tuple(card for card in self.cards if card.color == card_color and not card.revealed)
 
     def find_card_index(self, word: str) -> int:
@@ -117,6 +118,12 @@ class Board(BaseModel, Generic[C], ABC):
     def reset_state(self):
         for card in self.cards:
             card.revealed = False
+
+
+@dataclass
+class Vocabulary:
+    language: str
+    words: Collection[str]
 
 
 def two_integer_factors(n: int) -> tuple[int, int]:

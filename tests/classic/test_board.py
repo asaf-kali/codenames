@@ -1,11 +1,11 @@
 import pytest
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.builder import SupportedLanguage, generate_board
 from codenames.classic.color import ClassicTeam
 from codenames.generic.board import two_integer_factors
 from codenames.generic.exceptions import CardNotFoundError
-from tests.utils import constants
+from codenames.utils.vocabulary.languages import SupportedLanguage, get_vocabulary
+from tests.classic.utils import constants
 
 
 def test_get_board_at_integer_index_returns_card(board_10: ClassicBoard):
@@ -62,23 +62,23 @@ def test_str_is_printable_string(board_10: ClassicBoard, board_25: ClassicBoard)
     print(constants.hebrew_board().printable_string)
 
 
-def test_basic_english_board_build():
-    board = generate_board(language="english")
-    _validate_standard_board(board)
-
-
-def test_basic_hebrew_board_build():
-    board = generate_board(language=SupportedLanguage.HEBREW)
+@pytest.mark.parametrize(
+    "language",
+    [
+        "english",
+        SupportedLanguage.HEBREW,
+    ],
+)
+def test_basic_board_build(language: str):
+    vocabulary = get_vocabulary(language=language)
+    board = ClassicBoard.from_vocabulary(vocabulary=vocabulary)
     _validate_standard_board(board)
 
 
 def test_build_board_with_params():
-    board = generate_board(
-        language=SupportedLanguage.ENGLISH,
-        board_size=17,
-        assassin_amount=2,
-        seed=42,
-        first_team=ClassicTeam.RED,
+    vocabulary = get_vocabulary(language=SupportedLanguage.ENGLISH)
+    board = ClassicBoard.from_vocabulary(
+        vocabulary=vocabulary, board_size=17, assassin_amount=2, first_team=ClassicTeam.RED, seed=42
     )
     assert len(board.cards) == 17
     assert len(board.revealed_cards) == 0
