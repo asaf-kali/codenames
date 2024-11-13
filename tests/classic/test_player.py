@@ -1,8 +1,9 @@
 import pytest
 
 from codenames.classic.color import ClassicColor, ClassicTeam
-from codenames.classic.runner.models import GamePlayers, TeamPlayers
+from codenames.classic.runner import ClassicGamePlayers
 from codenames.generic.player import Player, PlayerRole
+from codenames.generic.runner import TeamPlayers
 from tests.utils.players.dictated import DictatedOperative, DictatedSpymaster
 
 
@@ -27,8 +28,7 @@ def test_game_players_builder():
     red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
     red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
-    all_players = [blue_spymaster, blue_operative, red_spymaster, red_operative]
-    players = GamePlayers.from_collection(all_players)
+    players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
 
     assert players.blue_team == TeamPlayers(blue_spymaster, blue_operative)
     assert players.red_team == TeamPlayers(red_spymaster, red_operative)
@@ -39,9 +39,8 @@ def test_game_players_builder_raises_if_not_enough_players():
     blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
     red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
 
-    all_players = [blue_spymaster, blue_operative, red_spymaster]
     with pytest.raises(ValueError):
-        GamePlayers.from_collection(all_players)
+        ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster)
 
 
 def test_game_players_builder_raises_if_operative_missing_from_team():
@@ -50,9 +49,8 @@ def test_game_players_builder_raises_if_operative_missing_from_team():
     red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
     blue_operative_2 = DictatedOperative(guesses=[], name="Blue Operative 2", team=ClassicTeam.BLUE)
 
-    all_players = [blue_spymaster, blue_operative, red_spymaster, blue_operative_2]
     with pytest.raises(ValueError):
-        GamePlayers.from_collection(all_players)
+        ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, blue_operative_2)
 
 
 def test_get_player():
@@ -61,7 +59,7 @@ def test_get_player():
     red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
     red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
-    players = GamePlayers.from_collection([blue_spymaster, blue_operative, red_spymaster, red_operative])
+    players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
     blue_spymaster_2 = players.get_player(team=ClassicTeam.BLUE, role=PlayerRole.SPYMASTER)
     red_operative_2 = players.get_player(team=ClassicTeam.RED, role=PlayerRole.OPERATIVE)
 
@@ -75,7 +73,7 @@ def test_game_players_properties():
     red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
     red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
-    players = GamePlayers.from_collection([blue_spymaster, blue_operative, red_spymaster, red_operative])
+    players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
     assert players.spymasters == (blue_spymaster, red_spymaster)
     assert players.operatives == (blue_operative, red_operative)
 

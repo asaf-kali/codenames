@@ -5,7 +5,7 @@ from codenames.classic.color import ClassicTeam
 from codenames.classic.types import ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.move import PASS_GUESS, QUIT_GAME, Clue, Guess
-from tests.utils.common import run_game
+from tests.classic.utils.runner import run_game
 from tests.utils.players.dictated import DictatedTurn
 
 
