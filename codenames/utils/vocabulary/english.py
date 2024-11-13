@@ -1,4 +1,4 @@
-ENGLISH_WORDS = [
+ENGLISH_WORDS = {
     "able",
     "abortion",
     "abroad",
@@ -408,4 +408,4 @@ ENGLISH_WORDS = [
     "young",
     "youth",
     "zone",
-]
+}

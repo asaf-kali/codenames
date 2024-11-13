@@ -3,19 +3,7 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 from codenames.classic.color import ClassicTeam
-
-
-class TeamScore(BaseModel):
-    total: int
-    revealed: int
-
-    @staticmethod
-    def new(total: int) -> TeamScore:
-        return TeamScore(total=total, revealed=0)
-
-    @property
-    def unrevealed(self) -> int:
-        return self.total - self.revealed
+from codenames.generic.state import TeamScore
 
 
 class Score(BaseModel):

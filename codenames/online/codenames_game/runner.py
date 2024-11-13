@@ -5,8 +5,7 @@ from threading import Semaphore, Thread
 from typing import ContextManager, Iterable, TypeVar
 
 from codenames.classic.color import ClassicTeam
-from codenames.classic.runner.models import GamePlayers
-from codenames.classic.runner.runner import ClassicGameRunner
+from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Player, PlayerRole, Spymaster
 from codenames.online.codenames_game.adapter import (
@@ -45,7 +44,7 @@ class CodenamesGameRunner(ContextManager):
         red_spymaster = player_or_agent(red_spymaster, PlayerRole.SPYMASTER, ClassicTeam.RED)
         blue_operative = player_or_agent(blue_operative, PlayerRole.OPERATIVE, ClassicTeam.BLUE)
         red_operative = player_or_agent(red_operative, PlayerRole.OPERATIVE, ClassicTeam.RED)
-        self.players = GamePlayers.from_collection([blue_spymaster, red_spymaster, blue_operative, red_operative])
+        self.players = ClassicGamePlayers.from_collection(blue_spymaster, red_spymaster, blue_operative, red_operative)
         self._show_host = show_host
         self.game_configs = game_configs or GameConfigs()
         self._running_game_url: str | None = None

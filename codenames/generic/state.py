@@ -32,7 +32,7 @@ class PlayerState(BaseModel, Generic[C, T]):
         return *self.board.all_words, *self.given_clue_words
 
 
-class SpymasterState(PlayerState):
+class SpymasterState(PlayerState, Generic[C, T]):
     """
     Represents all the information that is available to a Spymaster.
     """
@@ -52,3 +52,16 @@ class OperativeState(PlayerState, Generic[C, T]):
     @property
     def turn_guesses(self) -> list[GivenGuess[C, T]]:
         return [guess for guess in self.given_guesses if guess.for_clue == self.current_clue]
+
+
+class TeamScore(BaseModel):
+    total: int
+    revealed: int
+
+    @staticmethod
+    def new(total: int) -> TeamScore:
+        return TeamScore(total=total, revealed=0)
+
+    @property
+    def unrevealed(self) -> int:
+        return self.total - self.revealed

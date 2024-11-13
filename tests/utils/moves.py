@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from codenames.classic.state import ClassicState
 from codenames.generic.move import GivenClue, GivenGuess
 from codenames.generic.player import PlayerRole, Team
 
@@ -39,15 +38,7 @@ class PassMove(Move):
         return self.team
 
 
-def get_moves(state: ClassicState) -> list[Move]:
-    return _get_moves(
-        given_clues=state.given_clues,
-        given_guesses=state.given_guesses,
-        current_turn=state.current_player_role,
-    )
-
-
-def _get_moves(given_clues: list[GivenClue], given_guesses: list[GivenGuess], current_turn: PlayerRole) -> list[Move]:
+def get_moves(given_clues: list[GivenClue], given_guesses: list[GivenGuess], current_turn: PlayerRole) -> list[Move]:
     guesses_by_clues = get_guesses_by_clues(given_clues=given_clues, given_guesses=given_guesses)
     moves: list[Move] = []
     for clue, guesses in guesses_by_clues.items():

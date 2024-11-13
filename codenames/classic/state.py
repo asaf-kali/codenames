@@ -24,39 +24,38 @@ from codenames.utils.formatting import wrap
 log = logging.getLogger(__name__)
 
 
-class ClassicState(PlayerState[ClassicColor, ClassicTeam]):
-    board: ClassicBoard
+class ClassicPlayerState(PlayerState[ClassicColor, ClassicTeam]):
     score: Score
     current_player_role: PlayerRole = PlayerRole.SPYMASTER
 
     @field_validator("board", mode="before")
     @classmethod
-    def check_board(cls, v: Any) -> ClassicBoard:
+    def parse_board(cls, v: Any) -> ClassicBoard:
         return ClassicBoard.model_validate(v)
 
     @field_validator("current_team", mode="before")
     @classmethod
-    def check_current_team(cls, v: Any) -> ClassicTeam:
+    def parse_current_team(cls, v: Any) -> ClassicTeam:
         return ClassicTeam(v)
 
     @field_validator("given_clues", mode="before")
     @classmethod
-    def check_given_clues(cls, v: Any) -> list[ClassicGivenClue]:
+    def parse_given_clues(cls, v: Any) -> list[ClassicGivenClue]:
         clues = [ClassicGivenClue.model_validate(value) for value in v]
         return clues
 
     @field_validator("given_guesses", mode="before")
     @classmethod
-    def check_given_guesses(cls, v: Any) -> list[ClassicGivenGuess]:
+    def parse_given_guesses(cls, v: Any) -> list[ClassicGivenGuess]:
         guesses = [ClassicGivenGuess.model_validate(value) for value in v]
         return guesses
 
 
-class ClassicSpymasterState(SpymasterState, ClassicState):
+class ClassicSpymasterState(SpymasterState, ClassicPlayerState):
     pass
 
 
-class ClassicOperativeState(OperativeState, ClassicState):
+class ClassicOperativeState(OperativeState, ClassicPlayerState):
     left_guesses: int
 
 
@@ -99,6 +98,8 @@ class ClassicGameState(ClassicSpymasterState):
     def process_clue(self, clue: Clue) -> ClassicGivenClue | None:
         if self.is_game_over:
             raise GameIsOver()
+        if self.current_player_role != PlayerRole.SPYMASTER:
+            raise InvalidTurn("It's not the Spymaster's turn now!")
         self.clues.append(clue)
         if clue.card_amount == QUIT_GAME:
             log.info("Spymaster quit the game")
