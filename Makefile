@@ -64,6 +64,9 @@ cover: cover-html
 	$(OPEN_FILE_COMMAND) htmlcov/index.html &
 	$(DEL_COMMAND) .coverage*
 
+cover-fast:
+	@make cover COVERAGE_EXTRA="-m 'not web'"
+
 # Packaging
 
 build:
