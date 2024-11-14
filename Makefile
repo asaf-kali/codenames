@@ -50,7 +50,7 @@ test-fast:
 	python -m $(PYTHON_TEST_COMMAND) -m "not web"
 
 cover-base:
-	coverage run -m $(PYTHON_TEST_COMMAND)
+	coverage run -m $(PYTHON_TEST_COMMAND) $(COVERAGE_EXTRA)
 
 cover-xml: cover-base
 	coverage xml

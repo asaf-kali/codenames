@@ -1,7 +1,7 @@
 import pytest
 
 from codenames.classic.board import ClassicBoard
-from tests.utils import constants
+from tests.classic.utils import constants
 
 
 @pytest.fixture()

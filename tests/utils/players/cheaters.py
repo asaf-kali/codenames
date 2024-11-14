@@ -1,30 +1,29 @@
-from typing import Optional
+from typing import Generic, Optional
 from uuid import uuid4
 
-from codenames.classic.color import ClassicTeam
-from codenames.classic.types import ClassicCard
+from codenames.generic.card import C, Card
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Spymaster
+from codenames.generic.player import Operative, Spymaster, T
 from codenames.generic.state import OperativeState, SpymasterState
 
 
-class CheaterSpymaster(Spymaster):
-    def __init__(self, name: str, team: ClassicTeam, card_amount: int = 4):
+class CheaterSpymaster(Spymaster, Generic[C, T]):
+    def __init__(self, name: str, team: T, card_amount: int = 4):
         super().__init__(name, team)
-        self.game_state: Optional[SpymasterState] = None
+        self.game_state: Optional[SpymasterState[C, T]] = None
         self.card_amount = card_amount
 
-    def give_clue(self, game_state: SpymasterState) -> Clue:
+    def give_clue(self, game_state: SpymasterState[C, T]) -> Clue:
         self.game_state = game_state
         random_word = uuid4().hex[:4]
         return Clue(word=random_word, card_amount=self.card_amount)
 
 
-class CheaterOperative(Operative):
-    def __init__(self, name: str, team: ClassicTeam, spymaster: CheaterSpymaster):
+class CheaterOperative(Operative, Generic[C, T]):
+    def __init__(self, name: str, team: T, spymaster: CheaterSpymaster):
         super().__init__(name, team)
         self.spymaster = spymaster
-        self.team_cards: list[ClassicCard] = []
+        self.team_cards: list[Card[C]] = []
 
     def guess(self, game_state: OperativeState) -> Guess:
         if not self.team_cards:

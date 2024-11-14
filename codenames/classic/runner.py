@@ -1,28 +1,68 @@
 from __future__ import annotations
 
 import logging
-from typing import Callable
+from dataclasses import dataclass
+from typing import Collection, Iterator
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.builder import generate_board
 from codenames.classic.color import ClassicColor, ClassicTeam
-from codenames.classic.runner.models import GamePlayers, TeamPlayers
 from codenames.classic.score import Score, TeamScore
 from codenames.classic.state import ClassicGameState
 from codenames.classic.winner import Winner
 from codenames.generic.exceptions import InvalidGuess
-from codenames.generic.move import Clue, GivenGuess, Guess
-from codenames.generic.player import Operative, PlayerRole, Spymaster
+from codenames.generic.move import GivenGuess
+from codenames.generic.player import Operative, Player, PlayerRole, Spymaster
+from codenames.generic.runner import (
+    SEPARATOR,
+    ClueGivenSubscriber,
+    GuessGivenSubscriber,
+    TeamPlayers,
+)
 from codenames.utils.formatting import wrap
+from codenames.utils.vocabulary.languages import get_vocabulary
 
 log = logging.getLogger(__name__)
-SEPARATOR = "\n-----\n"
-ClueGivenSubscriber = Callable[[Spymaster, Clue], None]
-GuessGivenSubscriber = Callable[[Operative, Guess], None]
+
+
+@dataclass(frozen=True)
+class ClassicGamePlayers:
+    blue_team: TeamPlayers
+    red_team: TeamPlayers
+
+    @staticmethod
+    def from_collection(*players: Player) -> ClassicGamePlayers:
+        if len(players) != 4:
+            raise ValueError("There must be exactly 4 players")
+        blue_team = find_team(players, team=ClassicTeam.BLUE)
+        red_team = find_team(players, team=ClassicTeam.RED)
+        return ClassicGamePlayers(blue_team=blue_team, red_team=red_team)
+
+    @property
+    def spymasters(self) -> tuple[Spymaster, Spymaster]:
+        return self.blue_team.spymaster, self.red_team.spymaster
+
+    @property
+    def operatives(self) -> tuple[Operative, Operative]:
+        return self.blue_team.operative, self.red_team.operative
+
+    @property
+    def all(self) -> tuple[Spymaster, Operative, Spymaster, Operative]:
+        return self.blue_team.spymaster, self.blue_team.operative, self.red_team.spymaster, self.red_team.operative
+
+    def __iter__(self) -> Iterator[Player]:
+        return iter(self.all)
+
+    def get_player(self, team: ClassicTeam, role: PlayerRole) -> Player:
+        team_players = self.blue_team if team == ClassicTeam.BLUE else self.red_team
+        if role == PlayerRole.SPYMASTER:
+            return team_players.spymaster
+        return team_players.operative
 
 
 class ClassicGameRunner:
-    def __init__(self, players: GamePlayers, state: ClassicGameState | None = None, board: ClassicBoard | None = None):
+    def __init__(
+        self, players: ClassicGamePlayers, state: ClassicGameState | None = None, board: ClassicBoard | None = None
+    ):
         self.players = players
         if (not state and not board) or (state and board):
             raise ValueError("Exactly one of state or board must be provided.")
@@ -105,10 +145,7 @@ class ClassicGameRunner:
 
 
 def new_game_state(board: ClassicBoard | None = None, language: str | None = None) -> ClassicGameState:
-    if board is None and language is None:
-        raise ValueError("Either board or language must be provided.")
-    if board is None:
-        board = generate_board(language=language)  # type: ignore[arg-type]
+    board = _get_board(board=board, language=language)
     if not board.is_clean:
         raise ValueError("Board must be clean.")
     first_team = _determine_first_team(board)
@@ -119,6 +156,15 @@ def new_game_state(board: ClassicBoard | None = None, language: str | None = Non
         current_team=first_team,
         current_player_role=PlayerRole.SPYMASTER,
     )
+
+
+def _get_board(board: ClassicBoard | None, language: str | None) -> ClassicBoard:
+    if board is not None:
+        return board
+    if language is None:
+        raise ValueError("Either board or language must be provided.")
+    vocabulary = get_vocabulary(language=language)
+    return ClassicBoard.from_vocabulary(vocabulary=vocabulary)
 
 
 def build_score(board: ClassicBoard) -> Score:
@@ -132,3 +178,20 @@ def _determine_first_team(board: ClassicBoard) -> ClassicTeam:
     if len(board.blue_cards) >= len(board.red_cards):
         return ClassicTeam.BLUE
     return ClassicTeam.RED
+
+
+def find_team(players: Collection[Player], team: ClassicTeam) -> TeamPlayers:
+    spymaster = operative = None
+    for player in players:
+        if player.team == team:
+            if isinstance(player, Spymaster):
+                spymaster = player
+            elif isinstance(player, Operative):
+                operative = player
+            else:
+                raise ValueError(f"Player {player} is not a Spymaster or Operative")
+    if spymaster is None:
+        raise ValueError(f"No Spymaster found for team {team}")
+    if operative is None:
+        raise ValueError(f"No Operative found for team {team}")
+    return TeamPlayers(spymaster=spymaster, operative=operative)
