@@ -10,7 +10,7 @@ def configure_logging():
         "disable_existing_loggers": False,
         "formatters": {
             "default": {
-                "format": "[%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s [%(filename)s:%(lineno)d]",
+                "format": "[%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s [%(name)s:%(lineno)d]",
                 "datefmt": "%H:%M:%S",
             },
         },
