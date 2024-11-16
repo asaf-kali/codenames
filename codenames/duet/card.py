@@ -7,6 +7,7 @@ class DuetColor(CardColor):
     GREEN = "GREEN"
     NEUTRAL = "NEUTRAL"
     ASSASSIN = "ASSASSIN"
+    UNKNOWN = "UNKNOWN"
 
     @property
     def emoji(self) -> str:
@@ -17,4 +18,5 @@ CARD_COLOR_TO_EMOJI = {
     DuetColor.GREEN: "🟩",
     DuetColor.NEUTRAL: "⬜",
     DuetColor.ASSASSIN: "💀",
+    DuetColor.UNKNOWN: "❔",
 }
