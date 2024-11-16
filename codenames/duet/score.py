@@ -30,4 +30,5 @@ class GameResult(BaseModel):
 TARGET_REACHED = GameResult(win=True, reason="Target score reached")
 ASSASSIN_HIT = GameResult(win=False, reason="Assassin card was hit")
 GAME_QUIT = GameResult(win=False, reason="Team quit the game")
-TOKENS_OVER = GameResult(win=False, reason="Timer tokens over")
+TIMER_TOKENS_DEPLETED = GameResult(win=False, reason="Timer tokens depleted")
+MISTAKE_LIMIT_REACHED = GameResult(win=False, reason="Mistake limit reached")

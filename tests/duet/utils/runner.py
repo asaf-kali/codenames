@@ -4,8 +4,8 @@ from unittest.mock import Mock
 from codenames.duet.board import DuetBoard
 from codenames.duet.player import DuetTeam
 from codenames.duet.runner import DuetGamePlayers, DuetGameRunner
-from codenames.duet.state import DuetSide
-from codenames.generic.move import Clue, Guess
+from codenames.duet.state import DuetGameState, DuetSide
+from codenames.generic.move import Guess
 from codenames.generic.runner import (
     ClueGivenSubscriber,
     GuessGivenSubscriber,
@@ -18,17 +18,21 @@ from tests.utils.players.dictated import (
     DictatedTurn,
 )
 
+Turns = list[DictatedTurn]
+TurnsBySide = dict[DuetSide, Turns]
+
 
 def run_duet_game(
-    board: DuetBoard,
     all_turns: list[DictatedTurn],
+    state: DuetGameState | None = None,
+    board: DuetBoard | None = None,
     clue_given_sub: Optional[ClueGivenSubscriber] = None,
     guess_given_sub: Optional[GuessGivenSubscriber] = None,
     on_clue_given_mock: Optional[Mock] = None,
     on_guess_given_mock: Optional[Mock] = None,
 ) -> DuetGameRunner:
-    players = build_players(all_turns=all_turns)
-    runner = DuetGameRunner(players=players, board=board)
+    players = build_players_from_turns(all_turns=all_turns)
+    runner = DuetGameRunner(players=players, state=state, board=board)
     if clue_given_sub:
         runner.clue_given_subscribers.append(clue_given_sub)
     if guess_given_sub:
@@ -42,22 +46,25 @@ def run_duet_game(
     return runner
 
 
-def build_players(all_turns: Iterable[DictatedTurn]) -> DuetGamePlayers:
+def build_players_from_turns(all_turns: Iterable[DictatedTurn]) -> DuetGamePlayers:
+    turns_by_side: TurnsBySide = {DuetSide.SIDE_A: [], DuetSide.SIDE_B: []}
     current_side = DuetSide.SIDE_A
-    clues_a: list[Clue] = []
-    clues_b: list[Clue] = []
-    guesses_a: list[Guess] = []
-    guesses_b: list[Guess] = []
     for turn in all_turns:
-        if current_side == DuetSide.SIDE_A:
-            clues, guesses = clues_a, guesses_b
-        else:
-            clues, guesses = clues_b, guesses_a
-        clues.append(turn.clue)
-        guesses.extend([Guess(card_index=index) for index in turn.guesses])
+        turns_by_side[current_side].append(turn)
         current_side = current_side.opposite
-    player_a = DictatedDuetPlayer(side=DuetSide.SIDE_A, clues=clues_a, guesses=guesses_a)
-    player_b = DictatedDuetPlayer(side=DuetSide.SIDE_B, clues=clues_b, guesses=guesses_b)
+    return build_players(turns_by_side=turns_by_side)
+
+
+def build_players(turns_by_side: TurnsBySide) -> DuetGamePlayers:
+    clues = {DuetSide.SIDE_A: [], DuetSide.SIDE_B: []}  # type: ignore[var-annotated]
+    guesses = {DuetSide.SIDE_A: [], DuetSide.SIDE_B: []}  # type: ignore[var-annotated]
+    for side, turns in turns_by_side.items():
+        for turn in turns:
+            clues[side].append(turn.clue)
+            turn_guesses = [Guess(card_index=index) for index in turn.guesses]
+            guesses[side.opposite].extend(turn_guesses)
+    player_a = DictatedDuetPlayer(side=DuetSide.SIDE_A, clues=clues[DuetSide.SIDE_A], guesses=guesses[DuetSide.SIDE_A])
+    player_b = DictatedDuetPlayer(side=DuetSide.SIDE_B, clues=clues[DuetSide.SIDE_B], guesses=guesses[DuetSide.SIDE_B])
     return DuetGamePlayers(player_a=player_a, player_b=player_b)
 
 

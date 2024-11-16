@@ -10,7 +10,7 @@ from codenames.duet.score import GameResult
 from codenames.duet.state import DuetGameState, DuetSide
 from codenames.generic.exceptions import InvalidGuess
 from codenames.generic.move import GivenGuess
-from codenames.generic.player import Operative, Spymaster
+from codenames.generic.player import Operative, PlayerRole, Spymaster
 from codenames.generic.runner import (
     SEPARATOR,
     ClueGivenSubscriber,
@@ -54,6 +54,10 @@ class DuetGameRunner:
             return self.players.team_a
         return self.players.team_b
 
+    @property
+    def current_role(self) -> PlayerRole:
+        return self.state.current_side_state.current_player_role
+
     def run_game(self) -> GameResult:
         self._notify_game_starts()
         result = self._run_rounds()
@@ -71,7 +75,7 @@ class DuetGameRunner:
         log.info(f"{SEPARATOR}{wrap(side_turn)} turn.")
         team = self.current_team
         self._get_clue_from(spymaster=team.spymaster)
-        while not self.state.is_game_over and self.state.current_playing_side == side_turn:
+        while not self.state.is_game_over and self.current_role == PlayerRole.OPERATIVE:
             self._get_guess_from(operative=team.operative)
 
     def _get_clue_from(self, spymaster: Spymaster):

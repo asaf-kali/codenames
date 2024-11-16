@@ -14,6 +14,11 @@ log = logging.getLogger(__name__)
 class DuetBoard(Board[DuetColor]):
 
     @property
+    def is_clean(self) -> bool:
+        base = super().is_clean
+        return base and not self.irrelevant_cards
+
+    @property
     def green_cards(self) -> DuetCards:
         return self.cards_for_color(DuetColor.GREEN)
 
@@ -24,6 +29,10 @@ class DuetBoard(Board[DuetColor]):
     @property
     def assassin_cards(self) -> DuetCards:
         return self.cards_for_color(DuetColor.ASSASSIN)
+
+    @property
+    def irrelevant_cards(self) -> DuetCards:
+        return self.cards_for_color(DuetColor.IRRELEVANT)
 
     @classmethod
     def from_vocabulary(
