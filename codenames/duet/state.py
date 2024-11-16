@@ -243,6 +243,10 @@ class DuetGameState(BaseModel):
         return TARGET_REACHED
 
     @property
+    def is_sudden_death(self) -> bool:
+        return self.timer_tokens == 0
+
+    @property
     def is_game_over(self) -> bool:
         return self.game_result is not None
 
@@ -289,10 +293,13 @@ class DuetGameState(BaseModel):
             if not self.current_dual_state.is_game_over:
                 self.current_playing_side = self.current_playing_side.opposite
             return given_guess
-        # If the guess is correct, the dual card is also revealed
+        # If the guess is correct, the dual card is now irrelevant
         self.current_dual_state.dual_card_revealed(guess=guess)
-        # If we reached our target score, it is now the other side's turn
-        if self.current_side_state.is_game_over:
+        # If we reached our target score, and we are not in "sudden death", we consume a timer token
+        if self.current_side_state.is_game_over and not self.is_sudden_death:
+            self._update_tokens(mistake=False)
+        # If we reached our target score, or we are in "sudden death", it is now the other side's turn
+        if self.current_side_state.is_game_over or self.is_sudden_death:
             self.current_playing_side = self.current_playing_side.opposite
         return given_guess
 
@@ -300,7 +307,9 @@ class DuetGameState(BaseModel):
         if self.timer_tokens >= 0:
             self.timer_tokens -= 1
         if self.timer_tokens == 0:
-            log.info("Timer ran out!")
+            log.info("Timer tokens depleted! Entering sudden death")
+            self.side_a.current_player_role = PlayerRole.OPERATIVE
+            self.side_b.current_player_role = PlayerRole.OPERATIVE
         if not mistake:
             return
         self.allowed_mistakes -= 1

@@ -109,6 +109,7 @@ def test_game_state_flow(board_10: DuetBoard, board_10_dual: DuetBoard):
     assert game_state.current_playing_side == DuetSide.SIDE_B
     assert game_state.current_dual_state.score.main.revealed == 4
     assert game_state.current_side_state.score.main.revealed == 2
+    assert game_state.timer_tokens == 6
     assert game_state.side_a.is_game_over
     assert game_state.side_a.game_result == TARGET_REACHED
     assert not game_state.side_b.is_game_over
@@ -123,7 +124,7 @@ def test_game_state_flow(board_10: DuetBoard, board_10_dual: DuetBoard):
 
     game_state.process_guess(guess=Guess(card_index=6))  # Neutral - Incorrect
     assert game_state.current_playing_side == DuetSide.SIDE_B  # Still Side B, as A already won
-    assert game_state.timer_tokens == 6
+    assert game_state.timer_tokens == 5
 
     # Round 5 - Side B
     game_state.process_clue(clue=Clue(word="Clue 5", card_amount=2))
@@ -133,6 +134,6 @@ def test_game_state_flow(board_10: DuetBoard, board_10_dual: DuetBoard):
     game_state.process_guess(guess=Guess(card_index=5))  # Green - Correct
     game_state.process_guess(guess=Guess(card_index=9))  # Green - Correct
 
-    assert game_state.timer_tokens == 6
+    assert game_state.timer_tokens == 4
     assert game_state.is_game_over
     assert game_state.game_result == TARGET_REACHED

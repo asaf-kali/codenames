@@ -74,9 +74,13 @@ class DuetGameRunner:
         side_turn = self.state.current_playing_side
         log.info(f"{SEPARATOR}{wrap(side_turn)} turn.")
         team = self.current_team
-        self._get_clue_from(spymaster=team.spymaster)
+        if not self.state.is_sudden_death:
+            self._get_clue_from(spymaster=team.spymaster)
         while not self.state.is_game_over and self.current_role == PlayerRole.OPERATIVE:
             self._get_guess_from(operative=team.operative)
+            # In sudden death, we get one guess per operative turn
+            if self.state.is_sudden_death:
+                break
 
     def _get_clue_from(self, spymaster: Spymaster):
         state, dual_state = self.state.current_side_state, self.state.current_dual_state

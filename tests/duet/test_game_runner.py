@@ -6,7 +6,11 @@ import pytest
 from codenames.duet.board import DuetBoard
 from codenames.duet.player import DuetTeam
 from codenames.duet.runner import DuetGameRunner
-from codenames.duet.score import MISTAKE_LIMIT_REACHED, TIMER_TOKENS_DEPLETED
+from codenames.duet.score import (
+    MISTAKE_LIMIT_REACHED,
+    TARGET_REACHED,
+    TIMER_TOKENS_DEPLETED,
+)
 from codenames.duet.state import (
     DuetGameState,
     DuetOperativeState,
@@ -82,13 +86,16 @@ def test_tokens_run_out_game(board_10_state: DuetGameState):
     board_10_state.timer_tokens = 3
     turns_by_side = {
         DuetSide.SIDE_A: [
-            DictatedTurn(clue=Clue(word="A", card_amount=4), guesses=[0, 1, 2, 3]),
+            # Timer = 3
+            DictatedTurn(clue=Clue(word="A", card_amount=4), guesses=[0, 1, 2, 3]),  # All green
         ],
         DuetSide.SIDE_B: [
-            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[4, PASS_GUESS]),
-            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[5, PASS_GUESS]),
-            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[6]),
-            DictatedTurn(clue=Clue(word="E", card_amount=2), guesses=[7]),
+            # Timer = 2
+            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[4, PASS_GUESS]),  # Green, pass
+            # Timer = 1
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[5, PASS_GUESS]),  # Green, pass
+            # Timer = 0, last chance
+            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[6]),  # Neutral
         ],
     }
     players = build_players(turns_by_side=turns_by_side)
@@ -102,12 +109,12 @@ def test_mistakes_run_out_game(board_10_state: DuetGameState):
     board_10_state.allowed_mistakes = 4
     turns_by_side = {
         DuetSide.SIDE_A: [
-            DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 7]),
-            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[6]),
+            DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 7]),  # Green, Green, Neutral
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[6]),  # Neutral
         ],
         DuetSide.SIDE_B: [
-            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[2, 6]),
-            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[7]),
+            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[0, 2, 6]),  # Invalid, Green, Neutral
+            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[1, 7]),  # Invalid, Neutral
         ],
     }
     players = build_players(turns_by_side=turns_by_side)
@@ -115,3 +122,29 @@ def test_mistakes_run_out_game(board_10_state: DuetGameState):
     runner.run_game()
 
     assert runner.state.game_result == MISTAKE_LIMIT_REACHED
+
+
+def test_sudden_death(board_10_state: DuetGameState):
+    board_10_state.timer_tokens = 3
+    turns_by_side = {
+        DuetSide.SIDE_A: [
+            DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 4]),  # Green, Green, Neutral
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[6]),  # Neutral
+            # Sudden death
+            DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[2]),  # Green
+            DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[3]),  # Green
+        ],
+        DuetSide.SIDE_B: [
+            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[4, 6]),  # Green, Neutral
+            # Sudden death
+            DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[5]),  # Green
+            DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[9]),  # Green
+        ],
+    }
+    players = build_players(turns_by_side=turns_by_side)
+    runner = DuetGameRunner(players=players, state=board_10_state)
+    runner.run_game()
+
+    assert runner.state.game_result == TARGET_REACHED
+    assert runner.state.timer_tokens == 0
+    assert runner.state.is_sudden_death
