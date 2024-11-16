@@ -78,7 +78,7 @@ jobs:
           make install-test
       - name: Run tests
         run: |
-          make cover-xml
+          make cover-xml COVERAGE_EXTRA="-m 'not web'"
       - name: Test report
         uses: dorny/test-reporter@v1
         if: ${{ ! cancelled() }}
