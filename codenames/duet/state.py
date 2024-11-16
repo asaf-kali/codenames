@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 from enum import StrEnum
-from typing import Any
+from typing import Any, Self
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.card import DuetColor
@@ -12,8 +12,9 @@ from codenames.duet.player import DuetTeam
 from codenames.duet.score import (
     ASSASSIN_HIT,
     GAME_QUIT,
+    MISTAKE_LIMIT_REACHED,
     TARGET_REACHED,
-    TOKENS_OVER,
+    TIMER_TOKENS_DEPLETED,
     GameResult,
     Score,
 )
@@ -144,7 +145,7 @@ class DuetSideState(DuetSpymasterState):
             return
         if card.color == DuetColor.GREEN:
             self._update_score(card_color=DuetColor.GREEN)
-        card.color = DuetColor.UNKNOWN  # This is a hack, but effectively what happens
+        card.color = DuetColor.IRRELEVANT  # This is a hack, but effectively what happens
         card.revealed = True
 
     def get_spymaster_state(self, dual_state: DuetSideState | None) -> DuetSpymasterState:
@@ -216,12 +217,15 @@ class DuetGameState(BaseModel):
     side_b: DuetSideState
     current_playing_side: DuetSide = DuetSide.SIDE_A
     timer_tokens: int = 9
+    allowed_mistakes: int = 9
 
     @property
     def game_result(self) -> GameResult | None:
         # If the timer runs out, the game is lost
         if self.timer_tokens < 0:
-            return TOKENS_OVER
+            return TIMER_TOKENS_DEPLETED
+        if self.allowed_mistakes == 0:
+            return MISTAKE_LIMIT_REACHED
         result_a, result_b = self.side_a.game_result, self.side_b.game_result
         # If no side has a result, the game is still ongoing
         if not result_a and not result_b:
@@ -255,6 +259,12 @@ class DuetGameState(BaseModel):
         dual_board = DuetBoard.dual_board(board=board)
         return cls.from_boards(board_a=board, board_b=dual_board)
 
+    @model_validator(mode="after")
+    def validate_allowed_mistakes(self) -> Self:
+        if self.allowed_mistakes > self.timer_tokens:
+            raise ValueError("Allowed mistakes cannot be greater than timer tokens.")
+        return self
+
     @classmethod
     def from_boards(cls, board_a: DuetBoard, board_b: DuetBoard) -> DuetGameState:
         if not board_a.is_clean or not board_b.is_clean:
@@ -274,7 +284,7 @@ class DuetGameState(BaseModel):
         given_guess = self.current_side_state.process_guess(guess)
         # If the guess is wrong or passed the turn, the timer is updated
         if not given_guess or not given_guess.correct:
-            self._update_timer()
+            self._update_tokens(mistake=given_guess is not None)
             # If the other side did not win yet, it is their turn now
             if not self.current_dual_state.is_game_over:
                 self.current_playing_side = self.current_playing_side.opposite
@@ -286,8 +296,13 @@ class DuetGameState(BaseModel):
             self.current_playing_side = self.current_playing_side.opposite
         return given_guess
 
-    def _update_timer(self) -> None:
-        if self.timer_tokens > 0:
+    def _update_tokens(self, mistake: bool) -> None:
+        if self.timer_tokens >= 0:
             self.timer_tokens -= 1
         if self.timer_tokens == 0:
             log.info("Timer ran out!")
+        if not mistake:
+            return
+        self.allowed_mistakes -= 1
+        if self.allowed_mistakes == 0:
+            log.info("Mistake limit reached!")

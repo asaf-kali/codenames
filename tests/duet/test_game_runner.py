@@ -5,10 +5,17 @@ import pytest
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.player import DuetTeam
-from codenames.duet.state import DuetGameState, DuetOperativeState, DuetSpymasterState
+from codenames.duet.runner import DuetGameRunner
+from codenames.duet.score import MISTAKE_LIMIT_REACHED, TIMER_TOKENS_DEPLETED
+from codenames.duet.state import (
+    DuetGameState,
+    DuetOperativeState,
+    DuetSide,
+    DuetSpymasterState,
+)
 from codenames.duet.types import DuetGivenClue, DuetGivenGuess
 from codenames.generic.move import PASS_GUESS, Clue
-from tests.duet.utils.runner import run_duet_game
+from tests.duet.utils.runner import build_players, run_duet_game
 from tests.utils.hooks import hook_method
 from tests.utils.players.dictated import DictatedSpymaster, DictatedTurn
 
@@ -29,7 +36,7 @@ def test_game_runner_spymaster_state(board_10_state: DuetGameState):
     ]
 
     with hook_method(DictatedSpymaster, "give_clue") as give_clue_mock:
-        run_duet_game(board=board_a, all_turns=all_turns)
+        run_duet_game(state=board_10_state, all_turns=all_turns)
 
     calls = give_clue_mock.hook.calls
     assert len(calls) == 2
@@ -56,7 +63,7 @@ def test_game_runner_spymaster_state(board_10_state: DuetGameState):
     assert game_state_2.given_guesses == []
     assert game_state_2.given_clue_words == ()
     assert "a" in game_state_2.illegal_clue_words
-    # dual_state_2 is the state of the game where B is an operative
+    # dual_state_2 - Censored state A, where player B is an operative
     dual_state_2 = game_state_2.dual_state
     assert isinstance(dual_state_2, DuetOperativeState)
     assert dual_state_2.board.cards[0].revealed
@@ -69,3 +76,42 @@ def test_game_runner_spymaster_state(board_10_state: DuetGameState):
         DuetGivenGuess(for_clue=dual_state_2.given_clues[0], guessed_card=board_a[1]),
     ]
     assert dual_state_2.given_clue_words == ("a",)
+
+
+def test_tokens_run_out_game(board_10_state: DuetGameState):
+    board_10_state.timer_tokens = 3
+    turns_by_side = {
+        DuetSide.SIDE_A: [
+            DictatedTurn(clue=Clue(word="A", card_amount=4), guesses=[0, 1, 2, 3]),
+        ],
+        DuetSide.SIDE_B: [
+            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[4, PASS_GUESS]),
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[5, PASS_GUESS]),
+            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[6]),
+            DictatedTurn(clue=Clue(word="E", card_amount=2), guesses=[7]),
+        ],
+    }
+    players = build_players(turns_by_side=turns_by_side)
+    runner = DuetGameRunner(players=players, state=board_10_state)
+    runner.run_game()
+
+    assert runner.state.game_result == TIMER_TOKENS_DEPLETED
+
+
+def test_mistakes_run_out_game(board_10_state: DuetGameState):
+    board_10_state.allowed_mistakes = 4
+    turns_by_side = {
+        DuetSide.SIDE_A: [
+            DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 7]),
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[6]),
+        ],
+        DuetSide.SIDE_B: [
+            DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[2, 6]),
+            DictatedTurn(clue=Clue(word="D", card_amount=2), guesses=[7]),
+        ],
+    }
+    players = build_players(turns_by_side=turns_by_side)
+    runner = DuetGameRunner(players=players, state=board_10_state)
+    runner.run_game()
+
+    assert runner.state.game_result == MISTAKE_LIMIT_REACHED
