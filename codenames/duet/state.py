@@ -144,7 +144,7 @@ class DuetSideState(DuetSpymasterState):
             return
         if card.color == DuetColor.GREEN:
             self._update_score(card_color=DuetColor.GREEN)
-        card.color = DuetColor.GREEN  # This is a hack, but effectively what happens
+        card.color = DuetColor.UNKNOWN  # This is a hack, but effectively what happens
         card.revealed = True
 
     def get_spymaster_state(self, dual_state: DuetSideState | None) -> DuetSpymasterState:
@@ -157,6 +157,7 @@ class DuetSideState(DuetSpymasterState):
             current_team=self.current_team,
             current_player_role=self.current_player_role,
             clues=self.clues,
+            dual_given_words=self.dual_given_words,
             dual_state=dual_player_state,
         )
 
@@ -169,6 +170,7 @@ class DuetSideState(DuetSpymasterState):
             score=self.score,
             current_team=self.current_team,
             current_player_role=self.current_player_role,
+            dual_given_words=self.dual_given_words,
             dual_state=dual_player_state,
         )
 
@@ -205,7 +207,7 @@ class DuetSide(StrEnum):
     SIDE_B = "SIDE_B"
 
     @property
-    def other(self) -> DuetSide:
+    def opposite(self) -> DuetSide:
         return DuetSide.SIDE_B if self == DuetSide.SIDE_A else DuetSide.SIDE_A
 
 
@@ -275,13 +277,13 @@ class DuetGameState(BaseModel):
             self._update_timer()
             # If the other side did not win yet, it is their turn now
             if not self.current_dual_state.is_game_over:
-                self.current_playing_side = self.current_playing_side.other
+                self.current_playing_side = self.current_playing_side.opposite
             return given_guess
         # If the guess is correct, the dual card is also revealed
         self.current_dual_state.dual_card_revealed(guess=guess)
         # If we reached our target score, it is now the other side's turn
         if self.current_side_state.is_game_over:
-            self.current_playing_side = self.current_playing_side.other
+            self.current_playing_side = self.current_playing_side.opposite
         return given_guess
 
     def _update_timer(self) -> None:

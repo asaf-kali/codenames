@@ -11,7 +11,7 @@ def get_duet_moves(state: DuetGameState) -> list[Move]:
         current_moves = moves_a if current_side == DuetSide.SIDE_A else moves_b
         turn_moves = _extract_turn_moves(moves=current_moves)
         moves.extend(turn_moves)
-        current_side = current_side.other
+        current_side = current_side.opposite
     assert not moves_a or not moves_b
     if moves_a:
         moves.extend(moves_a)

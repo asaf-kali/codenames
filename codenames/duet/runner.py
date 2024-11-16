@@ -7,7 +7,7 @@ from typing import Iterator
 from codenames.duet.board import DuetBoard
 from codenames.duet.player import DuetPlayer
 from codenames.duet.score import GameResult
-from codenames.duet.state import DuetGameState, DuetSide, DuetSideState
+from codenames.duet.state import DuetGameState, DuetSide
 from codenames.generic.exceptions import InvalidGuess
 from codenames.generic.move import GivenGuess
 from codenames.generic.player import Operative, Spymaster
@@ -80,15 +80,14 @@ class DuetGameRunner:
         clue = spymaster.give_clue(game_state=spymaster_state)
         for subscriber in self.clue_given_subscribers:
             subscriber(spymaster, clue)
-        given_clue = state.process_clue(clue=clue)
+        given_clue = self.state.process_clue(clue=clue)
         if given_clue is None:
             return
         for player in self.players:
             player.on_clue_given(given_clue=given_clue)
 
     def _get_guess_from(self, operative: Operative):
-        state, dual_state = self.state.current_side_state, self.state.current_dual_state
-        given_guess = self._get_guess_until_valid(operative, state=state, dual_state=dual_state)
+        given_guess = self._get_guess_until_valid(operative)
         if given_guess is None:
             return
         for player in self.players:
@@ -100,14 +99,13 @@ class DuetGameRunner:
         self.players.player_b.on_game_start(board=self.state.side_b.board)
         self.players.player_b.on_game_start(board=self.state.side_a.board.censored)
 
-    def _get_guess_until_valid(
-        self, operative: Operative, state: DuetSideState, dual_state: DuetSideState
-    ) -> GivenGuess | None:
+    def _get_guess_until_valid(self, operative: Operative) -> GivenGuess | None:
+        state, dual_state = self.state.current_side_state, self.state.current_dual_state
+        operative_state = state.get_operative_state(dual_state=dual_state)
         while True:
-            operative_state = state.get_operative_state(dual_state=dual_state)
             guess = operative.guess(game_state=operative_state)
             try:
-                given_guess = state.process_guess(guess=guess)
+                given_guess = self.state.process_guess(guess=guess)
             except InvalidGuess:
                 continue
             for subscriber in self.guess_given_subscribers:
