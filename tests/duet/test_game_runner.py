@@ -129,9 +129,8 @@ def test_sudden_death(board_10_state: DuetGameState):
     turns_by_side = {
         DuetSide.SIDE_A: [
             DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 4]),  # Green, Green, Neutral
-            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[6]),  # Neutral
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[2, PASS_GUESS]),  # Green, pass
             # Sudden death
-            DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[2]),  # Green
             DictatedTurn(clue=Clue(word="NONE", card_amount=0), guesses=[3]),  # Green
         ],
         DuetSide.SIDE_B: [
