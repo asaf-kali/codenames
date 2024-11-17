@@ -2,7 +2,42 @@
 
 
 
+## v5.1.0 (2024-11-17)
+
+### Other
+
+* 🧹 Small makefile fix ([`6ffa0ad`](https://github.com/asaf-kali/codenames/commit/6ffa0ad6b1c1ccd22fab8ea34ef8f4a333c35c73))
+
+* 🚤 CI fix ([`fa932d1`](https://github.com/asaf-kali/codenames/commit/fa932d1ce9d6e6e41279a27f69e279b3404c0a73))
+
+### ⛵️
+
+* ⛵️ CI: don&#39;t run online tests ([`714a832`](https://github.com/asaf-kali/codenames/commit/714a832baead18b8306dfe29ecd6d5d5c55a05d9))
+
+### ✨
+
+* ✨ Duet: properly handle sudden death ([`0547812`](https://github.com/asaf-kali/codenames/commit/0547812f781d974af3148aacc6d6fbe096532257))
+
+* ✨ Duet: add max mistakes limit ([`ba1a472`](https://github.com/asaf-kali/codenames/commit/ba1a4724ef2b65264ca6c32d8191b775fb62989d))
+
+### 🏗️
+
+* 🏗️ Abstraction fixes ([`fd02623`](https://github.com/asaf-kali/codenames/commit/fd026238cd6d2eb9e73d029c7332353554a1aba3))
+
+### 🐛
+
+* 🐛 Duet runner fixes, add basic test ([`bbd5de6`](https://github.com/asaf-kali/codenames/commit/bbd5de65d544fdd75f24ca4916fe5e05829df744))
+
+### 🔥
+
+* 🔥 Implement Duet game type ([`fccd579`](https://github.com/asaf-kali/codenames/commit/fccd57912845402f5d38a0910596dc9985cd241e))
+
+
 ## v5.0.4 (2024-11-12)
+
+### Other
+
+* 🤖 Release [5.0.4] [skip ci] ([`1d70b8a`](https://github.com/asaf-kali/codenames/commit/1d70b8a72d83a4a6d528ca203fe1abec2fe75d44))
 
 ### 🌴
 
