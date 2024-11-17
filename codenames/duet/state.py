@@ -219,6 +219,19 @@ class DuetGameState(BaseModel):
     timer_tokens: int = 9
     allowed_mistakes: int = 9
 
+    @classmethod
+    def from_board(cls, board: DuetBoard) -> DuetGameState:
+        dual_board = DuetBoard.dual_board(board=board)
+        return cls.from_boards(board_a=board, board_b=dual_board)
+
+    @classmethod
+    def from_boards(cls, board_a: DuetBoard, board_b: DuetBoard) -> DuetGameState:
+        if not board_a.is_clean or not board_b.is_clean:
+            raise ValueError("Boards must be clean.")
+        side_a = DuetSideState.from_board(board_a)
+        side_b = DuetSideState.from_board(board_b)
+        return cls(side_a=side_a, side_b=side_b)
+
     @property
     def game_result(self) -> GameResult | None:
         # If the timer runs out, the game is lost
@@ -258,24 +271,11 @@ class DuetGameState(BaseModel):
     def current_dual_state(self) -> DuetSideState:
         return self.side_b if self.current_playing_side == DuetSide.SIDE_A else self.side_a
 
-    @classmethod
-    def from_board(cls, board: DuetBoard) -> DuetGameState:
-        dual_board = DuetBoard.dual_board(board=board)
-        return cls.from_boards(board_a=board, board_b=dual_board)
-
     @model_validator(mode="after")
     def validate_allowed_mistakes(self) -> Self:
         if self.allowed_mistakes > self.timer_tokens:
             raise ValueError("Allowed mistakes cannot be greater than timer tokens.")
         return self
-
-    @classmethod
-    def from_boards(cls, board_a: DuetBoard, board_b: DuetBoard) -> DuetGameState:
-        if not board_a.is_clean or not board_b.is_clean:
-            raise ValueError("Boards must be clean.")
-        side_a = DuetSideState.from_board(board_a)
-        side_b = DuetSideState.from_board(board_b)
-        return cls(side_a=side_a, side_b=side_b)
 
     def process_clue(self, clue: Clue) -> DuetGivenClue | None:
         side_state = self.current_side_state

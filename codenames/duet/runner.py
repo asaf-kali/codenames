@@ -65,6 +65,12 @@ class DuetGameRunner:
         log.info(f"{SEPARATOR}{result.reason}, you {suffix}")
         return result
 
+    def _notify_game_starts(self):
+        self.players.player_a.on_game_start(board=self.state.side_a.board)
+        self.players.player_a.on_game_start(board=self.state.side_b.board.censored)
+        self.players.player_b.on_game_start(board=self.state.side_b.board)
+        self.players.player_b.on_game_start(board=self.state.side_a.board.censored)
+
     def _run_rounds(self) -> GameResult:
         while not self.state.is_game_over:
             self._run_side_turn()
@@ -100,12 +106,6 @@ class DuetGameRunner:
             return
         for player in self.players:
             player.on_guess_given(given_guess=given_guess)
-
-    def _notify_game_starts(self):
-        self.players.player_a.on_game_start(board=self.state.side_a.board)
-        self.players.player_a.on_game_start(board=self.state.side_b.board.censored)
-        self.players.player_b.on_game_start(board=self.state.side_b.board)
-        self.players.player_b.on_game_start(board=self.state.side_a.board.censored)
 
     def _get_guess_until_valid(self, operative: Operative) -> GivenGuess | None:
         state, dual_state = self.state.current_side_state, self.state.current_dual_state
