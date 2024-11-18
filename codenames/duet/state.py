@@ -83,7 +83,7 @@ class DuetSideState(DuetSpymasterState):
     game_result: GameResult | None = None
 
     @classmethod
-    def from_board(cls, board: DuetBoard) -> DuetSideState:
+    def from_board(cls, board: DuetBoard) -> Self:
         score = Score.new(green=len(board.green_cards))
         return cls(board=board, score=score)
 
