@@ -78,7 +78,12 @@ jobs:
           make install-test
       - name: Run tests
         run: |
-          make cover-xml COVERAGE_EXTRA="-m 'not web'"
+          if [[ $GITHUB_REF != "refs/heads/main" ]]; then
+            COVERAGE_EXTRA="-m 'not web'"
+          else
+            COVERAGE_EXTRA=""
+          fi
+          make cover-xml COVERAGE_EXTRA="$COVERAGE_EXTRA"
       - name: Test report
         uses: dorny/test-reporter@v1
         if: ${{ ! cancelled() }}
