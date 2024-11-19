@@ -2,9 +2,24 @@
 
 
 
+## v5.1.1 (2024-11-19)
+
+### ⛵️
+
+* ⛵️ CI: run online tests on main only ([`e3765ef`](https://github.com/asaf-kali/codenames/commit/e3765ef7ac234583235b050d62de6c64338290e3))
+
+### 🎡
+
+* 🎡 Implement mini game runner ([`b0cde6f`](https://github.com/asaf-kali/codenames/commit/b0cde6f17e5341a43d6e0c63cbe9b24854254f2c))
+
+* 🎡 Implement mini game state ([`8756b42`](https://github.com/asaf-kali/codenames/commit/8756b421f58e03b01c420ca720b1887c9e48d75a))
+
+
 ## v5.1.0 (2024-11-17)
 
 ### Other
+
+* 🤖 Release [5.1.0] [skip ci] ([`074d872`](https://github.com/asaf-kali/codenames/commit/074d87263acfbd2ef40ea063216a3601fd732134))
 
 * 🧹 Small makefile fix ([`6ffa0ad`](https://github.com/asaf-kali/codenames/commit/6ffa0ad6b1c1ccd22fab8ea34ef8f4a333c35c73))
 
