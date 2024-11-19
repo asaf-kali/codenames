@@ -2,7 +2,18 @@
 
 
 
+## v5.1.2 (2024-11-19)
+
+### 🏖️
+
+* 🏖️ Vocabulary: use lists instead of sets ([`31a7ea7`](https://github.com/asaf-kali/codenames/commit/31a7ea7131155159347fe66849d5138cb9acdca2))
+
+
 ## v5.1.1 (2024-11-19)
+
+### Other
+
+* 🤖 Release [5.1.1] [skip ci] ([`c5d8c0b`](https://github.com/asaf-kali/codenames/commit/c5d8c0b0189dc6114378bc3a891aa0849feaa5a5))
 
 ### ⛵️
 
