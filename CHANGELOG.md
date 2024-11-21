@@ -2,7 +2,22 @@
 
 
 
+## v5.2.0 (2024-11-21)
+
+### Other
+
+* 🧹 CI: upgrade job versions ([`6e5a807`](https://github.com/asaf-kali/codenames/commit/6e5a8074100841cdfa91caf8821e26e93a48536b))
+
+### ✨
+
+* ✨ Add game type enum ([`d80f0b3`](https://github.com/asaf-kali/codenames/commit/d80f0b3545c4054a21cc2b048e7a1a2bc9480246))
+
+
 ## v5.1.2 (2024-11-19)
+
+### Other
+
+* 🤖 Release [5.1.2] [skip ci] ([`4e28168`](https://github.com/asaf-kali/codenames/commit/4e2816849df265cf564fbb74a35dc1f40aeb9aa5))
 
 ### 🏖️
 
@@ -14,8 +29,6 @@
 ### Other
 
 * 🤖 Release [5.1.1] [skip ci] ([`c5d8c0b`](https://github.com/asaf-kali/codenames/commit/c5d8c0b0189dc6114378bc3a891aa0849feaa5a5))
-
-### ⛵️
 
 * ⛵️ CI: run online tests on main only ([`e3765ef`](https://github.com/asaf-kali/codenames/commit/e3765ef7ac234583235b050d62de6c64338290e3))
 
@@ -32,13 +45,11 @@
 
 * 🤖 Release [5.1.0] [skip ci] ([`074d872`](https://github.com/asaf-kali/codenames/commit/074d87263acfbd2ef40ea063216a3601fd732134))
 
+* ⛵️ CI: don&#39;t run online tests ([`714a832`](https://github.com/asaf-kali/codenames/commit/714a832baead18b8306dfe29ecd6d5d5c55a05d9))
+
 * 🧹 Small makefile fix ([`6ffa0ad`](https://github.com/asaf-kali/codenames/commit/6ffa0ad6b1c1ccd22fab8ea34ef8f4a333c35c73))
 
 * 🚤 CI fix ([`fa932d1`](https://github.com/asaf-kali/codenames/commit/fa932d1ce9d6e6e41279a27f69e279b3404c0a73))
-
-### ⛵️
-
-* ⛵️ CI: don&#39;t run online tests ([`714a832`](https://github.com/asaf-kali/codenames/commit/714a832baead18b8306dfe29ecd6d5d5c55a05d9))
 
 ### ✨
 
