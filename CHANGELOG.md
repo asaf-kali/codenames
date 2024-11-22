@@ -2,9 +2,18 @@
 
 
 
+## v5.2.1 (2024-11-22)
+
+### 🛠️
+
+* 🛠️ Add py.typed file ([`1793ec5`](https://github.com/asaf-kali/codenames/commit/1793ec58dbf0af3e4d371577842ab038e13e23d2))
+
+
 ## v5.2.0 (2024-11-21)
 
 ### Other
+
+* 🤖 Release [5.2.0] [skip ci] ([`04a03a0`](https://github.com/asaf-kali/codenames/commit/04a03a07483f61502d424590cdbedaac7f8e05fd))
 
 * 🧹 CI: upgrade job versions ([`6e5a807`](https://github.com/asaf-kali/codenames/commit/6e5a8074100841cdfa91caf8821e26e93a48536b))
 
