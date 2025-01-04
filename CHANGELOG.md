@@ -2,7 +2,18 @@
 
 
 
+## v5.3.0 (2025-01-04)
+
+### 🐲
+
+* 🐲 Better state constructors, pydantic fixes ([`c20f859`](https://github.com/asaf-kali/codenames/commit/c20f859536b212da9184602894079d0cb8418ff3))
+
+
 ## v5.2.1 (2024-11-22)
+
+### Other
+
+* 🤖 Release [5.2.1] [skip ci] ([`b298c4f`](https://github.com/asaf-kali/codenames/commit/b298c4fce08127ff954b5f9bf628c25237a94dc2))
 
 ### 🛠️
 
