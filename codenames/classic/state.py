@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, Self
 
 from pydantic import field_validator
 
@@ -18,7 +18,12 @@ from codenames.generic.exceptions import (
 )
 from codenames.generic.move import PASS_GUESS, QUIT_GAME, Clue, GivenClue, Guess
 from codenames.generic.player import PlayerRole
-from codenames.generic.state import OperativeState, PlayerState, SpymasterState
+from codenames.generic.state import (
+    OperativeState,
+    PlayerState,
+    SpymasterState,
+    TeamScore,
+)
 from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
@@ -62,6 +67,24 @@ class ClassicOperativeState(OperativeState, ClassicPlayerState):
 class ClassicGameState(ClassicSpymasterState):
     left_guesses: int = 0
     winner: Winner | None = None
+
+    @classmethod
+    def from_language(cls, language: str) -> Self:
+        board = ClassicBoard.from_language(language)
+        return cls.from_board(board=board)
+
+    @classmethod
+    def from_board(cls, board: ClassicBoard) -> Self:
+        if not board.is_clean:
+            raise ValueError("Board must be clean.")
+        first_team = _determine_first_team(board)
+        score = _build_score(board)
+        return cls(
+            board=board,
+            score=score,
+            current_team=first_team,
+            current_player_role=PlayerRole.SPYMASTER,
+        )
 
     @property
     def spymaster_state(self) -> ClassicSpymasterState:
@@ -181,3 +204,16 @@ class ClassicGameState(ClassicSpymasterState):
         game_ended = self.score.add_point(score_team)
         if game_ended:
             self.winner = Winner(team=score_team, reason=WinningReason.TARGET_SCORE_REACHED)
+
+
+def _determine_first_team(board: ClassicBoard) -> ClassicTeam:
+    if len(board.blue_cards) >= len(board.red_cards):
+        return ClassicTeam.BLUE
+    return ClassicTeam.RED
+
+
+def _build_score(board: ClassicBoard) -> Score:
+    blue_score = TeamScore(total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(ClassicColor.BLUE)))
+    red_score = TeamScore(total=len(board.red_cards), revealed=len(board.revealed_cards_for_color(ClassicColor.RED)))
+    score = Score(blue=blue_score, red=red_score)
+    return score

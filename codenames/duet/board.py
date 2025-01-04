@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import random
+from typing import Self
 
 from codenames.duet.card import DuetColor
 from codenames.duet.types import DuetCard, DuetCards
@@ -35,6 +36,10 @@ class DuetBoard(Board[DuetColor]):
         return self.cards_for_color(DuetColor.IRRELEVANT)
 
     @classmethod
+    def cast_board(cls, board: Board[DuetColor]) -> Self:
+        return cls(language=board.language, cards=board.cards)
+
+    @classmethod
     def from_vocabulary(
         cls,
         vocabulary: Vocabulary,
@@ -42,7 +47,7 @@ class DuetBoard(Board[DuetColor]):
         green_amount: int = 9,
         assassin_amount: int = 3,
         seed: int | None = None,
-    ) -> DuetBoard:
+    ) -> Self:
         if seed:
             random.seed(seed)
 
@@ -60,11 +65,7 @@ class DuetBoard(Board[DuetColor]):
         return cls(language=vocabulary.language, cards=all_cards)
 
     @classmethod
-    def from_board(cls, board: Board[DuetColor]) -> DuetBoard:
-        return cls(language=board.language, cards=board.cards)
-
-    @classmethod
-    def dual_board(cls, board: DuetBoard, overlap_ratio: float = 3, seed: int | None = None) -> DuetBoard:
+    def dual_board(cls, board: DuetBoard, overlap_ratio: float = 3, seed: int | None = None) -> Self:
         if seed:
             random.seed(seed)
         # Given board analysis

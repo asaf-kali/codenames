@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import logging
 import random
+from typing import Self
 
 from codenames.classic.color import ClassicColor, ClassicTeam
 from codenames.classic.types import ClassicCard, ClassicCards
 from codenames.generic.board import Board, Vocabulary
 from codenames.utils.builder import extract_random_subset
+from codenames.utils.vocabulary.languages import get_vocabulary
 
 log = logging.getLogger(__name__)
 
@@ -30,6 +32,11 @@ class ClassicBoard(Board[ClassicColor]):
         return self.cards_for_color(ClassicColor.ASSASSIN)
 
     @classmethod
+    def from_language(cls, language: str) -> Self:
+        vocabulary = get_vocabulary(language=language)
+        return cls.from_vocabulary(vocabulary=vocabulary)
+
+    @classmethod
     def from_vocabulary(
         cls,
         vocabulary: Vocabulary,
@@ -37,7 +44,7 @@ class ClassicBoard(Board[ClassicColor]):
         assassin_amount: int = 1,
         first_team: ClassicTeam | None = None,
         seed: int | None = None,
-    ) -> ClassicBoard:
+    ) -> Self:
         if seed:
             random.seed(seed)
 

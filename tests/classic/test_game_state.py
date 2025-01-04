@@ -4,18 +4,18 @@ import pytest
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor, ClassicTeam
-from codenames.classic.runner import new_game_state
 from codenames.classic.state import ClassicGameState, ClassicPlayerState
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.exceptions import InvalidGuess, InvalidTurn
 from codenames.generic.move import PASS_GUESS, Clue, Guess
 from codenames.generic.player import PlayerRole
+from codenames.utils.vocabulary.languages import SupportedLanguage
 from tests.utils.moves import ClueMove, GuessMove, Move, PassMove, get_moves
 
 
 def test_game_state_flow(board_10: ClassicBoard):
-    game_state = new_game_state(board=board_10)
+    game_state = ClassicGameState.from_board(board=board_10)
     assert game_state.current_team == ClassicTeam.BLUE
     assert game_state.current_player_role == PlayerRole.SPYMASTER
     assert _get_moves(game_state) == []
@@ -138,7 +138,7 @@ def test_game_state_flow(board_10: ClassicBoard):
 
 
 def test_game_state_json_serialization_and_load(board_10: ClassicBoard):
-    game_state = new_game_state(board=board_10)
+    game_state = ClassicGameState.from_board(board=board_10)
     game_state.process_clue(Clue(word="A", card_amount=2))
     game_state.process_guess(Guess(card_index=0))
     game_state.process_guess(Guess(card_index=1))
@@ -156,3 +156,8 @@ def _get_moves(state: ClassicPlayerState) -> list[Move]:
         given_guesses=state.given_guesses,
         current_turn=state.current_player_role,
     )
+
+
+def test_game_state_from_language():
+    game_state = ClassicGameState.from_language(language=SupportedLanguage.ENGLISH)
+    assert len(game_state.board.cards) == 25

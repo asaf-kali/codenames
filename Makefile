@@ -61,7 +61,7 @@ cover-html: cover-base
 	coverage report
 
 cover: cover-html
-	$(OPEN_FILE_COMMAND) htmlcov/index.html &
+	$(OPEN_FILE_COMMAND) htmlcov/index.html > /dev/null 2>&1 &
 	$(DEL_COMMAND) .coverage*
 
 cover-fast:

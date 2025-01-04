@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from typing import Collection, Iterator
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicColor, ClassicTeam
-from codenames.classic.score import Score, TeamScore
+from codenames.classic.color import ClassicTeam
 from codenames.classic.state import ClassicGameState
 from codenames.classic.winner import Winner
 from codenames.generic.exceptions import InvalidGuess
@@ -19,7 +18,6 @@ from codenames.generic.runner import (
     TeamPlayers,
 )
 from codenames.utils.formatting import wrap
-from codenames.utils.vocabulary.languages import get_vocabulary
 
 log = logging.getLogger(__name__)
 
@@ -64,9 +62,11 @@ class ClassicGameRunner:
         self, players: ClassicGamePlayers, state: ClassicGameState | None = None, board: ClassicBoard | None = None
     ):
         self.players = players
-        if (not state and not board) or (state and board):
-            raise ValueError("Exactly one of state or board must be provided.")
-        self.state = state or new_game_state(board=board)
+        if not state:
+            if not board:
+                raise ValueError("Exactly one of state or board must be provided.")
+            state = ClassicGameState.from_board(board=board)
+        self.state = state
         self.clue_given_subscribers: list[ClueGivenSubscriber] = []
         self.guess_given_subscribers: list[GuessGivenSubscriber] = []
 
@@ -142,42 +142,6 @@ class ClassicGameRunner:
                 return given_guess
             except InvalidGuess:
                 pass
-
-
-def new_game_state(board: ClassicBoard | None = None, language: str | None = None) -> ClassicGameState:
-    board = _get_board(board=board, language=language)
-    if not board.is_clean:
-        raise ValueError("Board must be clean.")
-    first_team = _determine_first_team(board)
-    score = build_score(board)
-    return ClassicGameState(
-        board=board,
-        score=score,
-        current_team=first_team,
-        current_player_role=PlayerRole.SPYMASTER,
-    )
-
-
-def _get_board(board: ClassicBoard | None, language: str | None) -> ClassicBoard:
-    if board is not None:
-        return board
-    if language is None:
-        raise ValueError("Either board or language must be provided.")
-    vocabulary = get_vocabulary(language=language)
-    return ClassicBoard.from_vocabulary(vocabulary=vocabulary)
-
-
-def build_score(board: ClassicBoard) -> Score:
-    blue_score = TeamScore(total=len(board.blue_cards), revealed=len(board.revealed_cards_for_color(ClassicColor.BLUE)))
-    red_score = TeamScore(total=len(board.red_cards), revealed=len(board.revealed_cards_for_color(ClassicColor.RED)))
-    score = Score(blue=blue_score, red=red_score)
-    return score
-
-
-def _determine_first_team(board: ClassicBoard) -> ClassicTeam:
-    if len(board.blue_cards) >= len(board.red_cards):
-        return ClassicTeam.BLUE
-    return ClassicTeam.RED
 
 
 def find_team(players: Collection[Player], team: ClassicTeam) -> TeamPlayers:
