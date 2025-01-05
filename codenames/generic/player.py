@@ -59,11 +59,11 @@ class Player[C: CardColor, T: Team]:
 
 class Spymaster[C: CardColor, T: Team](Player[C, T], abc.ABC):
     @abc.abstractmethod
-    def give_clue(self, game_state: SpymasterState) -> Clue:
+    def give_clue(self, game_state: SpymasterState[C, T]) -> Clue:
         raise NotImplementedError
 
 
 class Operative[C: CardColor, T: Team](Player[C, T], abc.ABC):
     @abc.abstractmethod
-    def guess(self, game_state: OperativeState) -> Guess:
+    def guess(self, game_state: OperativeState[C, T]) -> Guess:
         raise NotImplementedError()
