@@ -26,22 +26,22 @@ beautifultable = "^1.0"
 selenium = { version = "^4.1", optional = true }
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.2.2"
-coverage = "^7.2.3"
+pytest = "^7.2"
+coverage = "^7.2"
 pytest-retry = "^1.6"
 
 [tool.poetry.group.lint.dependencies]
-ruff = "^0.7"
-black = "^24.10"
-isort = "^5.12.0"
-mypy = "^1.13.0"
-pylint = "^3.0"
+ruff = ">=0.7"
+black = ">=24.10"
+isort = ">=5.12.0"
+mypy = ">=1.13.0"
+pylint = ">=3.3.3"
 types-requests = "^2.28.11.17"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.2.2"
-twine = "^4.0.2"
-python-semantic-release = "^8.0.8"
+pre-commit = ">=3.2.2"
+twine = ">=5.0"
+python-semantic-release = "^8.0"
 
 [build-system]
 requires = ["poetry-core"]

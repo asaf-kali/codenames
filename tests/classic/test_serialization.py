@@ -1,5 +1,6 @@
 from codenames.classic.color import ClassicColor
-from codenames.classic.types import ClassicCard
+from codenames.classic.player import ClassicTeam
+from codenames.classic.types import ClassicCard, ClassicGivenClue
 
 
 def test_card_to_dict_returns_without_cached_properties():
@@ -21,3 +22,11 @@ def test_card_to_dict_returns_with_cached_properties_if_included():
     assert card_dict == {
         "formatted_word": "dog",
     }
+
+
+def test_given_clue_parsing():
+    data = {"word": "dog", "card_amount": 4, "team": "BLUE"}
+    given_clue = ClassicGivenClue.model_validate(data)
+    assert given_clue.word == "dog"
+    assert given_clue.card_amount == 4
+    assert given_clue.team == ClassicTeam.BLUE

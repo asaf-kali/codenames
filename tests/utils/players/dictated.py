@@ -1,8 +1,9 @@
-from typing import Generic, Iterable, NamedTuple
+from typing import Iterable, NamedTuple
 
+from codenames.generic.card import CardColor
 from codenames.generic.exceptions import QuitGame
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Player, Spymaster, T
+from codenames.generic.player import Operative, Player, Spymaster, Team
 from codenames.generic.state import OperativeState, SpymasterState
 
 
@@ -11,7 +12,7 @@ class UnexpectedEndOfInput(Exception):
         self.player = player
 
 
-class DictatedSpymaster(Spymaster, Generic[T]):
+class DictatedSpymaster[C: CardColor, T: Team](Spymaster[C, T]):
     def __init__(
         self,
         clues: Iterable[Clue],
@@ -34,7 +35,7 @@ class DictatedSpymaster(Spymaster, Generic[T]):
         return clue
 
 
-class DictatedOperative(Operative, Generic[T]):
+class DictatedOperative[C: CardColor, T: Team](Operative[C, T]):
     def __init__(
         self,
         guesses: Iterable[Guess],

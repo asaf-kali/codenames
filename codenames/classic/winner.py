@@ -2,7 +2,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 
 
 class WinningReason(StrEnum):

@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+import abc
 import math
-from abc import ABC
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Collection, Generic, Iterator, Union
+from typing import TYPE_CHECKING, Any, Collection, Iterator, Union
 
 from pydantic import BaseModel, field_validator
 
-from codenames.generic.card import C, Card, Cards, canonical_format
+from codenames.generic.card import Card, CardColor, Cards, canonical_format
 from codenames.generic.exceptions import CardNotFoundError
 
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ LTR = "\u200E"
 WordGroup = tuple[str, ...]
 
 
-class Board(BaseModel, Generic[C], ABC):
+class Board[C: CardColor](BaseModel, abc.ABC):
     language: str
     cards: list[Card[C]]
 

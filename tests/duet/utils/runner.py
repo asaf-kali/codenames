@@ -11,12 +11,12 @@ from codenames.generic.runner import (
     GuessGivenSubscriber,
     TeamPlayers,
 )
-from tests.duet.utils.dictated import DictatedDuetPlayer
-from tests.utils.players.dictated import (
-    DictatedOperative,
-    DictatedSpymaster,
-    DictatedTurn,
+from tests.duet.utils.dictated import (
+    DictatedDuetOperative,
+    DictatedDuetPlayer,
+    DictatedDuetSpymaster,
 )
+from tests.utils.players.dictated import DictatedTurn
 
 Turns = list[DictatedTurn]
 TurnsBySide = dict[DuetSide, Turns]
@@ -71,6 +71,6 @@ def build_players(turns_by_side: TurnsBySide) -> DuetGamePlayers:
 def build_side(team: DuetTeam, turns: Iterable[DictatedTurn]) -> TeamPlayers:
     clues = [turn.clue for turn in turns]
     guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    spymaster = DictatedSpymaster(clues=clues, team=team)
-    operative = DictatedOperative(guesses=guesses, team=team)
+    spymaster = DictatedDuetSpymaster(clues=clues, team=team)
+    operative = DictatedDuetOperative(guesses=guesses, team=team)
     return TeamPlayers(spymaster=spymaster, operative=operative)

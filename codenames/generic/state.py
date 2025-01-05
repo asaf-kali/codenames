@@ -1,19 +1,18 @@
 from __future__ import annotations
 
 import logging
-from typing import Generic
 
 from pydantic import BaseModel
 
 from codenames.generic.board import Board, WordGroup
-from codenames.generic.card import C
+from codenames.generic.card import CardColor
 from codenames.generic.move import Clue, GivenClue, GivenGuess
-from codenames.generic.player import T
+from codenames.generic.player import Team
 
 log = logging.getLogger(__name__)
 
 
-class PlayerState(BaseModel, Generic[C, T]):
+class PlayerState[C: CardColor, T: Team](BaseModel):
     """
     Represents all the information that is available to any player
     """
@@ -32,7 +31,7 @@ class PlayerState(BaseModel, Generic[C, T]):
         return *self.board.all_words, *self.given_clue_words
 
 
-class SpymasterState(PlayerState, Generic[C, T]):
+class SpymasterState[C: CardColor, T: Team](PlayerState[C, T]):
     """
     Represents all the information that is available to a Spymaster.
     """
@@ -40,7 +39,7 @@ class SpymasterState(PlayerState, Generic[C, T]):
     clues: list[Clue] = []
 
 
-class OperativeState(PlayerState, Generic[C, T]):
+class OperativeState[C: CardColor, T: Team](PlayerState[C, T]):
     """
     Represents all the information that is available to an Operative.
     """

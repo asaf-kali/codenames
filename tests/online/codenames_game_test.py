@@ -1,6 +1,6 @@
 import pytest
 
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers
 from codenames.classic.winner import WinningReason
 from codenames.online.codenames_game.runner import CodenamesGameRunner

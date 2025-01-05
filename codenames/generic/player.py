@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from abc import ABC
+import abc
 from enum import StrEnum
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING
 
+from codenames.generic.card import CardColor
 from codenames.utils.formatting import camel_case_split
 
 if TYPE_CHECKING:
@@ -18,9 +19,6 @@ class Team(StrEnum):
         raise NotImplementedError
 
 
-T = TypeVar("T", bound=Team)
-
-
 class PlayerRole(StrEnum):
     SPYMASTER = "SPYMASTER"
     OPERATIVE = "OPERATIVE"
@@ -30,7 +28,7 @@ class PlayerRole(StrEnum):
         return PlayerRole.SPYMASTER if self == PlayerRole.OPERATIVE else PlayerRole.OPERATIVE
 
 
-class Player(Generic[T], ABC):
+class Player[C: CardColor, T: Team]:
     def __init__(self, name: str, team: T):
         self.name = name
         self.team = team
@@ -49,21 +47,23 @@ class Player(Generic[T], ABC):
     def is_human(self) -> bool:
         return False
 
-    def on_game_start(self, board: Board):
+    def on_game_start(self, board: Board[C]):
         pass
 
-    def on_clue_given(self, given_clue: GivenClue):
+    def on_clue_given(self, given_clue: GivenClue[T]):
         pass
 
-    def on_guess_given(self, given_guess: GivenGuess):
+    def on_guess_given(self, given_guess: GivenGuess[C, T]):
         pass
 
 
-class Spymaster(Player[T], ABC):
+class Spymaster[C: CardColor, T: Team](Player[C, T], abc.ABC):
+    @abc.abstractmethod
     def give_clue(self, game_state: SpymasterState) -> Clue:
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
-class Operative(Player[T], ABC):
+class Operative[C: CardColor, T: Team](Player[C, T], abc.ABC):
+    @abc.abstractmethod
     def guess(self, game_state: OperativeState) -> Guess:
         raise NotImplementedError()

@@ -1,4 +1,5 @@
-from codenames.classic.color import ClassicColor, ClassicTeam
+from codenames.classic.color import ClassicColor
+from codenames.classic.player import ClassicTeam
 from codenames.generic.card import Card
 from codenames.generic.move import GivenClue, GivenGuess
 

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from abc import ABC
+import abc
 from enum import StrEnum
-from typing import Generic, TypeVar
 
 from pydantic import BaseModel, computed_field
 
@@ -14,10 +13,7 @@ class CardColor(StrEnum):
         raise NotImplementedError
 
 
-C = TypeVar("C", bound=CardColor)
-
-
-class Card(BaseModel, Generic[C], ABC):
+class Card[C: CardColor](BaseModel, abc.ABC):
     word: str
     color: C | None  # None for operatives.
     revealed: bool = False
@@ -44,7 +40,7 @@ class Card(BaseModel, Generic[C], ABC):
         return canonical_format(self.word)
 
 
-Cards = tuple[Card[C], ...]
+type Cards[C: CardColor] = tuple[Card[C], ...]
 
 
 def canonical_format(word: str) -> str:

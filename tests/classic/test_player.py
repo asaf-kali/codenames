@@ -1,32 +1,36 @@
 import pytest
 
-from codenames.classic.color import ClassicColor, ClassicTeam
+from codenames.classic.color import ClassicColor
+from codenames.classic.player import ClassicPlayer, ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers
-from codenames.generic.player import Player, PlayerRole
+from codenames.generic.player import PlayerRole
 from codenames.generic.runner import TeamPlayers
-from tests.utils.players.dictated import DictatedOperative, DictatedSpymaster
+from tests.classic.utils.dictated import (
+    DictatedClassicOperative,
+    DictatedClassicSpymaster,
+)
 
 
 def test_player_team_card_color():
-    p1 = Player("Player 1", team=ClassicTeam.RED)
-    p2 = Player("Player 2", team=ClassicTeam.BLUE)
+    p1 = ClassicPlayer("Player 1", team=ClassicTeam.RED)
+    p2 = ClassicPlayer("Player 2", team=ClassicTeam.BLUE)
     assert p1.team.as_card_color == ClassicColor.RED
     assert p2.team.as_card_color == ClassicColor.BLUE
 
 
 def test_play_to_string():
-    p1 = DictatedOperative(guesses=[], name="Player 1", team=ClassicTeam.RED)
-    p2 = DictatedSpymaster(clues=[], name="Player 2", team=ClassicTeam.BLUE)
+    p1 = DictatedClassicOperative(guesses=[], name="Player 1", team=ClassicTeam.RED)
+    p2 = DictatedClassicSpymaster(clues=[], name="Player 2", team=ClassicTeam.BLUE)
 
-    assert str(p1) == "Player 1 | Red Dictated Operative"
-    assert str(p2) == "Player 2 | Blue Dictated Spymaster"
+    assert str(p1) == "Player 1 | Red Dictated Classic Operative"
+    assert str(p2) == "Player 2 | Blue Dictated Classic Spymaster"
 
 
 def test_game_players_builder():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
-    red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
-    red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    blue_operative = DictatedClassicOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
+    red_spymaster = DictatedClassicSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
+    red_operative = DictatedClassicOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
     players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
 
@@ -35,29 +39,29 @@ def test_game_players_builder():
 
 
 def test_game_players_builder_raises_if_not_enough_players():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
-    red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    blue_operative = DictatedClassicOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
+    red_spymaster = DictatedClassicSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
 
     with pytest.raises(ValueError):
         ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster)
 
 
 def test_game_players_builder_raises_if_operative_missing_from_team():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
-    red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
-    blue_operative_2 = DictatedOperative(guesses=[], name="Blue Operative 2", team=ClassicTeam.BLUE)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    blue_operative = DictatedClassicOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
+    red_spymaster = DictatedClassicSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
+    blue_operative_2 = DictatedClassicOperative(guesses=[], name="Blue Operative 2", team=ClassicTeam.BLUE)
 
     with pytest.raises(ValueError):
         ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, blue_operative_2)
 
 
 def test_get_player():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
-    red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
-    red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    blue_operative = DictatedClassicOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
+    red_spymaster = DictatedClassicSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
+    red_operative = DictatedClassicOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
     players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
     blue_spymaster_2 = players.get_player(team=ClassicTeam.BLUE, role=PlayerRole.SPYMASTER)
@@ -68,10 +72,10 @@ def test_get_player():
 
 
 def test_game_players_properties():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    blue_operative = DictatedOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
-    red_spymaster = DictatedSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
-    red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    blue_operative = DictatedClassicOperative(guesses=[], name="Blue Operative", team=ClassicTeam.BLUE)
+    red_spymaster = DictatedClassicSpymaster(clues=[], name="Red Spymaster", team=ClassicTeam.RED)
+    red_operative = DictatedClassicOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
     players = ClassicGamePlayers.from_collection(blue_spymaster, blue_operative, red_spymaster, red_operative)
     assert players.spymasters == (blue_spymaster, red_spymaster)
@@ -79,8 +83,8 @@ def test_game_players_properties():
 
 
 def test_team_raises_if_spymaster_and_operative_have_different_teams():
-    blue_spymaster = DictatedSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
-    red_operative = DictatedOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
+    blue_spymaster = DictatedClassicSpymaster(clues=[], name="Blue Spymaster", team=ClassicTeam.BLUE)
+    red_operative = DictatedClassicOperative(guesses=[], name="Red Operative", team=ClassicTeam.RED)
 
     with pytest.raises(ValueError):
         TeamPlayers(spymaster=blue_spymaster, operative=red_operative)

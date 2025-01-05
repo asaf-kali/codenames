@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.classic.types import ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.move import PASS_GUESS, QUIT_GAME, Clue, Guess

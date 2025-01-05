@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC
+import abc
 
 from codenames.duet.card import DuetColor
 from codenames.generic.player import Operative, Spymaster, Team
@@ -14,5 +14,13 @@ class DuetTeam(Team):
         return DuetColor.GREEN  # Naive implementation
 
 
-class DuetPlayer(Spymaster[DuetTeam], Operative[DuetTeam], ABC):
+class DuetPlayer(Spymaster[DuetColor, DuetTeam], Operative[DuetColor, DuetTeam], abc.ABC):
+    pass
+
+
+class DuetSpymaster(Spymaster[DuetColor, DuetTeam], abc.ABC):
+    pass
+
+
+class DuetOperative(Operative[DuetColor, DuetTeam], abc.ABC):
     pass

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.generic.state import TeamScore
 
 

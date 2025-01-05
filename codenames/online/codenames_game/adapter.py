@@ -5,7 +5,7 @@ import os
 from dataclasses import dataclass
 from enum import StrEnum
 from time import sleep
-from typing import Callable, Mapping, TypeVar
+from typing import Callable, Mapping
 
 from selenium import webdriver
 from selenium.common import ElementNotInteractableException
@@ -30,7 +30,6 @@ from codenames.utils.formatting import wrap
 
 log = logging.getLogger(__name__)
 
-T = TypeVar("T")
 WEBAPP_URL = "https://codenames.game/"
 
 
@@ -314,7 +313,9 @@ class CodenamesGamePlayerAdapter:
 
     # Other #
 
-    def poll_element(
+    def poll_element[
+        T
+    ](
         self,
         element_getter: Callable[[], T],
         timeout_sec: float = 15,
@@ -329,7 +330,9 @@ class CodenamesGamePlayerAdapter:
             screenshot=screenshot,
         )
 
-    def poll_elements(
+    def poll_elements[
+        T
+    ](
         self,
         element_getters: list[Callable[[], T]],
         timeout_sec: float = 15,

@@ -1,13 +1,13 @@
-from typing import Generic, Optional
+from typing import Optional
 from uuid import uuid4
 
-from codenames.generic.card import C, Card
+from codenames.generic.card import Card, CardColor
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Spymaster, T
+from codenames.generic.player import Operative, Spymaster, Team
 from codenames.generic.state import OperativeState, SpymasterState
 
 
-class CheaterSpymaster(Spymaster, Generic[C, T]):
+class CheaterSpymaster[C: CardColor, T: Team](Spymaster[C, T]):
     def __init__(self, name: str, team: T, card_amount: int = 4):
         super().__init__(name, team)
         self.game_state: Optional[SpymasterState[C, T]] = None
@@ -19,7 +19,7 @@ class CheaterSpymaster(Spymaster, Generic[C, T]):
         return Clue(word=random_word, card_amount=self.card_amount)
 
 
-class CheaterOperative(Operative, Generic[C, T]):
+class CheaterOperative[C: CardColor, T: Team](Operative[C, T]):
     def __init__(self, name: str, team: T, spymaster: CheaterSpymaster):
         super().__init__(name, team)
         self.spymaster = spymaster
@@ -36,4 +36,6 @@ class CheaterOperative(Operative, Generic[C, T]):
         spymaster_state = self.spymaster.game_state
         if spymaster_state is None:
             raise ValueError("Spymaster has not yet picked a clue")
-        self.team_cards = list(spymaster_state.board.cards_for_color(card_color=self.team.as_card_color))
+        card_color = self.team.as_card_color
+        cards_for_color = spymaster_state.board.cards_for_color(card_color=card_color)
+        self.team_cards = list(cards_for_color)

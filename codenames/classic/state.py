@@ -4,7 +4,8 @@ from typing import Any, Self
 from pydantic import field_validator
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicColor, ClassicTeam
+from codenames.classic.color import ClassicColor
+from codenames.classic.player import ClassicTeam
 from codenames.classic.score import Score
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
@@ -56,11 +57,11 @@ class ClassicPlayerState(PlayerState[ClassicColor, ClassicTeam]):
         return guesses
 
 
-class ClassicSpymasterState(SpymasterState, ClassicPlayerState):
+class ClassicSpymasterState(ClassicPlayerState, SpymasterState[ClassicColor, ClassicTeam]):
     pass
 
 
-class ClassicOperativeState(OperativeState, ClassicPlayerState):
+class ClassicOperativeState(ClassicPlayerState, OperativeState[ClassicColor, ClassicTeam]):
     left_guesses: int
 
 

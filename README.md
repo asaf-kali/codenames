@@ -29,7 +29,7 @@ import logging
 import sys
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Spymaster
@@ -61,13 +61,14 @@ class CLIOperative(Operative):
         card_index = game_state.board.find_card_index(word=card_word)
         return Guess(card_index=card_index)
 
+
 ############
 # Run Game #
 ############
 
 def run_classic_cli_game():
     # Init players
-    blue_spymaster = CLISpymaster(name="Yoda",team= ClassicTeam.BLUE)
+    blue_spymaster = CLISpymaster(name="Yoda", team=ClassicTeam.BLUE)
     blue_operative = CLIOperative(name="Luke", team=ClassicTeam.BLUE)
     red_spymaster = CLISpymaster(name="Einstein", team=ClassicTeam.RED)
     red_operative = CLIOperative(name="Newton", team=ClassicTeam.RED)

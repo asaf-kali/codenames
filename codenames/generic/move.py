@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from abc import ABC
-from typing import Generic
+import abc
 
 from pydantic import BaseModel
 
 from codenames.generic.board import WordGroup
-from codenames.generic.card import C, Card, canonical_format
-from codenames.generic.player import T
+from codenames.generic.card import Card, CardColor, canonical_format
+from codenames.generic.player import Team
 from codenames.utils.formatting import wrap
 
 PASS_GUESS = -1
@@ -26,7 +25,7 @@ class Clue(BaseModel):
         return result
 
 
-class GivenClue(BaseModel, Generic[T], ABC):
+class GivenClue[T: Team](BaseModel, abc.ABC):
     word: str
     card_amount: int
     team: T
@@ -50,9 +49,9 @@ class Guess(BaseModel):
     card_index: int
 
 
-class GivenGuess(BaseModel, Generic[C, T], ABC):
+class GivenGuess[C: CardColor, T: Team](BaseModel, abc.ABC):
     guessed_card: Card[C]
-    for_clue: GivenClue
+    for_clue: GivenClue[T]
 
     def __str__(self) -> str:
         result = "correct!" if self.correct else "wrong!"

@@ -71,11 +71,11 @@ class DuetPlayerState(PlayerState[DuetColor, DuetTeam]):
         return guesses
 
 
-class DuetSpymasterState(DuetPlayerState, SpymasterState):
+class DuetSpymasterState(DuetPlayerState, SpymasterState[DuetColor, DuetTeam]):
     dual_state: DuetOperativeState | None = None
 
 
-class DuetOperativeState(DuetPlayerState, OperativeState):
+class DuetOperativeState(DuetPlayerState, OperativeState[DuetColor, DuetTeam]):
     dual_state: DuetSpymasterState | None = None
 
 

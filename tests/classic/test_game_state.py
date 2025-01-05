@@ -3,7 +3,8 @@ import json
 import pytest
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicColor, ClassicTeam
+from codenames.classic.color import ClassicColor
+from codenames.classic.player import ClassicTeam
 from codenames.classic.state import ClassicGameState, ClassicPlayerState
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason

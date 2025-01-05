@@ -2,7 +2,7 @@ from typing import Iterable, Optional
 from unittest.mock import Mock
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Guess
 from codenames.generic.runner import (
@@ -10,11 +10,11 @@ from codenames.generic.runner import (
     GuessGivenSubscriber,
     TeamPlayers,
 )
-from tests.utils.players.dictated import (
-    DictatedOperative,
-    DictatedSpymaster,
-    DictatedTurn,
+from tests.classic.utils.dictated import (
+    DictatedClassicOperative,
+    DictatedClassicSpymaster,
 )
+from tests.utils.players.dictated import DictatedTurn
 
 
 def run_game(
@@ -54,6 +54,6 @@ def build_players(all_turns: Iterable[DictatedTurn], first_team: ClassicTeam = C
 def build_team(team: ClassicTeam, turns: Iterable[DictatedTurn]) -> TeamPlayers:
     clues = [turn.clue for turn in turns]
     guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    spymaster = DictatedSpymaster(clues=clues, team=team)
-    operative = DictatedOperative(guesses=guesses, team=team)
+    spymaster = DictatedClassicSpymaster(clues=clues, team=team)
+    operative = DictatedClassicOperative(guesses=guesses, team=team)
     return TeamPlayers(spymaster=spymaster, operative=operative)

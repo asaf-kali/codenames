@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 from threading import Semaphore, Thread
-from typing import ContextManager, Iterable, TypeVar
+from typing import ContextManager, Iterable
 
-from codenames.classic.color import ClassicTeam
+from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Player, PlayerRole, Spymaster
@@ -17,10 +17,8 @@ from codenames.online.codenames_game.agent import Agent, OperativeAgent, Spymast
 
 log = logging.getLogger(__name__)
 
-T = TypeVar("T", bound=Player)
 
-
-def player_or_agent(player: T | None, role: PlayerRole, team: ClassicTeam) -> T:
+def player_or_agent[T: Player](player: T | None, role: PlayerRole, team: ClassicTeam) -> T:
     if player is not None:
         return player
     player_class = SpymasterAgent if role == PlayerRole.SPYMASTER else OperativeAgent

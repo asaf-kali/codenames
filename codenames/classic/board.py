@@ -4,7 +4,8 @@ import logging
 import random
 from typing import Self
 
-from codenames.classic.color import ClassicColor, ClassicTeam
+from codenames.classic.color import ClassicColor
+from codenames.classic.player import ClassicTeam
 from codenames.classic.types import ClassicCard, ClassicCards
 from codenames.generic.board import Board, Vocabulary
 from codenames.utils.builder import extract_random_subset
