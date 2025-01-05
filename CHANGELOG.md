@@ -2,7 +2,18 @@
 
 
 
+## v5.4.1 (2025-01-05)
+
+### 🌴
+
+* 🌴 Minor typing fix ([`822ce02`](https://github.com/asaf-kali/codenames/commit/822ce0207320374e9043a0f10fe00c509213f097))
+
+
 ## v5.4.0 (2025-01-05)
+
+### Other
+
+* 🤖 Release [5.4.0] [skip ci] ([`d12c7e6`](https://github.com/asaf-kali/codenames/commit/d12c7e63dac99f0a707ec9c958367ecebded1040))
 
 ### 🔥
 
