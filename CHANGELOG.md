@@ -2,7 +2,18 @@
 
 
 
+## v5.4.0 (2025-01-05)
+
+### 🔥
+
+* 🔥 Generics and typing fixes, dependencies upgrade ([`e1aafe5`](https://github.com/asaf-kali/codenames/commit/e1aafe5178481cbe4f83bfd1246b7fbe7270df31))
+
+
 ## v5.3.0 (2025-01-04)
+
+### Other
+
+* 🤖 Release [5.3.0] [skip ci] ([`da319a7`](https://github.com/asaf-kali/codenames/commit/da319a74871a86ef37aaa90c613e4336fcce55ee))
 
 ### 🐲
 
