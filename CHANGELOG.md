@@ -2,7 +2,18 @@
 
 
 
+## v5.5.0 (2025-01-06)
+
+### 🎡
+
+* 🎡 Even more typing fixes ([`9cbb7d9`](https://github.com/asaf-kali/codenames/commit/9cbb7d977a997c57cdfbf1d030b36cbda828db0e))
+
+
 ## v5.4.2 (2025-01-06)
+
+### Other
+
+* 🤖 Release [5.4.2] [skip ci] ([`d2dceb5`](https://github.com/asaf-kali/codenames/commit/d2dceb58c47c340b1e58e83c855221800a8b0e02))
 
 ### 🏖️
 
