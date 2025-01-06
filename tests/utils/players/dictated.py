@@ -3,8 +3,9 @@ from typing import Iterable, NamedTuple
 from codenames.generic.card import CardColor
 from codenames.generic.exceptions import QuitGame
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Player, Spymaster, Team
+from codenames.generic.player import Operative, Player, Spymaster
 from codenames.generic.state import OperativeState, SpymasterState
+from codenames.generic.team import Team
 
 
 class UnexpectedEndOfInput(Exception):

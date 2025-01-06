@@ -7,8 +7,13 @@ from codenames.duet.team import DuetTeam
 from codenames.generic.move import Clue, Guess
 from tests.utils.players.dictated import DictatedOperative, DictatedSpymaster
 
-DictatedDuetSpymaster = DictatedSpymaster[DuetColor, DuetTeam, DuetSpymasterState]
-DictatedDuetOperative = DictatedOperative[DuetColor, DuetTeam, DuetOperativeState]
+
+class DuetDictatedSpymaster(DictatedSpymaster[DuetColor, DuetTeam, DuetSpymasterState]):
+    pass
+
+
+class DuetDictatedOperative(DictatedOperative[DuetColor, DuetTeam, DuetOperativeState]):
+    pass
 
 
 class DictatedDuetPlayer(DuetPlayer):
@@ -20,12 +25,12 @@ class DictatedDuetPlayer(DuetPlayer):
         auto_quit: bool = False,
     ):
         super().__init__(name=f"Duet player {side}", team=DuetTeam.MAIN)
-        self._spymaster = DictatedDuetSpymaster(
+        self._spymaster = DuetDictatedSpymaster(
             clues=clues,
             team=DuetTeam.MAIN,
             auto_quit=auto_quit,
         )
-        self._operative = DictatedDuetOperative(
+        self._operative = DuetDictatedOperative(
             guesses=guesses,
             team=DuetTeam.MAIN,
             auto_quit=auto_quit,

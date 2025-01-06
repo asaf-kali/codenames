@@ -3,8 +3,9 @@ from uuid import uuid4
 
 from codenames.generic.card import Card, CardColor
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Spymaster, Team
+from codenames.generic.player import Operative, Spymaster
 from codenames.generic.state import OperativeState, SpymasterState
+from codenames.generic.team import Team
 
 
 class CheaterSpymaster[C: CardColor, T: Team, S: SpymasterState](Spymaster[C, T, S]):

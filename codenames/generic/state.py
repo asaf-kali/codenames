@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from codenames.generic.board import Board, WordGroup
 from codenames.generic.card import CardColor
 from codenames.generic.move import Clue, GivenClue, GivenGuess
-from codenames.generic.player import Team
+from codenames.generic.team import Team
 
 log = logging.getLogger(__name__)
 

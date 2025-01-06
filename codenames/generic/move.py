@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from codenames.generic.board import WordGroup
 from codenames.generic.card import Card, CardColor, canonical_format
-from codenames.generic.player import Team
+from codenames.generic.team import Team
 from codenames.utils.formatting import wrap
 
 PASS_GUESS = -1

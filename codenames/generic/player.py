@@ -5,18 +5,13 @@ from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from codenames.generic.card import CardColor
+from codenames.generic.state import OperativeState, SpymasterState
+from codenames.generic.team import Team
 from codenames.utils.formatting import camel_case_split
 
 if TYPE_CHECKING:
     from codenames.generic.board import Board
     from codenames.generic.move import Clue, GivenClue, GivenGuess, Guess
-    from codenames.generic.state import OperativeState, SpymasterState
-
-
-class Team(StrEnum):
-    @property
-    def as_card_color(self) -> str:
-        raise NotImplementedError
 
 
 class PlayerRole(StrEnum):
@@ -57,13 +52,13 @@ class Player[C: CardColor, T: Team]:
         pass
 
 
-class Spymaster[C: CardColor, T: Team, S: "SpymasterState"](Player[C, T], abc.ABC):
+class Spymaster[C: CardColor, T: Team, S: SpymasterState](Player[C, T], abc.ABC):
     @abc.abstractmethod
     def give_clue(self, game_state: S) -> Clue:
         raise NotImplementedError
 
 
-class Operative[C: CardColor, T: Team, S: "OperativeState"](Player[C, T], abc.ABC):
+class Operative[C: CardColor, T: Team, S: OperativeState](Player[C, T], abc.ABC):
     @abc.abstractmethod
     def guess(self, game_state: S) -> Guess:
         raise NotImplementedError()

@@ -12,9 +12,9 @@ from codenames.generic.runner import (
     TeamPlayers,
 )
 from tests.duet.utils.dictated import (
-    DictatedDuetOperative,
     DictatedDuetPlayer,
-    DictatedDuetSpymaster,
+    DuetDictatedOperative,
+    DuetDictatedSpymaster,
 )
 from tests.utils.players.dictated import DictatedTurn
 
@@ -71,6 +71,6 @@ def build_players(turns_by_side: TurnsBySide) -> DuetGamePlayers:
 def build_side(team: DuetTeam, turns: Iterable[DictatedTurn]) -> TeamPlayers:
     clues = [turn.clue for turn in turns]
     guesses = [Guess(card_index=index) for turn in turns for index in turn.guesses]
-    spymaster = DictatedDuetSpymaster(clues=clues, team=team)
-    operative = DictatedDuetOperative(guesses=guesses, team=team)
+    spymaster = DuetDictatedSpymaster(clues=clues, team=team)
+    operative = DuetDictatedOperative(guesses=guesses, team=team)
     return TeamPlayers(spymaster=spymaster, operative=operative)

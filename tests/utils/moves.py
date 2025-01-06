@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from codenames.generic.move import GivenClue, GivenGuess
-from codenames.generic.player import PlayerRole, Team
+from codenames.generic.player import PlayerRole
+from codenames.generic.team import Team
 
 
 @dataclass

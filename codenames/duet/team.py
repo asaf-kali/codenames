@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from codenames.duet.card import DuetColor
-from codenames.generic.player import Team
+from codenames.generic.team import Team
 
 
 class DuetTeam(Team):
