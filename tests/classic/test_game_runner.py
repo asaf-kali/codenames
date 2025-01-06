@@ -2,15 +2,15 @@ from unittest.mock import MagicMock
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor
-from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGameRunner
 from codenames.classic.state import ClassicOperativeState
+from codenames.classic.team import ClassicTeam
 from codenames.classic.types import ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.move import Clue
 from tests.classic.utils.dictated import (
-    DictatedClassicOperative,
-    DictatedClassicSpymaster,
+    ClassicDictatedOperative,
+    ClassicDictatedSpymaster,
 )
 from tests.classic.utils.runner import build_players, run_game
 from tests.utils.hooks import hook_method
@@ -76,7 +76,7 @@ def test_game_runner_spymaster_state(board_10: ClassicBoard):
         DictatedTurn(clue=Clue(word="B", card_amount=1), guesses=[4, 9]),
     ]
 
-    with hook_method(DictatedClassicSpymaster, "give_clue") as give_clue_mock:
+    with hook_method(ClassicDictatedSpymaster, "give_clue") as give_clue_mock:
         run_game(board=board_10, all_turns=all_turns)
 
     calls = give_clue_mock.hook.calls
@@ -108,7 +108,7 @@ def test_game_runner_operative_state(board_10: ClassicBoard):
         DictatedTurn(clue=Clue(word="A", card_amount=2), guesses=[0, 1, 2]),
         DictatedTurn(clue=Clue(word="B", card_amount=1), guesses=[4, 9]),
     ]
-    with hook_method(DictatedClassicOperative, "guess") as pick_guess_mock:
+    with hook_method(ClassicDictatedOperative, "guess") as pick_guess_mock:
         run_game(board=board_10, all_turns=all_turns)
 
     calls = pick_guess_mock.hook.calls

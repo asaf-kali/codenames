@@ -3,12 +3,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from codenames.classic.player import (
-    ClassicOperative,
-    ClassicPlayer,
-    ClassicSpymaster,
-    ClassicTeam,
-)
+from codenames.classic.player import ClassicOperative, ClassicPlayer, ClassicSpymaster
+from codenames.classic.team import ClassicTeam
 from codenames.generic.move import Clue, Guess
 from codenames.generic.state import OperativeState, SpymasterState
 

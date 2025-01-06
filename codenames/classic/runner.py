@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from typing import Collection, Iterator
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.player import ClassicTeam
 from codenames.classic.state import ClassicGameState
+from codenames.classic.team import ClassicTeam
 from codenames.classic.winner import Winner
 from codenames.generic.exceptions import InvalidGuess
 from codenames.generic.move import GivenGuess

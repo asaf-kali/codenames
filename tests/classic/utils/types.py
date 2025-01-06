@@ -1,6 +1,7 @@
 from codenames.classic.color import ClassicColor
-from codenames.classic.player import ClassicTeam
+from codenames.classic.state import ClassicOperativeState, ClassicSpymasterState
+from codenames.classic.team import ClassicTeam
 from tests.utils.players.cheaters import CheaterOperative, CheaterSpymaster
 
-ClassicCheaterSpymaster = CheaterSpymaster[ClassicColor, ClassicTeam]
-ClassicCheaterOperator = CheaterOperative[ClassicColor, ClassicTeam]
+ClassicCheaterSpymaster = CheaterSpymaster[ClassicColor, ClassicTeam, ClassicSpymasterState]
+ClassicCheaterOperator = CheaterOperative[ClassicColor, ClassicTeam, ClassicOperativeState]

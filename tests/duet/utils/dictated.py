@@ -1,17 +1,17 @@
 from typing import Iterable
 
 from codenames.duet.card import DuetColor
-from codenames.duet.player import DuetOperative, DuetPlayer, DuetSpymaster, DuetTeam
-from codenames.duet.state import DuetSide
+from codenames.duet.player import DuetPlayer
+from codenames.duet.state import DuetOperativeState, DuetSide, DuetSpymasterState
+from codenames.duet.team import DuetTeam
 from codenames.generic.move import Clue, Guess
-from codenames.generic.state import OperativeState, SpymasterState
 from tests.utils.players.dictated import DictatedOperative, DictatedSpymaster
 
-DictatedDuetSpymaster = DictatedSpymaster[DuetColor, DuetTeam]
-DictatedDuetOperative = DictatedOperative[DuetColor, DuetTeam]
+DictatedDuetSpymaster = DictatedSpymaster[DuetColor, DuetTeam, DuetSpymasterState]
+DictatedDuetOperative = DictatedOperative[DuetColor, DuetTeam, DuetOperativeState]
 
 
-class DictatedDuetPlayer(DuetPlayer, DuetSpymaster, DuetOperative):
+class DictatedDuetPlayer(DuetPlayer):
     def __init__(
         self,
         clues: Iterable[Clue],
@@ -31,8 +31,8 @@ class DictatedDuetPlayer(DuetPlayer, DuetSpymaster, DuetOperative):
             auto_quit=auto_quit,
         )
 
-    def give_clue(self, game_state: SpymasterState) -> Clue:
+    def give_clue(self, game_state: DuetSpymasterState) -> Clue:
         return self._spymaster.give_clue(game_state=game_state)
 
-    def guess(self, game_state: OperativeState) -> Guess:
+    def guess(self, game_state: DuetOperativeState) -> Guess:
         return self._operative.guess(game_state=game_state)

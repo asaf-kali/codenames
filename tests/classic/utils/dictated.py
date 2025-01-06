@@ -1,11 +1,12 @@
 from codenames.classic.color import ClassicColor
-from codenames.classic.player import ClassicTeam
+from codenames.classic.state import ClassicOperativeState, ClassicSpymasterState
+from codenames.classic.team import ClassicTeam
 from tests.utils.players.dictated import DictatedOperative, DictatedSpymaster
 
 
-class DictatedClassicSpymaster(DictatedSpymaster[ClassicColor, ClassicTeam]):
+class ClassicDictatedSpymaster(DictatedSpymaster[ClassicColor, ClassicTeam, ClassicSpymasterState]):
     pass
 
 
-class DictatedClassicOperative(DictatedOperative[ClassicColor, ClassicTeam]):
+class ClassicDictatedOperative(DictatedOperative[ClassicColor, ClassicTeam, ClassicOperativeState]):
     pass

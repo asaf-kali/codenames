@@ -1,5 +1,5 @@
 from codenames.duet.card import DuetColor
-from codenames.duet.player import DuetTeam
+from codenames.duet.team import DuetTeam
 from codenames.generic.card import Card
 from codenames.generic.move import GivenClue, GivenGuess
 

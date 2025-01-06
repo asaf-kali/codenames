@@ -1,7 +1,7 @@
 import pytest
 
-from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers
+from codenames.classic.team import ClassicTeam
 from codenames.classic.winner import WinningReason
 from codenames.online.codenames_game.runner import CodenamesGameRunner
 from codenames.online.codenames_game.screenshot import reset_screenshot_run

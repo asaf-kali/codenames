@@ -12,7 +12,7 @@ class UnexpectedEndOfInput(Exception):
         self.player = player
 
 
-class DictatedSpymaster[C: CardColor, T: Team](Spymaster[C, T]):
+class DictatedSpymaster[C: CardColor, T: Team, S: SpymasterState](Spymaster[C, T, S]):
     def __init__(
         self,
         clues: Iterable[Clue],
@@ -35,7 +35,7 @@ class DictatedSpymaster[C: CardColor, T: Team](Spymaster[C, T]):
         return clue
 
 
-class DictatedOperative[C: CardColor, T: Team](Operative[C, T]):
+class DictatedOperative[C: CardColor, T: Team, S: OperativeState](Operative[C, T, S]):
     def __init__(
         self,
         guesses: Iterable[Guess],

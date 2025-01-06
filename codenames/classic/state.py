@@ -5,8 +5,8 @@ from pydantic import field_validator
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor
-from codenames.classic.player import ClassicTeam
 from codenames.classic.score import Score
+from codenames.classic.team import ClassicTeam
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.card import canonical_format

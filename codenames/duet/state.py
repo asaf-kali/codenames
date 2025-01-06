@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.card import DuetColor
-from codenames.duet.player import DuetTeam
 from codenames.duet.score import (
     ASSASSIN_HIT,
     GAME_QUIT,
@@ -18,6 +17,7 @@ from codenames.duet.score import (
     GameResult,
     Score,
 )
+from codenames.duet.team import DuetTeam
 from codenames.duet.types import DuetCard, DuetGivenClue, DuetGivenGuess
 from codenames.generic.board import WordGroup
 from codenames.generic.card import canonical_format

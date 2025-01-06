@@ -4,8 +4,8 @@ import pytest
 
 from codenames.classic.board import ClassicBoard
 from codenames.classic.color import ClassicColor
-from codenames.classic.player import ClassicTeam
 from codenames.classic.state import ClassicGameState, ClassicPlayerState
+from codenames.classic.team import ClassicTeam
 from codenames.classic.types import ClassicCard, ClassicGivenClue, ClassicGivenGuess
 from codenames.classic.winner import Winner, WinningReason
 from codenames.generic.exceptions import InvalidGuess, InvalidTurn

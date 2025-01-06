@@ -29,7 +29,7 @@ import logging
 import sys
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.player import ClassicTeam
+from codenames.classic.team import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Spymaster

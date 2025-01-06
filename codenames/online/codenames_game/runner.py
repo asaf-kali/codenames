@@ -4,8 +4,8 @@ import logging
 from threading import Semaphore, Thread
 from typing import ContextManager, Iterable
 
-from codenames.classic.player import ClassicTeam
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
+from codenames.classic.team import ClassicTeam
 from codenames.generic.move import Clue, Guess
 from codenames.generic.player import Operative, Player, PlayerRole, Spymaster
 from codenames.online.codenames_game.adapter import (

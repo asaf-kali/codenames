@@ -2,9 +2,9 @@ from typing import Iterable, Optional
 from unittest.mock import Mock
 
 from codenames.duet.board import DuetBoard
-from codenames.duet.player import DuetTeam
 from codenames.duet.runner import DuetGamePlayers, DuetGameRunner
 from codenames.duet.state import DuetGameState, DuetSide
+from codenames.duet.team import DuetTeam
 from codenames.generic.move import Guess
 from codenames.generic.runner import (
     ClueGivenSubscriber,

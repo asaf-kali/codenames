@@ -4,7 +4,6 @@ from unittest import mock
 import pytest
 
 from codenames.duet.board import DuetBoard
-from codenames.duet.player import DuetTeam
 from codenames.duet.runner import DuetGameRunner
 from codenames.duet.score import (
     MISTAKE_LIMIT_REACHED,
@@ -17,6 +16,7 @@ from codenames.duet.state import (
     DuetSide,
     DuetSpymasterState,
 )
+from codenames.duet.team import DuetTeam
 from codenames.duet.types import DuetGivenClue, DuetGivenGuess
 from codenames.generic.move import PASS_GUESS, Clue
 from tests.duet.utils.runner import build_players, run_duet_game
