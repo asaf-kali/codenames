@@ -29,23 +29,20 @@ import logging
 import sys
 
 from codenames.classic.board import ClassicBoard
-from codenames.classic.team import ClassicTeam
+from codenames.classic.player import ClassicOperative, ClassicSpymaster
 from codenames.classic.runner import ClassicGamePlayers, ClassicGameRunner
+from codenames.classic.state import ClassicOperativeState, ClassicSpymasterState
+from codenames.classic.team import ClassicTeam
 from codenames.generic.move import Clue, Guess
-from codenames.generic.player import Operative, Spymaster
-from codenames.generic.state import OperativeState, SpymasterState
 from codenames.utils.vocabulary.languages import get_vocabulary
-
-logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
-
 
 ####################################
 # Naive CLI players implementation #
 ####################################
 
 
-class CLISpymaster(Spymaster):
-    def give_clue(self, game_state: SpymasterState) -> Clue:
+class CLISpymaster(ClassicSpymaster):
+    def give_clue(self, game_state: ClassicSpymasterState) -> Clue:
         print("\nGive a hint. Board: \n" + game_state.board.printable_string)
         print(f"Revealed cards: {list(game_state.board.revealed_card_indexes)}")
         hint_word = input("Enter hint word: ")
@@ -53,8 +50,8 @@ class CLISpymaster(Spymaster):
         return Clue(word=hint_word, card_amount=card_amount)
 
 
-class CLIOperative(Operative):
-    def guess(self, game_state: OperativeState) -> Guess:
+class CLIOperative(ClassicOperative):
+    def guess(self, game_state: ClassicOperativeState) -> Guess:
         print(f"\nGuess a card. Given clue: {game_state.current_clue}. Current board state: ")
         print(game_state.board.printable_string)
         card_word = input("Enter card word: ")
@@ -83,6 +80,7 @@ def run_classic_cli_game():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
     run_classic_cli_game()
 ```
 
