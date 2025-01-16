@@ -8,6 +8,7 @@
 [![Imports: isort](https://img.shields.io/badge/imports-isort-%231674b1)](https://pycqa.github.io/isort/)
 [![Type checked: mypy](https://img.shields.io/badge/type%20check-mypy-22aa11)](http://mypy-lang.org/)
 [![Linting: pylint](https://img.shields.io/badge/linting-pylint-22aa11)](https://github.com/pylint-dev/pylint)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/asaf-kali/codenames)
 
 Code infrastructure for the Codenames board game. \
 Designed to serve as a base for implementing players (agents) with different strategies and algorithms. \
