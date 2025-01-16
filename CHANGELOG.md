@@ -2,7 +2,18 @@
 
 
 
+## v5.5.2 (2025-01-16)
+
+### 📜
+
+* 📜 Add coderabbit badge (#16) ([`8bdf87b`](https://github.com/asaf-kali/codenames/commit/8bdf87b38112dde3afff9412b65686a0e21d8fd7))
+
+
 ## v5.5.1 (2025-01-10)
+
+### Other
+
+* 🤖 Release [5.5.1] [skip ci] ([`72c3b73`](https://github.com/asaf-kali/codenames/commit/72c3b73f334b4af4f832ad6598aa12c0fc5a1cf2))
 
 ### 📜
 
