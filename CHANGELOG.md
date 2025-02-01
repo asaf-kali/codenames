@@ -2,7 +2,18 @@
 
 
 
+## v5.5.4 (2025-02-01)
+
+### 🐛
+
+* 🐛 Mini and Duet state: fix invalid validation ([`b8e159f`](https://github.com/asaf-kali/codenames/commit/b8e159fdd3e42d633be735f79f14408ab67356a7))
+
+
 ## v5.5.3 (2025-02-01)
+
+### Other
+
+* 🤖 Release [5.5.3] [skip ci] ([`8ad239a`](https://github.com/asaf-kali/codenames/commit/8ad239a6a69bc32edea94f43dce6c548c8c04911))
 
 ### 🏖️
 
