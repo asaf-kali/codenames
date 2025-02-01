@@ -4,7 +4,7 @@ from typing import Self
 from pydantic import model_validator
 
 from codenames.duet.score import MISTAKE_LIMIT_REACHED, TIMER_TOKENS_DEPLETED
-from codenames.duet.state import DuetOperativeState, DuetSideState, DuetSpymasterState
+from codenames.duet.state import DuetSideState
 from codenames.duet.types import DuetGivenGuess
 from codenames.generic.move import Guess
 from codenames.generic.player import PlayerRole
@@ -15,14 +15,6 @@ log = logging.getLogger(__name__)
 class MiniGameState(DuetSideState):
     timer_tokens: int = 5
     allowed_mistakes: int = 4
-
-    @property
-    def spymaster_state(self) -> DuetSpymasterState:
-        return self.get_spymaster_state(None)
-
-    @property
-    def operative_state(self) -> DuetOperativeState:
-        return self.get_operative_state(None)
 
     @property
     def is_sudden_death(self) -> bool:

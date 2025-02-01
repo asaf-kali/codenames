@@ -4,7 +4,7 @@ import logging
 from enum import StrEnum
 from typing import Any, Self
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.card import DuetColor
@@ -41,7 +41,7 @@ class DuetPlayerState(PlayerState[DuetColor, DuetTeam]):
     score: Score
     current_player_role: PlayerRole = PlayerRole.SPYMASTER
     current_team: DuetTeam = DuetTeam.MAIN
-    dual_given_words: list[str] = Field(default_factory=list)
+    dual_given_words: list[str] = []
 
     @property
     def illegal_clue_words(self) -> WordGroup:
@@ -94,6 +94,14 @@ class DuetSideState(DuetSpymasterState):
     @property
     def is_game_over(self) -> bool:
         return self.game_result is not None
+
+    @property
+    def spymaster_state(self) -> DuetSpymasterState:
+        return self.get_spymaster_state(None)
+
+    @property
+    def operative_state(self) -> DuetOperativeState:
+        return self.get_operative_state(None)
 
     def process_clue(self, clue: Clue) -> DuetGivenClue | None:
         if self.is_game_over:
@@ -165,7 +173,7 @@ class DuetSideState(DuetSpymasterState):
     def get_operative_state(self, dual_state: DuetSideState | None) -> DuetOperativeState:
         dual_player_state = dual_state.get_spymaster_state(None) if dual_state else None
         return DuetOperativeState(
-            board=DuetBoard.cast_board(self.board.censored),
+            board=DuetBoard.cast(self.board.censored),
             given_clues=self.given_clues,
             given_guesses=self.given_guesses,
             score=self.score,
