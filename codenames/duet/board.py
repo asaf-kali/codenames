@@ -14,6 +14,10 @@ log = logging.getLogger(__name__)
 
 class DuetBoard(Board[DuetColor]):
 
+    @classmethod
+    def cast(cls, board: Board[DuetColor]) -> Self:
+        return cls(language=board.language, cards=board.cards)
+
     @property
     def is_clean(self) -> bool:
         base = super().is_clean
@@ -34,10 +38,6 @@ class DuetBoard(Board[DuetColor]):
     @property
     def irrelevant_cards(self) -> DuetCards:
         return self.cards_for_color(DuetColor.IRRELEVANT)
-
-    @classmethod
-    def cast_board(cls, board: Board[DuetColor]) -> Self:
-        return cls(language=board.language, cards=board.cards)
 
     @classmethod
     def from_vocabulary(

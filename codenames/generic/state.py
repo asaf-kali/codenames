@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Self
 
 from pydantic import BaseModel
 
@@ -57,9 +58,9 @@ class TeamScore(BaseModel):
     total: int
     revealed: int
 
-    @staticmethod
-    def new(total: int) -> TeamScore:
-        return TeamScore(total=total, revealed=0)
+    @classmethod
+    def new(cls, total: int) -> Self:
+        return cls(total=total, revealed=0)
 
     @property
     def unrevealed(self) -> int:
