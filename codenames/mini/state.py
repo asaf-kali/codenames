@@ -1,7 +1,4 @@
 import logging
-from typing import Self
-
-from pydantic import model_validator
 
 from codenames.duet.score import MISTAKE_LIMIT_REACHED, TIMER_TOKENS_DEPLETED
 from codenames.duet.state import DuetSideState
@@ -19,12 +16,6 @@ class MiniGameState(DuetSideState):
     @property
     def is_sudden_death(self) -> bool:
         return self.timer_tokens == 0
-
-    @model_validator(mode="after")
-    def validate_allowed_mistakes(self) -> Self:
-        if self.allowed_mistakes > self.timer_tokens:
-            raise ValueError("Allowed mistakes cannot be greater than timer tokens.")
-        return self
 
     def process_guess(self, guess: Guess) -> DuetGivenGuess | None:
         given_guess = super().process_guess(guess)

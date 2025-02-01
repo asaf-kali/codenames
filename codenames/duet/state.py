@@ -4,7 +4,7 @@ import logging
 from enum import StrEnum
 from typing import Any, Self
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.card import DuetColor
@@ -278,12 +278,6 @@ class DuetGameState(BaseModel):
     @property
     def current_dual_state(self) -> DuetSideState:
         return self.side_b if self.current_playing_side == DuetSide.SIDE_A else self.side_a
-
-    @model_validator(mode="after")
-    def validate_allowed_mistakes(self) -> Self:
-        if self.allowed_mistakes > self.timer_tokens:
-            raise ValueError("Allowed mistakes cannot be greater than timer tokens.")
-        return self
 
     def process_clue(self, clue: Clue) -> DuetGivenClue | None:
         side_state = self.current_side_state
