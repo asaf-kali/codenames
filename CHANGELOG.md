@@ -2,7 +2,18 @@
 
 
 
+## v5.5.3 (2025-02-01)
+
+### 🏖️
+
+* 🏖️ Abstraction fixes (#17) ([`3307a36`](https://github.com/asaf-kali/codenames/commit/3307a3639b1a6b9b7f4f9d119e6b4edd902b1cc6))
+
+
 ## v5.5.2 (2025-01-16)
+
+### Other
+
+* 🤖 Release [5.5.2] [skip ci] ([`7dc0d56`](https://github.com/asaf-kali/codenames/commit/7dc0d566be30c9412df69ebdd9f328f90dc223dc))
 
 ### 📜
 
