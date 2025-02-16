@@ -5,11 +5,7 @@ import pytest
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.runner import DuetGameRunner
-from codenames.duet.score import (
-    MISTAKE_LIMIT_REACHED,
-    TARGET_REACHED,
-    TIMER_TOKENS_DEPLETED,
-)
+from codenames.duet.score import GameResult
 from codenames.duet.state import (
     DuetGameState,
     DuetOperativeState,
@@ -102,7 +98,7 @@ def test_tokens_run_out_game(board_10_state: DuetGameState):
     runner = DuetGameRunner(players=players, state=board_10_state)
     runner.run_game()
 
-    assert runner.state.game_result == TIMER_TOKENS_DEPLETED
+    assert runner.state.game_result == GameResult.TIMER_TOKENS_DEPLETED
 
 
 def test_mistakes_run_out_game(board_10_state: DuetGameState):
@@ -121,7 +117,7 @@ def test_mistakes_run_out_game(board_10_state: DuetGameState):
     runner = DuetGameRunner(players=players, state=board_10_state)
     runner.run_game()
 
-    assert runner.state.game_result == MISTAKE_LIMIT_REACHED
+    assert runner.state.game_result == GameResult.MISTAKE_LIMIT_REACHED
 
 
 def test_sudden_death(board_10_state: DuetGameState):
@@ -144,6 +140,6 @@ def test_sudden_death(board_10_state: DuetGameState):
     runner = DuetGameRunner(players=players, state=board_10_state)
     runner.run_game()
 
-    assert runner.state.game_result == TARGET_REACHED
+    assert runner.state.game_result == GameResult.TARGET_REACHED
     assert runner.state.timer_tokens == 0
     assert runner.state.is_sudden_death

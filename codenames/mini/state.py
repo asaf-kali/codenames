@@ -1,6 +1,6 @@
 import logging
 
-from codenames.duet.score import MISTAKE_LIMIT_REACHED, TIMER_TOKENS_DEPLETED
+from codenames.duet.score import GameResult
 from codenames.duet.state import DuetSideState
 from codenames.duet.types import DuetGivenGuess
 from codenames.generic.move import Guess
@@ -35,12 +35,12 @@ class MiniGameState(DuetSideState):
             log.info("Timer tokens depleted! Entering sudden death")
             self.current_player_role = PlayerRole.OPERATIVE
         elif self.timer_tokens < 0:
-            self.game_result = TIMER_TOKENS_DEPLETED
+            self.game_result = GameResult.TIMER_TOKENS_DEPLETED
             log.info("Timer tokens depleted (after sudden death)!")
         if not mistake:
             return
         self.allowed_mistakes -= 1
         if self.allowed_mistakes == 0:
             log.info("Mistake limit reached!")
-            self.game_result = MISTAKE_LIMIT_REACHED
+            self.game_result = GameResult.MISTAKE_LIMIT_REACHED
             return

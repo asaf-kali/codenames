@@ -3,7 +3,7 @@ import json
 import pytest
 
 from codenames.duet.board import DuetBoard
-from codenames.duet.score import TARGET_REACHED
+from codenames.duet.score import GameResult
 from codenames.duet.state import DuetGameState, DuetSide
 from codenames.generic.exceptions import InvalidGuess
 from codenames.generic.move import PASS_GUESS, Clue, Guess
@@ -111,7 +111,7 @@ def test_game_state_flow(board_10: DuetBoard, board_10_dual: DuetBoard):
     assert game_state.current_side_state.score.main.revealed == 2
     assert game_state.timer_tokens == 6
     assert game_state.side_a.is_game_over
-    assert game_state.side_a.game_result == TARGET_REACHED
+    assert game_state.side_a.game_result == GameResult.TARGET_REACHED
     assert not game_state.side_b.is_game_over
     assert game_state.side_b.game_result is None
     assert not game_state.is_game_over
@@ -136,4 +136,4 @@ def test_game_state_flow(board_10: DuetBoard, board_10_dual: DuetBoard):
 
     assert game_state.timer_tokens == 4
     assert game_state.is_game_over
-    assert game_state.game_result == TARGET_REACHED
+    assert game_state.game_result == GameResult.TARGET_REACHED
