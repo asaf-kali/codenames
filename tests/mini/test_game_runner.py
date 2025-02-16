@@ -1,9 +1,5 @@
 from codenames.duet.board import DuetBoard
-from codenames.duet.score import (
-    MISTAKE_LIMIT_REACHED,
-    TARGET_REACHED,
-    TIMER_TOKENS_DEPLETED,
-)
+from codenames.duet.score import GameResult
 from codenames.duet.state import DuetSide
 from codenames.generic.move import PASS_GUESS, Clue
 from codenames.mini.runner import MiniGameRunner
@@ -25,7 +21,7 @@ def test_happy_flow(board_10: DuetBoard):
     runner = MiniGameRunner(players=players.team_a, state=state)
     runner.run_game()
 
-    assert runner.state.game_result == TARGET_REACHED
+    assert runner.state.game_result == GameResult.TARGET_REACHED
     assert runner.state.timer_tokens == 2
     assert runner.state.allowed_mistakes == 3
     assert len(runner.state.given_clues) == 3
@@ -46,7 +42,7 @@ def test_timer_token_depleted(board_10: DuetBoard):
     runner = MiniGameRunner(players=players.team_a, state=state)
     runner.run_game()
 
-    assert runner.state.game_result == TIMER_TOKENS_DEPLETED
+    assert runner.state.game_result == GameResult.TIMER_TOKENS_DEPLETED
     assert runner.state.timer_tokens == -1
     assert runner.state.allowed_mistakes == 2
     assert len(runner.state.given_clues) == 2
@@ -67,7 +63,7 @@ def test_mistake_limit_reached(board_10: DuetBoard):
     runner = MiniGameRunner(players=players.team_a, state=state)
     runner.run_game()
 
-    assert runner.state.game_result == MISTAKE_LIMIT_REACHED
+    assert runner.state.game_result == GameResult.MISTAKE_LIMIT_REACHED
     assert runner.state.timer_tokens == 2
     assert runner.state.allowed_mistakes == 0
     assert len(runner.state.given_clues) == 3

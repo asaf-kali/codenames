@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from enum import Enum
+
+from pydantic import BaseModel
 
 from codenames.generic.state import TeamScore
 
@@ -21,14 +23,13 @@ class Score(BaseModel):
         return self.main.revealed == self.main.total
 
 
-class GameResult(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    win: bool
-    reason: str
+class GameResult(Enum):
+    def __init__(self, win: bool, reason: str):
+        self.win = win
+        self.reason = reason
 
-
-TARGET_REACHED = GameResult(win=True, reason="Target score reached")
-ASSASSIN_HIT = GameResult(win=False, reason="Assassin card was hit")
-GAME_QUIT = GameResult(win=False, reason="Team quit the game")
-TIMER_TOKENS_DEPLETED = GameResult(win=False, reason="Timer tokens depleted")
-MISTAKE_LIMIT_REACHED = GameResult(win=False, reason="Mistake limit reached")
+    TARGET_REACHED = (True, "Target score reached")
+    ASSASSIN_HIT = (False, "Assassin card was hit")
+    GAME_QUIT = (False, "The game was quit")
+    TIMER_TOKENS_DEPLETED = (False, "Timer tokens depleted")
+    MISTAKE_LIMIT_REACHED = (False, "Mistake limit reached")

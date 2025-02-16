@@ -8,15 +8,7 @@ from pydantic import BaseModel, field_validator
 
 from codenames.duet.board import DuetBoard
 from codenames.duet.card import DuetColor
-from codenames.duet.score import (
-    ASSASSIN_HIT,
-    GAME_QUIT,
-    MISTAKE_LIMIT_REACHED,
-    TARGET_REACHED,
-    TIMER_TOKENS_DEPLETED,
-    GameResult,
-    Score,
-)
+from codenames.duet.score import GameResult, Score
 from codenames.duet.team import DuetTeam
 from codenames.duet.types import DuetCard, DuetGivenClue, DuetGivenGuess
 from codenames.generic.board import WordGroup
@@ -102,6 +94,13 @@ class DuetSideState(DuetSpymasterState):
     @property
     def operative_state(self) -> DuetOperativeState:
         return self.get_operative_state(None)
+
+    @field_validator("game_result", mode="before")
+    @classmethod
+    def parse_game_result(cls, v: Any) -> GameResult | None:
+        if v is None:
+            return None
+        return GameResult(*v)
 
     def process_clue(self, clue: Clue) -> DuetGivenClue | None:
         if self.is_game_over:
@@ -197,18 +196,18 @@ class DuetSideState(DuetSpymasterState):
         self.current_player_role = self.current_player_role.other
 
     def _quit(self):
-        self.game_result = GAME_QUIT
+        self.game_result = GameResult.GAME_QUIT
         self._end_turn()
 
     def _update_score(self, card_color: DuetColor):
         if card_color == DuetColor.NEUTRAL:
             return
         if card_color == DuetColor.ASSASSIN:
-            self.game_result = ASSASSIN_HIT
+            self.game_result = GameResult.ASSASSIN_HIT
             return
         game_ended = self.score.add_point()
         if game_ended:
-            self.game_result = TARGET_REACHED
+            self.game_result = GameResult.TARGET_REACHED
 
 
 class DuetSide(StrEnum):
@@ -244,9 +243,9 @@ class DuetGameState(BaseModel):
     def game_result(self) -> GameResult | None:
         # If the timer runs out, the game is lost
         if self.timer_tokens < 0:
-            return TIMER_TOKENS_DEPLETED
+            return GameResult.TIMER_TOKENS_DEPLETED
         if self.allowed_mistakes == 0:
-            return MISTAKE_LIMIT_REACHED
+            return GameResult.MISTAKE_LIMIT_REACHED
         result_a, result_b = self.side_a.game_result, self.side_b.game_result
         # If no side has a result, the game is still ongoing
         if not result_a and not result_b:
@@ -261,7 +260,7 @@ class DuetGameState(BaseModel):
             return None
         # Otherwise, both sides, finished, no one lost, means the game is won
         assert result_a.win and result_b.win
-        return TARGET_REACHED
+        return GameResult.TARGET_REACHED
 
     @property
     def is_sudden_death(self) -> bool:
