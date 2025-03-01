@@ -17,7 +17,7 @@ def test_happy_flow(board_10: DuetBoard):
         DuetSide.SIDE_A: [
             DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 4]),  # Green, Green, Neutral
             DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[2, PASS_GUESS]),  # Green, pass
-            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[3]),  # Green
+            DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[3, PASS_GUESS]),  # Green, pass (won't reach)
         ]
     }
     players = build_players(turns_by_side=turns_by_side)
@@ -26,8 +26,8 @@ def test_happy_flow(board_10: DuetBoard):
     runner.run_game()
 
     assert runner.state.game_result == TARGET_REACHED
-    assert runner.state.timer_tokens == 2
-    assert runner.state.allowed_mistakes == 3
+    assert runner.state.timer_tokens == 3  # 5 - 1 (mistake) - 1 (pass)
+    assert runner.state.allowed_mistakes == 3  # 4 - 1 (mistake)
     assert len(runner.state.given_clues) == 3
     assert len(runner.state.given_guesses) == 5
 

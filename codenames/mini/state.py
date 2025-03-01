@@ -19,16 +19,14 @@ class MiniGameState(DuetSideState):
 
     def process_guess(self, guess: Guess) -> DuetGivenGuess | None:
         given_guess = super().process_guess(guess)
-        # If the guess is wrong or passed the turn, the timer is updated
-        if not given_guess or not given_guess.correct:
-            self._update_tokens(mistake=given_guess is not None)
+        # If the guess is correct, there is nothing to do
+        if given_guess and given_guess.correct:
             return given_guess
-        # If we reached our target score, and we are not in "sudden death", we consume a timer token
-        if self.is_game_over and not self.is_sudden_death:
-            self._update_tokens(mistake=False)
+        # Otherwise, the guess was incorrect or the operator passed the turn
+        self._update_tokens(is_mistake=given_guess is not None)
         return given_guess
 
-    def _update_tokens(self, mistake: bool) -> None:
+    def _update_tokens(self, is_mistake: bool) -> None:
         if self.timer_tokens >= 0:
             self.timer_tokens -= 1
         if self.timer_tokens == 0:
@@ -37,7 +35,7 @@ class MiniGameState(DuetSideState):
         elif self.timer_tokens < 0:
             self.game_result = TIMER_TOKENS_DEPLETED
             log.info("Timer tokens depleted (after sudden death)!")
-        if not mistake:
+        if not is_mistake:
             return
         self.allowed_mistakes -= 1
         if self.allowed_mistakes == 0:
