@@ -93,7 +93,7 @@ class CodenamesGameRunner(ContextManager):
             try:
                 adapter.screenshot(tag=tag)
             except Exception as e:  # pylint: disable=broad-except
-                log.error(f"Error taking screenshot: {e}")
+                log.exception(f"Error taking screenshot: {e}")
 
     def run_game(self) -> ClassicGameRunner:
         self._start_game()
@@ -103,9 +103,9 @@ class CodenamesGameRunner(ContextManager):
         game_runner.guess_given_subscribers.append(self._handle_guess_given)
         try:
             game_runner.run_game()
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             self.all_players_screenshots(tag="game error")
-            raise e
+            raise
         self.host.screenshot("game over")
         return game_runner
 
@@ -164,7 +164,8 @@ class CodenamesGameRunner(ContextManager):
         for adapter in self.adapters:
             if adapter.player == player:
                 return adapter
-        raise ValueError(f"Player {player} not found in this game manager.")
+        msg = f"Player {player} not found in this game manager."
+        raise ValueError(msg)
 
     def _start_game(self) -> CodenamesGameRunner:
         if not self.host_connected:

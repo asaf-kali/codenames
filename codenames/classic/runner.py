@@ -59,7 +59,10 @@ class ClassicGamePlayers:
 
 class ClassicGameRunner:
     def __init__(
-        self, players: ClassicGamePlayers, state: ClassicGameState | None = None, board: ClassicBoard | None = None
+        self,
+        players: ClassicGamePlayers,
+        state: ClassicGameState | None = None,
+        board: ClassicBoard | None = None,
     ):
         self.players = players
         if not state:
@@ -153,9 +156,12 @@ def find_team(players: Collection[Player], team: ClassicTeam) -> TeamPlayers:
             elif isinstance(player, Operative):
                 operative = player
             else:
-                raise ValueError(f"Player {player} is not a Spymaster or Operative")
+                msg = f"Player {player} is not a Spymaster or Operative"
+                raise ValueError(msg)
     if spymaster is None:
-        raise ValueError(f"No Spymaster found for team {team}")
+        msg = f"No Spymaster found for team {team}"
+        raise ValueError(msg)
     if operative is None:
-        raise ValueError(f"No Operative found for team {team}")
+        msg = f"No Operative found for team {team}"
+        raise ValueError(msg)
     return TeamPlayers(spymaster=spymaster, operative=operative)

@@ -18,4 +18,5 @@ def get_vocabulary(language: str) -> Vocabulary:
         return Vocabulary(language=language, words=ENGLISH_WORDS)
     if language == SupportedLanguage.HEBREW:
         return Vocabulary(language=language, words=HEBREW_WORDS)
-    raise NotImplementedError(f"Unknown language: {language}")
+    msg = f"Unknown language: {language}"
+    raise NotImplementedError(msg)

@@ -17,6 +17,4 @@ class Score(BaseModel):
     def add_point(self, team: ClassicTeam) -> bool:
         team_score = self.blue if team == ClassicTeam.BLUE else self.red
         team_score.revealed += 1
-        if team_score.unrevealed == 0:
-            return True
-        return False
+        return team_score.unrevealed == 0

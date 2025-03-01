@@ -38,7 +38,7 @@ def multi_click(element: WebElement, times: int = 3, warn: bool = False):
 
 def poll_elements[
     T
-](element_getters: list[Callable[[], T]], timeout_sec: float = 15, poll_interval_sec: float = 0.5,) -> T:
+](element_getters: list[Callable[[], T]], timeout_sec: float = 15, poll_interval_sec: float = 0.5) -> T:
     def safe_getter() -> T | None:
         for element_getter in element_getters:
             try:

@@ -39,19 +39,19 @@ def test_game_runner_notifies_all_players_on_clue_given(board_10: ClassicBoard):
 
     assert on_guess_given_mock.call_count == 5 * 4
     assert on_guess_given_mock.call_args_list[0][1] == {
-        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[0])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[0]),
     }
     assert on_guess_given_mock.call_args_list[4][1] == {
-        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[1])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[1]),
     }
     assert on_guess_given_mock.call_args_list[8][1] == {
-        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[2])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_1, guessed_card=board_10[2]),
     }
     assert on_guess_given_mock.call_args_list[12][1] == {
-        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board_10[4])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board_10[4]),
     }
     assert on_guess_given_mock.call_args_list[16][1] == {
-        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board_10[9])
+        "given_guess": ClassicGivenGuess(for_clue=expected_given_clue_2, guessed_card=board_10[9]),
     }
 
 

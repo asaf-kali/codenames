@@ -18,7 +18,7 @@ def test_happy_flow(board_10: DuetBoard):
             DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[0, 1, 4]),  # Green, Green, Neutral
             DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[2, PASS_GUESS]),  # Green, pass
             DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[3, PASS_GUESS]),  # Green, pass (won't reach)
-        ]
+        ],
     }
     players = build_players(turns_by_side=turns_by_side)
     state = MiniGameState.from_board(board=board_10)
@@ -38,7 +38,7 @@ def test_timer_token_depleted(board_10: DuetBoard):
             DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[4]),  # Neutral
             DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[PASS_GUESS]),  # pass
             DictatedTurn(clue=Clue(word="NONE", card_amount=2), guesses=[4, 1, 5]),  # Green, Neutral
-        ]
+        ],
     }
     players = build_players(turns_by_side=turns_by_side)
     state = MiniGameState.from_board(board=board_10)
@@ -59,7 +59,7 @@ def test_mistake_limit_reached(board_10: DuetBoard):
             DictatedTurn(clue=Clue(word="A", card_amount=3), guesses=[4]),  # Neutral
             DictatedTurn(clue=Clue(word="B", card_amount=2), guesses=[PASS_GUESS]),  # pass
             DictatedTurn(clue=Clue(word="C", card_amount=2), guesses=[0, 1, 5]),  # Green, Green, Neutral
-        ]
+        ],
     }
     players = build_players(turns_by_side=turns_by_side)
     state = MiniGameState.from_board(board=board_10)

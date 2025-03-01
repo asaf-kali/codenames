@@ -4,6 +4,6 @@ from codenames.duet.board import DuetBoard
 from tests.duet.utils import constants
 
 
-@pytest.fixture()
+@pytest.fixture
 def board_10() -> DuetBoard:
     return constants.board_10()

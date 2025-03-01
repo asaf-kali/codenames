@@ -3,7 +3,7 @@ from __future__ import annotations
 import abc
 import math
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Collection, Iterator, Union
+from typing import TYPE_CHECKING, Any, Collection, Iterator
 
 from pydantic import BaseModel, field_validator
 
@@ -27,13 +27,15 @@ class Board[C: CardColor](BaseModel, abc.ABC):
     def convert_cards(cls, v: Any) -> list[Card[C]]:
         return list(v)
 
-    def __getitem__(self, item: Union[int, str]) -> Card:
+    def __getitem__(self, item: int | str) -> Card:
         if isinstance(item, str):
             item = self.find_card_index(item)
         if not isinstance(item, int):
-            raise IndexError(f"Illegal index type for card: {item}")
+            msg = f"Illegal index type for card: {item}"
+            raise IndexError(msg)
         if item < 0 or item >= self.size:
-            raise IndexError(f"Card index out of bounds: {item}")
+            msg = f"Card index out of bounds: {item}"
+            raise IndexError(msg)
         return self.cards[item]
 
     def __iter__(self) -> Iterator[Card[C]]:  # type: ignore
