@@ -99,7 +99,7 @@ semrel-dev:
 format:
 	black .
 	isort .
-	ruff check --fix
+	ruff check --fix --unsafe-fixes
 
 check-ruff:
 	ruff check
