@@ -2,7 +2,18 @@
 
 
 
+## v5.5.5 (2025-03-22)
+
+### 🌴
+
+* 🌴 Multiple fixes (#19) ([`4b95ca4`](https://github.com/asaf-kali/codenames/commit/4b95ca4188439e293795cf9321e43ecbfc7f35e7))
+
+
 ## v5.5.4 (2025-02-01)
+
+### Other
+
+* 🤖 Release [5.5.4] [skip ci] ([`b83dafb`](https://github.com/asaf-kali/codenames/commit/b83dafb40c3eaee1e572536587dbf797e2861c5d))
 
 ### 🐛
 
