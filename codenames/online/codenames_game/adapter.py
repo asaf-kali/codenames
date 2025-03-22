@@ -5,13 +5,12 @@ import os
 from dataclasses import dataclass
 from enum import StrEnum
 from time import sleep
-from typing import Callable, Mapping
+from typing import TYPE_CHECKING, Callable, Mapping
 
 from selenium import webdriver
 from selenium.common import ElementNotInteractableException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 
 from codenames.classic.board import ClassicBoard
 from codenames.generic.move import PASS_GUESS, Clue, Guess
@@ -27,6 +26,9 @@ from codenames.online.utils import (
     poll_elements,
 )
 from codenames.utils.formatting import wrap
+
+if TYPE_CHECKING:
+    from selenium.webdriver.remote.webelement import WebElement
 
 log = logging.getLogger(__name__)
 
@@ -279,7 +281,8 @@ class CodenamesGamePlayerAdapter:
         card_elements = self.driver.find_elements(by=By.CLASS_NAME, value="card")
         card_elements = [element for element in card_elements if element.text != ""]
         if len(card_elements) < 25:
-            raise ValueError(f"Expected 25 cards, loaded {len(card_elements)}")
+            msg = f"Expected 25 cards, loaded {len(card_elements)}"
+            raise ValueError(msg)
         return self.driver.find_elements(By.XPATH, value="//div[@role='img']")
 
     def get_clue_input(self) -> WebElement:
@@ -343,11 +346,11 @@ class CodenamesGamePlayerAdapter:
             log.debug(f"Polling [{len(element_getters)}] elements...")
         try:
             return poll_elements(element_getters, timeout_sec=timeout_sec, poll_interval_sec=poll_interval_sec)
-        except Exception as e:
+        except Exception:
             if screenshot:
                 log.info(f"{self.log_prefix} Polling failed, saving screenshot...")
                 self.screenshot("failed polling")
-            raise e
+            raise
 
     def screenshot(self, tag: str, raise_on_error: bool = False) -> str | None:
         return save_screenshot(adapter=self, tag=tag, raise_on_error=raise_on_error)

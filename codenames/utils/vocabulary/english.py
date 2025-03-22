@@ -409,5 +409,5 @@ ENGLISH_WORDS = list(
         "young",
         "youth",
         "zone",
-    }
+    },
 )

@@ -105,7 +105,7 @@ class DuetSideState(DuetSpymasterState):
 
     def process_clue(self, clue: Clue) -> DuetGivenClue | None:
         if self.is_game_over:
-            raise GameIsOver()
+            raise GameIsOver
         if self.current_player_role != PlayerRole.SPYMASTER:
             raise InvalidTurn("It's not the Spymaster's turn now!")
         self.clues.append(clue)
@@ -124,7 +124,7 @@ class DuetSideState(DuetSpymasterState):
 
     def process_guess(self, guess: Guess) -> DuetGivenGuess | None:
         if self.is_game_over:
-            raise GameIsOver()
+            raise GameIsOver
         if self.current_player_role != PlayerRole.OPERATIVE:
             raise InvalidTurn("It's not the Operative's turn now!")
         if guess.card_index == PASS_GUESS:
@@ -149,7 +149,7 @@ class DuetSideState(DuetSpymasterState):
     def dual_card_revealed(self, guess: Guess):
         card = self.board[guess.card_index]
         if card.revealed:
-            assert not card.color == DuetColor.GREEN  # This should not happen
+            assert card.color != DuetColor.GREEN  # This should not happen
             return
         if card.color == DuetColor.GREEN:
             self._update_score(card_color=DuetColor.GREEN)
@@ -260,7 +260,8 @@ class DuetGameState(BaseModel):
         if not result_a or not result_b:
             return None
         # Otherwise, both sides, finished, no one lost, means the game is won
-        assert result_a.win and result_b.win
+        assert result_a.win
+        assert result_b.win
         return TARGET_REACHED
 
     @property

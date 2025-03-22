@@ -9,7 +9,7 @@ from codenames.generic.team import Team
 class Move:
     @property
     def team_color(self) -> Team:
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 @dataclass
@@ -66,7 +66,8 @@ def get_moves(given_clues: list[GivenClue], given_guesses: list[GivenGuess], cur
 
 
 def get_guesses_by_clues(
-    given_clues: list[GivenClue], given_guesses: list[GivenGuess]
+    given_clues: list[GivenClue],
+    given_guesses: list[GivenGuess],
 ) -> dict[GivenClue, list[GivenGuess]]:
     guesses_by_clues: dict[GivenClue, list[GivenGuess]] = {}
     for clue in given_clues:

@@ -27,7 +27,7 @@ def configure_logging():
                 "level": logging.DEBUG,
                 "handlers": ["console"],
                 "propagate": False,
-            }
+            },
         },
     }
     dictConfig(config)

@@ -49,10 +49,9 @@ def _parse_card_color(card_element: WebElement) -> ClassicColor:
     for css_class, classic_color in CSS_CLASS_TO_CLASSIC_COLOR.items():
         if css_class.lower() in element_classes:
             return classic_color
-    raise ValueError(f"Could not parse card color from element classes: {element_classes}")
+    msg = f"Could not parse card color from element classes: {element_classes}"
+    raise ValueError(msg)
 
 
 def _is_card_revealed(card_container: WebElement) -> bool:  # pylint: disable=unused-argument
-    if "revealed" in card_container.accessible_name:
-        return True
-    return False
+    return "revealed" in card_container.accessible_name

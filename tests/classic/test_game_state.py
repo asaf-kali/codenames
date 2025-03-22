@@ -102,13 +102,13 @@ def test_game_state_flow(board_10: ClassicBoard):
             given_guess=ClassicGivenGuess(
                 for_clue=ClassicGivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
                 guessed_card=ClassicCard(word="Card 0", color=ClassicColor.BLUE, revealed=True),
-            )
+            ),
         ),
         GuessMove(
             given_guess=ClassicGivenGuess(
                 for_clue=ClassicGivenClue(word="clue 1", card_amount=2, team=ClassicTeam.BLUE),
                 guessed_card=ClassicCard(word="Card 1", color=ClassicColor.BLUE, revealed=True),
-            )
+            ),
         ),
         PassMove(team=ClassicTeam.BLUE),
         ClueMove(given_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED)),
@@ -116,13 +116,13 @@ def test_game_state_flow(board_10: ClassicBoard):
             given_guess=ClassicGivenGuess(
                 for_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
                 guessed_card=ClassicCard(word="Card 4", color=ClassicColor.RED, revealed=True),
-            )
+            ),
         ),
         GuessMove(
             given_guess=ClassicGivenGuess(
                 for_clue=ClassicGivenClue(word="clue 2", card_amount=1, team=ClassicTeam.RED),
                 guessed_card=ClassicCard(word="Card 5", color=ClassicColor.RED, revealed=True),
-            )
+            ),
         ),
         ClueMove(given_clue=ClassicGivenClue(word="clue 3", card_amount=2, team=ClassicTeam.BLUE)),
         PassMove(team=ClassicTeam.BLUE),
@@ -131,7 +131,7 @@ def test_game_state_flow(board_10: ClassicBoard):
             given_guess=ClassicGivenGuess(
                 for_clue=ClassicGivenClue(word="clue 4", card_amount=2, team=ClassicTeam.RED),
                 guessed_card=ClassicCard(word="Card 9", color=ClassicColor.ASSASSIN, revealed=True),
-            )
+            ),
         ),
     ]
     assert _get_moves(game_state) == expected_moves

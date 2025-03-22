@@ -25,7 +25,7 @@ def save_screenshot(adapter: "CodenamesGamePlayerAdapter", tag: str, raise_on_er
         adapter.driver.save_screenshot(path_abs)
     except Exception as e:  # pylint: disable=broad-except
         if raise_on_error:
-            raise e
+            raise
         log.warning(f"Failed to save screenshot: {e}")
         return None
     log.info(f"{adapter.log_prefix} Screenshot saved to {path_abs}")

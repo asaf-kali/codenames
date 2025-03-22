@@ -121,7 +121,7 @@ class ClassicGameState(ClassicSpymasterState):
 
     def process_clue(self, clue: Clue) -> ClassicGivenClue | None:
         if self.is_game_over:
-            raise GameIsOver()
+            raise GameIsOver
         if self.current_player_role != PlayerRole.SPYMASTER:
             raise InvalidTurn("It's not the Spymaster's turn now!")
         self.clues.append(clue)
@@ -141,7 +141,7 @@ class ClassicGameState(ClassicSpymasterState):
 
     def process_guess(self, guess: Guess) -> ClassicGivenGuess | None:
         if self.is_game_over:
-            raise GameIsOver()
+            raise GameIsOver
         if self.current_player_role != PlayerRole.OPERATIVE:
             raise InvalidTurn("It's not the Operative's turn now!")
         if guess.card_index == PASS_GUESS:

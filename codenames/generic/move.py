@@ -61,7 +61,8 @@ class GivenGuess[C: CardColor, T: Team](BaseModel, abc.ABC):
     def correct(self) -> bool:
         card_color = self.guessed_card.color
         if not card_color:
-            raise ValueError(f"Card {self.guessed_card} has no color set")
+            msg = f"Card {self.guessed_card} has no color set"
+            raise ValueError(msg)
         return self.for_clue.team.as_card_color == card_color
 
     @property

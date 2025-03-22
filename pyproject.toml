@@ -106,8 +106,50 @@ line-length = 120
 exclude = ["local", ".deployment"]
 
 [tool.ruff.lint]
-select = ["B", "C", "E", "F", "W"]
-ignore = []
+select = ["ALL"]
+ignore = [
+    "ARG",
+    "ANN001",
+    "ANN002",
+    "ANN003",
+    "ANN201",
+    "ANN202",
+    "ANN204",
+    "ANN401",
+    "BLE001",
+    "D",
+    "ERA001",
+    "EM101",
+    "FA",
+    "FBT001",
+    "FBT002",
+    "G004",
+    "N818",
+    "PERF203",
+    "PGH003",
+    "PGH004",
+    "PLR0911",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+    "PLW0603",
+    "PT011",
+    "PTH100",
+    "PTH103",
+    "PTH118",
+    "PYI063",
+    "RET504",
+    "RUF001",
+    "RUF012",
+    "S101",
+    "S311",
+    "SIM105",
+    "TC001",
+    "TRY003",
+    "TRY300",
+    "TRY401",
+    "UP035",
+]
 
 [tool.black]
 line-length = 120
